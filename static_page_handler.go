@@ -62,14 +62,24 @@ func StaticPageHandler(w http.ResponseWriter, req *http.Request) {
 
 }
 
-func staticPagesServePage(w http.ResponseWriter, data staticPageData) {
-	templates, err := NewBasicHtmlTemplateSet("staticpage.html.tpl", "staticpage_script.html.tpl")
-	if err != nil {
-		Error.Printf("Fatal error creating template set: %s\n", err)
-		panic(err)
-	}
+var StaticPagesTemplates *template.Template
 
-	err = templates.ExecuteTemplate(w, "root", data)
+func initializeTemplates() {
+	if StaticPagesTemplates == nil {
+		Debug.Printf("Initializing templates for static pages")
+		var err error
+		StaticPagesTemplates, err = NewBasicHtmlTemplateSet("staticpage.html.tpl", "staticpage_script.html.tpl")
+		if err != nil {
+			Error.Printf("Fatal error creating template set: %s\n", err)
+			panic(err)
+		}
+	}
+}
+
+func staticPagesServePage(w http.ResponseWriter, data staticPageData) {
+	initializeTemplates()
+
+	err := StaticPagesTemplates.ExecuteTemplate(w, "root", data)
 	if err != nil {
 		Error.Printf("Error executing template: %s\n", err)
 	}
