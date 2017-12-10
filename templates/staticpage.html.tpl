@@ -1,0 +1,3 @@
+{{define `main`}}
+{{.HtmlOutput}}
+{{end}}

@@ -36,6 +36,7 @@ var routes = Routes{
 	Route{"FavIcon", "GET", "/favicon", faviconHandler},
 	Route{"Index", "GET", "/index.html", IndexHandler},
 	Route{"Index", "GET", "/", IndexHandler},
+	Route{"About", "GET", "/{page}.html", StaticPageHandler},
 }
 
 func NewRouter() *mux.Router {
