@@ -1,0 +1,7 @@
+---
+http:
+  port: 8080
+logging:
+  debug: stdout
+  verbose: stdout
+  error: stderr
