@@ -30,6 +30,9 @@ type Config struct {
 		Verbose	string `yaml:"verbose"`
 		Error   string `yaml:"error"`
 	}
+	Paths struct {
+		StaticPagesPath	string `yaml:"staticpages"`
+	}
 }
 
 // Read yaml configuration from file (fromPath),

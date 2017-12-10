@@ -21,10 +21,11 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
+	"path/filepath"
 )
 
 var whiteListPages = map[string]string{
-	"about": "static-content/about.html.tpl",
+	"about": "about.html.tpl",
 }
 
 type staticPageData struct {
@@ -39,6 +40,9 @@ func StaticPageHandler(w http.ResponseWriter, req *http.Request) {
 	// look up page by name
 	bp, ok := whiteListPages[pageName]
 	if ok {
+		bp = filepath.Join(ServerConfig.Paths.StaticPagesPath, bp)
+		Debug.Printf("serving static page %s\n", bp)
+
 		tplBytes, err := ioutil.ReadFile(bp)
 		if err != nil {
 			Error.Printf("Error reading page by name %s\n", pageName)

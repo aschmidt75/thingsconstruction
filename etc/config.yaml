@@ -5,3 +5,5 @@ logging:
   debug: stdout
   verbose: stdout
   error: stderr
+paths:
+  staticpages: "./static-content"
