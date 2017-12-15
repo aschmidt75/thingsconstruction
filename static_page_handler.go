@@ -26,11 +26,32 @@ import (
 
 var whiteListPages = map[string]string{
 	"about": "about.html.tpl",
+	"imprint": "imprint.html.tpl",
 }
 
 type staticPageData struct {
 	PageData
 	HtmlOutput template.HTML
+}
+
+func ServeNotFound(w http.ResponseWriter, req *http.Request) {
+	w.WriteHeader(404)
+
+	bp := filepath.Join(ServerConfig.Paths.StaticPagesPath, "notfound.html.tpl")
+	Debug.Printf("serving not found page %s\n", bp)
+
+	tplBytes, err := ioutil.ReadFile(bp)
+	if err != nil {
+		Debug.Printf("ServeNotFound: err=%s\n", err)
+		return
+	}
+
+	staticPagesServePage(w, staticPageData{
+		PageData: PageData{
+			Title: "Page not found", // TODO
+		},
+		HtmlOutput: template.HTML(tplBytes),
+	})
 }
 
 func StaticPageHandler(w http.ResponseWriter, req *http.Request) {
@@ -46,7 +67,7 @@ func StaticPageHandler(w http.ResponseWriter, req *http.Request) {
 		tplBytes, err := ioutil.ReadFile(bp)
 		if err != nil {
 			Error.Printf("Error reading page by name %s\n", pageName)
-			w.WriteHeader(404)
+			ServeNotFound(w,req)
 			return
 		}
 
@@ -57,13 +78,16 @@ func StaticPageHandler(w http.ResponseWriter, req *http.Request) {
 			HtmlOutput: template.HTML(tplBytes),
 		})
 	} else {
-		w.WriteHeader(404)
+		ServeNotFound(w,req)
 	}
 
 }
 
 var StaticPagesTemplates *template.Template
 
+// initializes template set. Static Pages are
+// staticpage.html.tpl, staticpage_script.html.tpl
+// plus the inner content parts
 func initializeTemplates() {
 	if StaticPagesTemplates == nil {
 		Debug.Printf("Initializing templates for static pages")
