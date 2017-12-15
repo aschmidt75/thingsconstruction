@@ -20,24 +20,55 @@ import (
 	"log"
 	"net/http"
 	"fmt"
+	"os"
 )
 
-var Debug *log.Logger
-var Verbose *log.Logger
-var Error *log.Logger
-var ServerConfig *Config
+var (
+	Debug *log.Logger
+	Verbose *log.Logger
+	Error *log.Logger
+	ServerConfig *Config
+	Blog *BlogPages
+)
+
+
+func InitializeBlogPages() {
+	var err error
+	p := ServerConfig.Paths.MDPagesPath
+	Debug.Printf("Initializing Blog Pages from %s", p)
+	// read all pages
+	Blog, err = NewBlogPagesFromPath(p)
+	if err != nil {
+		Verbose.Printf("Unable to read blog content: %e\n", err)
+	}
+	Debug.Printf("Blog=%#v\n", Blog)
+	// dump overview
+}
+
+func configFileName() string {
+	t := os.Getenv("TC_CONFIG")
+	if t != "" {
+		return t
+	}
+
+	// fallback to default
+	return "./etc/config.yaml"
+}
 
 func main() {
 	Debug, Verbose, Error = InitializeBasicLogging()
 
+
 	var err error
-	ServerConfig, err = NewConfig("./etc/config.yaml")
+	ServerConfig, err = NewConfig(configFileName())
 	if err != nil {
 		panic(err)
 	} else {
 		Debug, Verbose, Error = InitializeLogging(ServerConfig)
 		Debug.Printf("%#v\n", ServerConfig)
 	}
+
+	InitializeBlogPages()
 
 	router := NewRouter()
 	Debug.Printf("router=%#v\n", router)

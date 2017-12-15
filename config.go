@@ -32,6 +32,7 @@ type Config struct {
 	}
 	Paths struct {
 		StaticPagesPath	string `yaml:"staticpages"`
+		MDPagesPath 	string `yaml:"mdpages"`
 	}
 }
 

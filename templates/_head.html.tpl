@@ -9,11 +9,12 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- Path of the materialize.min.css file -->
   <link rel="stylesheet" href="/css/materialize.min.css" media="screen,projection">
-
-    <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
-
-    <!-- Custom css file path -->
+  <!-- Custom css file path -->
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+
   <!-- Used as an example only to position the footer at the end of the page.
       You can delete these styles or move it to your custom css file -->
   <style>

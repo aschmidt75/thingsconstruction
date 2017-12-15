@@ -7,3 +7,4 @@ logging:
   error: stderr
 paths:
   staticpages: "./static-content"
+  mdpages: "./md-content"

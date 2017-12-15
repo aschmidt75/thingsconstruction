@@ -20,6 +20,7 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"time"
+	"fmt"
 )
 
 
@@ -37,6 +38,9 @@ var routes = Routes{
 	Route{"Index", "GET", "/index.html", IndexHandler},
 	Route{"Index", "GET", "/", IndexHandler},
 	Route{"StaticPage", "GET", "/{page}.html", StaticPageHandler},
+	Route{"Blog", "GET", "/blog", BlogIndexHandler},
+	Route{"BlogPage", "GET", "/blog/{page}", MarkdownBlogHandler},
+
 }
 
 func NewRouter() *mux.Router {
@@ -64,7 +68,14 @@ func NewRouter() *mux.Router {
 			Handler(handler)
 	}
 
+	router.NotFoundHandler = http.HandlerFunc(notFoundHandler)
+
 	return router
+}
+
+func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(404)
+	fmt.Fprint(w, "The page you're looking for has not been found.")
 }
 
 func logger(inner http.Handler, name string) http.Handler {
