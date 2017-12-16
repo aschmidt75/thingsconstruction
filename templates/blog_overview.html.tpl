@@ -30,7 +30,7 @@
         <div id="bp_all_tags" class="col s3">
             <h5>Filter by tags</h5>
             {{ range .TagChipData }}
-                <div class="chip bp_selected deep-orange lighten-3">
+                <div class="chip">
                     {{ .TagName }}
                 </div>
             {{ end }}

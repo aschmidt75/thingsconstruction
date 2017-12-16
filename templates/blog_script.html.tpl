@@ -25,8 +25,6 @@ if (all_posts != null) {
         if (c[i].className.startsWith("chip")) {
             // add listener
             c[i].addEventListener('click', bp_tag_clicked)
-            // put on map by default
-            bp_selected_tags.set(c[i].innerText, c[i])
 
         }
     }
@@ -34,6 +32,8 @@ if (all_posts != null) {
 bp_update_list_filter()
 
 function bp_update_list_filter() {
+    console.log(""+bp_selected_tags.size)
+    var all_on = (bp_selected_tags.size == 0)
     var total = 0
     var active = 0
     all_bps = document.getElementsByClassName("blogpost")
@@ -52,7 +52,7 @@ function bp_update_list_filter() {
             }
         }
         total += 1
-        if ( num_chips == num_matching) {
+        if (( all_on == true) || (num_matching > 0)) {
             // all tags of this post are selected on right -> activate
             all_bps[i].className = "blogpost row"
             active += 1
@@ -65,14 +65,14 @@ function bp_update_list_filter() {
     // update title
     if ( total == active) {
         document.getElementById("bp_title").innerHTML = "Blog posts"
-        document.getElementById("bp_count").innerHTML = ""
-        document.getElementById("bp_count").className = ""
+        document.getElementById("bp_count").innerText = "all"
+        document.getElementById("bp_count").className = "badge deep-orange white-text"
 
     } else {
         document.getElementById("bp_title").innerText = "Blog posts"
         if ( active > 0) {
             document.getElementById("bp_count").innerText = ""+active+"/"+total
-            document.getElementById("bp_count").className = "badge new"
+            document.getElementById("bp_count").className = "badge deep-orange white-text tiny"
         } else {
             //
             document.getElementById("bp_count").innerText = ""
