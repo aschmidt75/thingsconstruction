@@ -34,6 +34,9 @@ type Config struct {
 		StaticPagesPath	string `yaml:"staticpages"`
 		MDPagesPath 	string `yaml:"mdpages"`
 	}
+	Features struct {
+		Blog     bool `yaml:"blog"`
+	}
 }
 
 // Read yaml configuration from file (fromPath),

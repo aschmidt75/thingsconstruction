@@ -8,3 +8,5 @@ logging:
 paths:
   staticpages: "./static-content"
   mdpages: "./md-content"
+features:
+  blog: true

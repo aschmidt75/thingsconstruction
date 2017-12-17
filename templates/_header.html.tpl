@@ -6,11 +6,13 @@
           <a href="/index.html" class="brand-logo">ThingsConstruction</a>
           <ul class="right hide-on-med-and-down">
             <li>
-              <a href="/about">About</a>
+              <a href="/about.html">About</a>
             </li>
+            {{ if .BlogFeature }}
             <li>
               <a href="/blog">Blog</a>
             </li>
+            {{ end }}
           </ul>
         </div>
       </div>

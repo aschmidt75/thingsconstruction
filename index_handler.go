@@ -26,10 +26,12 @@ func IndexHandler(w http.ResponseWriter, req *http.Request) {
 		Error.Fatalf( "Fatal error creating template set: %s\n", err)
 	}
 
-	context := PageData{
+	data := PageData{
 		Title: "Index",
 	}
-	err = templates.ExecuteTemplate(w, "root", context)
+	data.SetFeaturesFromConfig()
+
+	err = templates.ExecuteTemplate(w, "root", data)
 	if err != nil {
 		Error.Printf("Error executing template: %s", err)
 

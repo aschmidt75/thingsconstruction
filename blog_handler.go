@@ -58,6 +58,11 @@ type blogOverviewData struct {
 }
 
 func BlogIndexHandler(w http.ResponseWriter, req *http.Request) {
+	if ServerConfig.Features.Blog == false {
+		http.Redirect(w,req,"/", 302)
+		return
+	}
+
 	data := blogOverviewData{
 		PageData: PageData{
 			Title: "Blog Index",
@@ -66,10 +71,16 @@ func BlogIndexHandler(w http.ResponseWriter, req *http.Request) {
 		TagChipData:    collectTagChipData(Blog.MetaData, nil),
 		AllPostsChrono: collectAllPostsChrono(Blog),
 	}
+	data.SetFeaturesFromConfig()
 	blogServeOverviewPage(w, data)
 }
 
 func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
+	if ServerConfig.Features.Blog == false {
+		http.Redirect(w,req,"/", 302)
+		return
+	}
+
 	vars := mux.Vars(req)
 	pageName := vars["page"]
 
@@ -148,6 +159,8 @@ func collectAllPostsChrono(blog *BlogPages) []blogPostChronoData {
 }
 
 func blogServePage(w http.ResponseWriter, data blogContentData) {
+	data.SetFeaturesFromConfig()
+
 	templates, err := NewHtmlTemplateSet("root", "blog.html.tpl", "blog_script.html.tpl")
 	if err != nil {
 		Verbose.Printf("Fatal error creating template set: %s\n", err)
@@ -162,6 +175,8 @@ func blogServePage(w http.ResponseWriter, data blogContentData) {
 }
 
 func blogServeOverviewPage(w http.ResponseWriter, data blogOverviewData) {
+	data.SetFeaturesFromConfig()
+
 	templates, err := NewHtmlTemplateSet("root", "blog_overview.html.tpl", "blog_script.html.tpl")
 	if err != nil {
 		Verbose.Printf("Fatal error creating template set: %s\n", err)

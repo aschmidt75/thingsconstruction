@@ -102,6 +102,7 @@ func initializeTemplates() {
 
 func staticPagesServePage(w http.ResponseWriter, data staticPageData) {
 	initializeTemplates()
+	data.SetFeaturesFromConfig()
 
 	err := StaticPagesTemplates.ExecuteTemplate(w, "root", data)
 	if err != nil {

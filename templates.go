@@ -26,6 +26,12 @@ import (
 // template data embeds this struct
 type PageData struct {
 	Title string
+
+	BlogFeature bool
+}
+
+func (pd *PageData) SetFeaturesFromConfig() {
+	pd.BlogFeature = ServerConfig.Features.Blog
 }
 
 // Adds a a file to the template set
