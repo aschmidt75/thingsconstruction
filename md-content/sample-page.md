@@ -6,7 +6,7 @@ tags:
 - Tech
 - IoT
 - whatever
-abstract: Here is the best place for a decent oneline to say what this post is going to be about.
+abstract: Here is the best place for a decent one-liner to say what this post is going to be about.
 ---
 
 ### Headline

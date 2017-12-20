@@ -8,7 +8,7 @@
                 Read more about <a class="grey-text text-lighten-1" target="tc-wot-ext" href="https://www.w3.org/WoT/"><i class="tiny material-icons">link</i>WoT</a> and the
                 <a class="grey-text text-lighten-1" target="tc-wot-ext" href="https://iot.mozilla.org/wot/"><i class="tiny material-icons">link</i>Web Thing Description</a></p>
         </div>
-        <div class="col s12 m4 l4">
+        <div class="col s12 m4 l4 right-align">
             <ul>
                     <a target="tc-ext" style="padding-right: 10px" href="https://github.com/aschmidt75/thingsconstruction"><i class="white-text fab fa-github fa-2x"></i></a>
                     <a target="tc-ext" style="padding-right: 10px" href="https://twitter.com/aschmidt75"><i class="white-text fab fa-twitter fa-2x"></i></a>

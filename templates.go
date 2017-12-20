@@ -28,10 +28,12 @@ type PageData struct {
 	Title string
 
 	BlogFeature bool
+	AppFeature bool
 }
 
 func (pd *PageData) SetFeaturesFromConfig() {
 	pd.BlogFeature = ServerConfig.Features.Blog
+	pd.AppFeature = ServerConfig.Features.App
 }
 
 // Adds a a file to the template set

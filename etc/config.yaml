@@ -6,7 +6,10 @@ logging:
   verbose: stdout
   error: stderr
 paths:
+  assets: "./static"
   staticpages: "./static-content"
   mdpages: "./md-content"
+  feedback: "/tmp/"
 features:
   blog: true
+  app: true

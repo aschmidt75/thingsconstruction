@@ -40,16 +40,20 @@ var routes = Routes{
 	Route{"StaticPage", "GET", "/{page}.html", StaticPageHandler},
 	Route{"Blog", "GET", "/blog", BlogIndexHandler},
 	Route{"BlogPage", "GET", "/blog/{page}", MarkdownBlogHandler},
+	Route{"AppChooseFramework", "GET", "/app/framework", AppGenParamsHandleGet},
+	Route{"FeedbackQuick", "POST", "/app/feedback/q", AppFeedbackQuickHandlePost},
+
 
 }
 
 func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(false)
 
+	// add asset paths
 	staticPaths := []string{"js", "css", "fonts", "img"}
 	for _, staticPath := range staticPaths {
-		p := "/" + staticPath + "/"
-		d := "./static/" + staticPath
+		p := fmt.Sprintf("/%s/", staticPath)
+		d := fmt.Sprintf("%s/%s", ServerConfig.Paths.AssetPath, staticPath)
 		router.PathPrefix(p).Handler(http.StripPrefix(p, http.FileServer(http.Dir(d))))
 	}
 
@@ -58,8 +62,9 @@ func NewRouter() *mux.Router {
 		var handler http.Handler
 
 		handler = route.HandlerFunc
-		handler = webNoCache(handler)
-		handler = logger(handler, route.Name) // Log request
+		handler = addNoCacheHeaders(handler)
+		handler = filterTooBigPayloads(handler)
+		handler = logger(handler, route.Name)
 
 		router.
 			Methods(route.Method).
@@ -102,7 +107,7 @@ func logger(inner http.Handler, name string) http.Handler {
 
 
 // Insert no-cache elements into http header
-func webNoCache(inner http.Handler) http.Handler {
+func addNoCacheHeaders(inner http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 		w.Header().Set("Cache-control", "no-cache")
@@ -111,6 +116,13 @@ func webNoCache(inner http.Handler) http.Handler {
 		w.Header().Set("Expires", "0")
 
 		// forward
+		inner.ServeHTTP(w, r)
+	})
+}
+
+func filterTooBigPayloads(inner http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// TODO!
 		inner.ServeHTTP(w, r)
 	})
 }

@@ -3,7 +3,7 @@
     </div>
     <div class="row">
         <div id="bp_overview" class="col s9">
-            <h4><span id="bp_title">All blog posts</span><span id="bp_count" class="badge" data-badge-caption=""></span></h4>
+            <h4><span id="bp_title">Blog posts</span><span id="bp_count" class="badge" data-badge-caption=""></span></h4>
             <p>
             <br>
             {{ range .AllPostsChrono }}

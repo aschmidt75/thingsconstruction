@@ -31,11 +31,14 @@ type Config struct {
 		Error   string `yaml:"error"`
 	}
 	Paths struct {
+		AssetPath		string `yaml:"assets"`
 		StaticPagesPath	string `yaml:"staticpages"`
 		MDPagesPath 	string `yaml:"mdpages"`
+		FeedbackPath    string `yaml:"feedback"`
 	}
 	Features struct {
 		Blog     bool `yaml:"blog"`
+		App      bool `yaml:"app"`
 	}
 }
 
