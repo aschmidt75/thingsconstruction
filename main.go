@@ -17,20 +17,19 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
-	"fmt"
 	"os"
 )
 
 var (
-	Debug *log.Logger
-	Verbose *log.Logger
-	Error *log.Logger
+	Debug        *log.Logger
+	Verbose      *log.Logger
+	Error        *log.Logger
 	ServerConfig *Config
-	Blog *BlogPages
+	Blog         *BlogPages
 )
-
 
 func InitializeBlogPages() {
 	var err error
@@ -41,7 +40,8 @@ func InitializeBlogPages() {
 	if err != nil {
 		Verbose.Printf("Unable to read blog content: %e\n", err)
 	}
-	Debug.Printf("Blog=%#v\n", Blog)
+	//Debug.Printf("Blog=%s\n", spew.Sdump(Blog))
+	Verbose.Printf("Blog: Read %d posts.\n", len(Blog.Pages))
 	// dump overview
 }
 
@@ -58,7 +58,6 @@ func configFileName() string {
 func main() {
 	Debug, Verbose, Error = InitializeBasicLogging()
 
-
 	var err error
 	ServerConfig, err = NewConfig(configFileName())
 	if err != nil {
@@ -74,8 +73,8 @@ func main() {
 	Debug.Printf("router=%#v\n", router)
 
 	srv := &http.Server{
-		Addr:    	fmt.Sprintf(":%d", ServerConfig.Http.Port),
-		Handler: 	router,
+		Addr:    fmt.Sprintf(":%d", ServerConfig.Http.Port),
+		Handler: router,
 	}
 	Debug.Printf("srv=%#v\n", srv)
 

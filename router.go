@@ -17,12 +17,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
 	"time"
-	"fmt"
 )
-
 
 type Route struct {
 	Name        string
@@ -40,10 +39,13 @@ var routes = Routes{
 	Route{"StaticPage", "GET", "/{page}.html", StaticPageHandler},
 	Route{"Blog", "GET", "/blog", BlogIndexHandler},
 	Route{"BlogPage", "GET", "/blog/{page}", MarkdownBlogHandler},
-	Route{"AppChooseFramework", "GET", "/app/framework", AppGenParamsHandleGet},
-	Route{"FeedbackQuick", "POST", "/app/feedback/q", AppFeedbackQuickHandlePost},
-
-
+	Route{"AppCreateThing", "GET", "/app", AppCreateThingHandleGet},
+	Route{"AppCreateThing", "GET", "/app/{id}", AppCreateThingHandleGet},
+	Route{"AppCreateThing", "POST", "/app", AppCreateThingHandlePost},
+	Route{"AppChooseFramework", "GET", "/app/{id}/framework", AppGenParamsHandleGet},
+	Route{"Feedback", "GET", "/feedback", FeedbackHandleGet},
+	Route{"Feedback", "POST", "/feedback", FeedbackHandlePost},
+	Route{"FeedbackQuick", "POST", "/feedback/q", FeedbackQuickHandlePost},
 }
 
 func NewRouter() *mux.Router {
@@ -104,7 +106,6 @@ func logger(inner http.Handler, name string) http.Handler {
 		)
 	})
 }
-
 
 // Insert no-cache elements into http header
 func addNoCacheHeaders(inner http.Handler) http.Handler {

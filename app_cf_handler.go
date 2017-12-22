@@ -17,54 +17,75 @@
 package main
 
 import (
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"net/http"
 )
 
-type appGenTarget struct {
-	Id        string
-	ShortDesc string
-	Desc      string
-	Tags      []string
+type AppStringArray []string
+
+type AppGenDependency struct {
+	Name      string `yaml:"name"`
+	URL       string `yaml:"url"`
+	Copyright string `yaml:"copyright"`
+	License   string `yaml:"license"`
+	Info      string `yaml:"info"`
+}
+type AppGenDependencyArray []AppGenDependency
+
+type AppGenTarget struct {
+	Id           string                `yaml:"id"`
+	Image        string                `yaml:"image"`
+	ShortDesc    string                `yaml:"shortdesc"`
+	Desc         string                `yaml:"desc"`
+	Tags         AppStringArray        `yaml:"tags"`
+	Dependencies AppGenDependencyArray `yaml:"dependencies"`
+}
+
+type AppGenTargetArray []AppGenTarget
+
+type AppGenTargets struct {
+	Targets AppGenTargetArray `yaml:"targets"`
 }
 
 type appGenParamsData struct {
 	PageData
 	NumGenerators int
-	AppGenTargets []appGenTarget
+	AppGenTargets *AppGenTargets
+}
+
+func readGeneratorsConfig() (*AppGenTargets, error) {
+	b, err := ioutil.ReadFile(ServerConfig.Paths.GeneratorsDataPath)
+	if err != nil {
+		return nil, err
+	}
+
+	var t = &AppGenTargets{}
+	if err := yaml.Unmarshal(b, t); err != nil {
+		Error.Printf("Error reading generators config file. Check YAML: %s", err)
+		return t, err
+	}
+
+	Debug.Printf("targets=%s\n", spew.Sdump(t))
+	return t, nil
 }
 
 func AppGenParamsHandleGet(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
-		http.Redirect(w,req,"/", 302)
+		http.Redirect(w, req, "/", 302)
 		return
 	}
-
 
 	vars := mux.Vars(req)
 	Verbose.Printf("Vars: %#v\n", vars)
 
-	// TODO: This from config file
-	var t = make([]appGenTarget, 3)
-	t[0] = appGenTarget{
-		Id:        "1",
-		ShortDesc: "Creates a HTTP Rest API using JSON, for the Arduino Frameworks and Ethernet Adapters",
-		Desc:      "",
-		Tags:      []string{"framework:arduino", "proto:http", "app:json", "conn:ethernet"},
-	}
-	t[1] = appGenTarget{
-		Id:        "2",
-		ShortDesc: "Creates a HTTP Rest API using JSON, for the ESP8266 Arduino Frameworks",
-		Desc:      "",
-		Tags:      []string{"framework:arduino", "proto:http", "app:json", "conn:wifi", "mcu:esp8266"},
-	}
-	t[2] = appGenTarget{
-		Id:        "3",
-		ShortDesc: "Creates a HTTP Rest API using MessagePack, for ARM MBed OS 5 compatible stuff, with WiFi",
-		Desc:      "",
-		Tags:      []string{"framework:ARM Mbed", "proto:http", "app:messagepack", "conn:wifi"},
-	}
+	t, err := readGeneratorsConfig()
 
+	if err != nil {
+		t = &AppGenTargets{}
+	}
 	var data = &appGenParamsData{
 		PageData: PageData{
 			Title: "THNGS:CONSTR - Choose Embedded Development Framework",
@@ -73,6 +94,8 @@ func AppGenParamsHandleGet(w http.ResponseWriter, req *http.Request) {
 		AppGenTargets: t,
 	}
 	data.SetFeaturesFromConfig()
+	data.InApp = true
+
 	appGenParamsServePage(w, *data)
 }
 

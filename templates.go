@@ -22,20 +22,6 @@ import (
 	"path/filepath"
 )
 
-// Generic Page Data, valid for all pages
-// template data embeds this struct
-type PageData struct {
-	Title string
-
-	BlogFeature bool
-	AppFeature bool
-}
-
-func (pd *PageData) SetFeaturesFromConfig() {
-	pd.BlogFeature = ServerConfig.Features.Blog
-	pd.AppFeature = ServerConfig.Features.App
-}
-
 // Adds a a file to the template set
 func AddTemplateByFileName(template *template.Template, fileName string) error {
 	tplBytes, err := ioutil.ReadFile(filepath.Join("./templates/", fileName))
@@ -88,7 +74,7 @@ func NewHtmlTemplateSet(name string, fileNames ...string) (*template.Template, e
 
 // Includes root template, names template set as root.
 // adds empty_script template if script template not present.
-func NewBasicHtmlTemplateSet(fileNames ...string ) (*template.Template, error) {
+func NewBasicHtmlTemplateSet(fileNames ...string) (*template.Template, error) {
 	templates := template.New("root")
 	fileName := "root.html.tpl"
 	err := AddTemplateByFileName(templates, fileName)

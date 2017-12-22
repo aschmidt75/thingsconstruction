@@ -17,28 +17,31 @@
 package main
 
 import (
-	"io/ioutil"
 	"gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
 type Config struct {
 	Http struct {
-		Port 	int	`yaml:"port"`
+		Port int `yaml:"port"`
 	}
 	Logging struct {
 		Debug   string `yaml:"debug"`
-		Verbose	string `yaml:"verbose"`
+		Verbose string `yaml:"verbose"`
 		Error   string `yaml:"error"`
 	}
 	Paths struct {
-		AssetPath		string `yaml:"assets"`
-		StaticPagesPath	string `yaml:"staticpages"`
-		MDPagesPath 	string `yaml:"mdpages"`
-		FeedbackPath    string `yaml:"feedback"`
+		AssetPath          string `yaml:"assets"`
+		StaticPagesPath    string `yaml:"staticpages"`
+		MDPagesPath        string `yaml:"mdpages"`
+		FeedbackPath       string `yaml:"feedback"`
+		GeneratorsDataPath string `yaml:"generators"`
+		DataPath           string `yaml:"data"`
 	}
 	Features struct {
-		Blog     bool `yaml:"blog"`
-		App      bool `yaml:"app"`
+		Blog    bool `yaml:"blog"`
+		App     bool `yaml:"app"`
+		Contact bool `yaml:"contact"`
 	}
 }
 

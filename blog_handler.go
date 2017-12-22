@@ -33,10 +33,10 @@ type tagChipData struct {
 }
 
 type blogPostChronoData struct {
-	Title string
-	Date  time.Time
-	Name  string
-	Tags  []string
+	Title    string
+	Date     time.Time
+	Name     string
+	Tags     []string
 	Abstract string
 }
 
@@ -59,13 +59,14 @@ type blogOverviewData struct {
 
 func BlogIndexHandler(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.Blog == false {
-		http.Redirect(w,req,"/", 302)
+		http.Redirect(w, req, "/", 302)
 		return
 	}
 
 	data := blogOverviewData{
 		PageData: PageData{
-			Title: "Blog Index",
+			Title:  "THNGS:CONSTR - Blog Index",
+			InBlog: true,
 		},
 		BlogMetaData:   Blog.MetaData,
 		TagChipData:    collectTagChipData(Blog.MetaData, nil),
@@ -77,7 +78,7 @@ func BlogIndexHandler(w http.ResponseWriter, req *http.Request) {
 
 func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.Blog == false {
-		http.Redirect(w,req,"/", 302)
+		http.Redirect(w, req, "/", 302)
 		return
 	}
 
@@ -97,7 +98,8 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 		markDown := github_flavored_markdown.Markdown(bp.Content)
 		blogServePage(w, blogContentData{
 			PageData: PageData{
-				Title: bp.MetaData.Title,
+				Title:  bp.MetaData.Title,
+				InBlog: true,
 			},
 			MetaData:       bp.MetaData,
 			BlogMetaData:   Blog.MetaData,
@@ -144,10 +146,10 @@ func collectAllPostsChrono(blog *BlogPages) []blogPostChronoData {
 	cr := make([]blogPostChronoData, 0)
 	for name, post := range blog.Pages {
 		cr = append(cr, blogPostChronoData{
-			Title: post.MetaData.Title,
-			Name:  name,
-			Date:  post.MetaData.DateTime,
-			Tags:  post.MetaData.Tags,
+			Title:    post.MetaData.Title,
+			Name:     name,
+			Date:     post.MetaData.DateTime,
+			Tags:     post.MetaData.Tags,
 			Abstract: post.MetaData.Abstract,
 		})
 	}

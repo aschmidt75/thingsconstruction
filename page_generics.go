@@ -16,25 +16,23 @@
 //
 package main
 
-import (
-	"net/http"
-)
+// Generic Page Data, valid for all pages
+// template data embeds this struct
+type PageData struct {
+	Title string
 
-func IndexHandler(w http.ResponseWriter, req *http.Request) {
-	templates, err := NewBasicHtmlTemplateSet("index.html.tpl")
-	if err != nil {
-		Error.Fatalf("Fatal error creating template set: %s\n", err)
-	}
+	BlogFeature    bool
+	AppFeature     bool
+	ContactFeature bool
 
-	data := PageData{
-		Title: "THNGS:CONSTR - Index",
-	}
-	data.SetFeaturesFromConfig()
+	InBlog    bool
+	InApp     bool
+	InContact bool
+}
 
-	err = templates.ExecuteTemplate(w, "root", data)
-	if err != nil {
-		Error.Printf("Error executing template: %s", err)
-
-		// TODO: Send error page
-	}
+func (pd *PageData) SetFeaturesFromConfig() {
+	pd.BlogFeature = ServerConfig.Features.Blog
+	pd.AppFeature = ServerConfig.Features.App
+	pd.InApp = false
+	pd.ContactFeature = ServerConfig.Features.Contact
 }

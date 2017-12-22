@@ -18,7 +18,7 @@
 //
 
 // given a name of a target tag (i.e. "framework:arduino"), this
-// function creates a new chip and places it unter nodeId
+// function creates a new chip and places it under nodeId
 // unless it already exists
 function cf_has_chip_under(target_tag, nodeId) {
     var x = document.getElementById(nodeId).childNodes;
@@ -135,7 +135,6 @@ function cf_unselect_chip(e) {
 }
 
 
-
 // returns true if all elements of arr_part are
 // also in arr_whole
 function is_array_in_array(arr_part, arr_whole) {
@@ -149,7 +148,8 @@ function is_array_in_array(arr_part, arr_whole) {
 
 // takes all chips from "selected", uses the tags
 // to look up all matching targets. Creates a <li>
-// element under cf_targets_matching
+// element under cf_targets_matching to display
+// available generators.
 function cf_lookup_matching_targets() {
     // away with the old stuff
     var cf_targets_matching = document.getElementById('cf_targets_matching');
@@ -173,6 +173,13 @@ function cf_lookup_matching_targets() {
             // match
             num_found++;
             var li = document.createElement("li");
+            var depsStr = "<ul class=\"browser-default\">"
+            for (var d = 0; d < t.deps.length; d++) {
+                var dep = t.deps[d]
+                depsStr += "<li><a target=\"tcext\" href=\""+dep.url+"\"><b>"+dep.name+"</a></b>: "+dep.copyright+" - "+dep.license+"</li>"
+            }
+            depsStr += "</ul>"
+            console.log(depsStr)
             li.innerHTML = `<div class="collapsible-header">
  <i class="material-icons">keyboard_arrow_right</i>
  ${t.shortDesc}
@@ -183,7 +190,10 @@ function cf_lookup_matching_targets() {
  </span>
 </div>
 <div class="collapsible-body">
- <span>${t.desc}</span>
+ <span>${t.desc}</span><br/>
+ <span><b>Dependencies/Library usages/License Information</b>
+${depsStr}
+</span>
 </div>`
 
             cf_targets_matching.appendChild(li);
@@ -195,8 +205,8 @@ function cf_lookup_matching_targets() {
         div.className = ""
         div.style = "padding: 1em"
         div.innerHTML = `I'm sorry, i don't have a code generator on board for the aspects you selected.
-        Do you like to have a code generator that is still missing? Please let me know on the <a class="deep-orange-text" href="/feedback">feedback</a> page
-        or right here: <form id="cff_feedback" action="/app/feedback/q" method="POST">
+        Do you like to have a code generator that is still missing? Please let us know on the <a class="deep-orange-text" href="/feedback">feedback</a> page
+        or right here: <form id="cff_feedback" action="/feedback/q" method="POST">
         <div class="row">
         <div class="input-field col s8">
         <input id="cff_feedback_what" name="cff_feedback_what" type="text" placeholder="I'm missing ...">

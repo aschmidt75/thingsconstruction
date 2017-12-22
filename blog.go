@@ -25,13 +25,13 @@ import (
 )
 
 type BlogPageMetaData struct {
-	Title    string
-	Author   string
-	Date     string
-	DateTime time.Time
-	Tags     []string
-	Abstract string
-	originalFileName	string
+	Title            string
+	Author           string
+	Date             string
+	DateTime         time.Time
+	Tags             []string
+	Abstract         string
+	originalFileName string
 }
 
 type BlogPage struct {

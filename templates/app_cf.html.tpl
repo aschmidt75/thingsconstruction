@@ -4,7 +4,8 @@
         <div class="col s12">
             <!-- cf == choose framework -->
             <div class="row">
-                <h4>Choose Code Generation Options</h4>
+                <p><br></p>
+                <h4>Choose Code Generation Module</h4>
                 <p>
                     The list below shows all available generators. You can narrow down the list of
                     generators by selecting implementation aspects from the stack below.
@@ -26,7 +27,7 @@
 
             </div>
             <div class="row">
-                <h4>Available Generators<span class="new badge grey darken-1" id="cf_targets_num_showing" data-badge-caption="">0</span></h4>
+                <h4>Available generators<span class="new badge grey darken-1" id="cf_targets_num_showing" data-badge-caption="">0</span></h4>
                 <ul class="collapsible" data-collapsible="accordion" id="cf_targets_matching">
                 </ul>
             </div>

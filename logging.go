@@ -17,12 +17,12 @@
 package main
 
 import (
+	"bufio"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"syscall"
-	"bufio"
-	"log"
 )
 
 func writerFromLoggingTargetString(in string) io.Writer {
@@ -42,18 +42,16 @@ func writerFromLoggingTargetString(in string) io.Writer {
 	return bufio.NewWriter(f)
 }
 
-
 func InitializeBasicLogging() (debug *log.Logger, verbose *log.Logger, error *log.Logger) {
-	debug = 	log.New(ioutil.Discard, "", 0)
-	verbose = 	log.New(ioutil.Discard, "", 0)
+	debug = log.New(ioutil.Discard, "", 0)
+	verbose = log.New(ioutil.Discard, "", 0)
 	error = log.New(os.Stderr, "ERROR ", log.Lshortfile)
 	return debug, verbose, error
 }
 
-
 func InitializeLogging(c *Config) (debug *log.Logger, verbose *log.Logger, error *log.Logger) {
-	debug = 	log.New(writerFromLoggingTargetString(c.Logging.Debug), "DEBUG ", log.Lshortfile)
-	verbose = 	log.New(writerFromLoggingTargetString(c.Logging.Verbose), "INFO ", 0)
-	error = 	log.New(writerFromLoggingTargetString(c.Logging.Error), "ERROR ",0)
+	debug = log.New(writerFromLoggingTargetString(c.Logging.Debug), "DEBUG ", log.Lshortfile)
+	verbose = log.New(writerFromLoggingTargetString(c.Logging.Verbose), "INFO ", 0)
+	error = log.New(writerFromLoggingTargetString(c.Logging.Error), "ERROR ", 0)
 	return debug, verbose, error
 }

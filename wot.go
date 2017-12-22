@@ -17,24 +17,42 @@
 package main
 
 import (
-	"net/http"
+	"encoding/json"
+	"io/ioutil"
+	"path/filepath"
 )
 
-func IndexHandler(w http.ResponseWriter, req *http.Request) {
-	templates, err := NewBasicHtmlTemplateSet("index.html.tpl")
+type WebThingDescription struct {
+	Name        string `json:name`
+	Type        string `json:type`
+	Description string `json:description`
+}
+
+func (self *WebThingDescription) Serialize(id string) error {
+	b, err := json.Marshal(self)
 	if err != nil {
-		Error.Fatalf("Fatal error creating template set: %s\n", err)
+		return err
 	}
 
-	data := PageData{
-		Title: "THNGS:CONSTR - Index",
-	}
-	data.SetFeaturesFromConfig()
+	fileName := filepath.Join(ServerConfig.Paths.DataPath, ""+id+".json")
 
-	err = templates.ExecuteTemplate(w, "root", data)
+	Debug.Printf("%s %s", fileName, b)
+	return ioutil.WriteFile(fileName, b, 0640)
+}
+
+func (self *WebThingDescription) Deserialize(id string) error {
+	fileName := filepath.Join(ServerConfig.Paths.DataPath, ""+id+".json")
+
+	b, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		Error.Printf("Error executing template: %s", err)
-
-		// TODO: Send error page
+		Debug.Printf("Error reading %s: %s", fileName, err)
+		return err
 	}
+
+	err = json.Unmarshal(b, self)
+	if err != nil {
+		Debug.Printf("Error parsing %s: %s", fileName, err)
+		Debug.Println(string(b))
+	}
+	return err
 }

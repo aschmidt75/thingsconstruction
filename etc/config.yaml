@@ -10,6 +10,9 @@ paths:
   staticpages: "./static-content"
   mdpages: "./md-content"
   feedback: "/tmp/"
+  generators: "./etc/generators.yaml"
+  data: "/tmp/"
 features:
   blog: true
   app: true
+  contact: true

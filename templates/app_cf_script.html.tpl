@@ -6,11 +6,25 @@
         this.desc = desc;
         this.tags = tags;
         this.selected = false;
+        this.deps = []
     };
 
+    function TargetDep(name,url,license,copyright,info) {
+        this.name = name;
+        this.url = url;
+        this.license = license;
+        this.copyright = copyright;
+        this.info = info;
+    }
+
     var targets = [];
-    {{ range .AppGenTargets }}
-    targets.push(new Target('{{.Id}}', '{{.ShortDesc}}', '{{.Desc}}', [{{ range .Tags }}'{{.}}', {{end}} ]))
+    {{ range .AppGenTargets.Targets }}
+    t = new Target('{{.Id}}', '{{.ShortDesc}}', '{{.Desc}}', [{{ range .Tags }}'{{.}}', {{end}} ])
+    {{ range .Dependencies }}
+    d = new TargetDep('{{.Name}}','{{.URL}}','{{.License}}','{{.Copyright}}','{{.Info}}')
+    t.deps.push(d)
+    {{ end }}
+    targets.push(t)
     {{ end }}
 </script>
 <script src="/js/cf.js"></script>

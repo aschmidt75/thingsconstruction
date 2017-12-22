@@ -1,0 +1,22 @@
+---
+targets:
+ - id: 1
+   shortdesc: Arduino-compatible JSON/REST-API, for use with EthernetServer
+   desc: "This generates a single .ino sketch suitable for working with the Arduino IDE. The sketch
+   will run an HTTP server, which serves the Web Of Things API. Understands JSON.
+   Setup-Code includes code to connect via an Ethernet Adapter. Will run on probably
+   most hardware that supports the Arduino Framework and an Ethernet Shield."
+   tags:
+   - framework:arduino
+   - proto:http
+   - app:json
+   - conn:ethernet
+   dependencies:
+   - name: ArduinoJSON
+     url: https://arduinojson.org/
+     copyright: Copyright © 2014-2017 Benoit BLANCHON
+     license: The MIT License
+     info: ""
+   - name: This Generator
+     url: https://github.com/aschmidt75/thingsconstruction
+     license: Generated code is under CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/

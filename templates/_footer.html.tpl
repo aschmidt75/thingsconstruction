@@ -23,10 +23,8 @@
       </div>
     </div>
   </footer>
-  <!-- The jQuery file path -->
   <script src="/js/jquery-3.2.1.min.js"></script>
   <script src="/js/jquery.form.js"></script>
-  <!-- Path of the materialize.min.js file -->
   <script src="/js/materialize.min.js"></script>
   <script src="/js/main.js"></script>
 {{ template `script` . }}

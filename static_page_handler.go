@@ -25,7 +25,7 @@ import (
 )
 
 var whiteListPages = map[string]string{
-	"about": "about.html.tpl",
+	"about":   "about.html.tpl",
 	"imprint": "imprint.html.tpl",
 }
 
@@ -67,7 +67,7 @@ func StaticPageHandler(w http.ResponseWriter, req *http.Request) {
 		tplBytes, err := ioutil.ReadFile(bp)
 		if err != nil {
 			Error.Printf("Error reading page by name %s\n", pageName)
-			ServeNotFound(w,req)
+			ServeNotFound(w, req)
 			return
 		}
 
@@ -78,7 +78,7 @@ func StaticPageHandler(w http.ResponseWriter, req *http.Request) {
 			HtmlOutput: template.HTML(tplBytes),
 		})
 	} else {
-		ServeNotFound(w,req)
+		ServeNotFound(w, req)
 	}
 
 }
