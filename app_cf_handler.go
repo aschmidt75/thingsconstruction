@@ -51,7 +51,7 @@ type AppGenTargets struct {
 }
 
 type appGenParamsData struct {
-	PageData
+	AppPageData
 	NumGenerators int
 	AppGenTargets *AppGenTargets
 }
@@ -72,14 +72,16 @@ func readGeneratorsConfig() (*AppGenTargets, error) {
 	return t, nil
 }
 
-func AppGenParamsHandleGet(w http.ResponseWriter, req *http.Request) {
+func AppChooseFrameworkHandleGet(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
 		http.Redirect(w, req, "/", 302)
 		return
 	}
 
 	vars := mux.Vars(req)
-	Verbose.Printf("Vars: %#v\n", vars)
+	id := vars["id"]
+
+	// Todo: Check id, must be valid
 
 	t, err := readGeneratorsConfig()
 
@@ -87,8 +89,11 @@ func AppGenParamsHandleGet(w http.ResponseWriter, req *http.Request) {
 		t = &AppGenTargets{}
 	}
 	var data = &appGenParamsData{
-		PageData: PageData{
-			Title: "THNGS:CONSTR - Choose Embedded Development Framework",
+		AppPageData: AppPageData{
+			PageData: PageData{
+				Title: "THNGS:CONSTR - Choose Embedded Development Framework",
+			},
+			ThingId: id,
 		},
 		NumGenerators: 1,
 		AppGenTargets: t,
@@ -99,14 +104,67 @@ func AppGenParamsHandleGet(w http.ResponseWriter, req *http.Request) {
 	appGenParamsServePage(w, *data)
 }
 
+func AppChooseFrameworkHandlePost(w http.ResponseWriter, req *http.Request) {
+	if ServerConfig.Features.App == false {
+		http.Redirect(w, req, "/", 302)
+		return
+	}
+
+	err := req.ParseForm()
+	if err != nil {
+		Debug.Printf("Error parsing create thing form: %s\n", err)
+		appCreateThingServePage(w, appEntryData{Msg: "There was an error processing your data."})
+	}
+	ctf := req.PostForm
+	Debug.Printf(spew.Sdump(ctf))
+
+	// user selected a generator.
+	// check if id is valid
+	vars := mux.Vars(req)
+	id := vars["id"]
+	cfid := ctf.Get("cfid")
+	cfs := ctf.Get("cfs")
+
+	Debug.Printf("got id=%s, cfs=%s, cfid=%s\n", id, cfs, cfid)
+	if id != cfid {
+		AppErrorServePage(w, "An error occurred while processing form data. Please try again.", id)
+		return
+	}
+
+	data := &AppPageData{
+		ThingId: id,
+	}
+	if !data.IsIdValid() {
+		AppErrorServePage(w, "An error occurred while location session data. Please try again.", id)
+		return
+	}
+	if data.Deserialize() != nil {
+		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", id)
+		return
+	}
+	Debug.Printf("id=%s, wtd=%s\n", spew.Sdump(data.wtd))
+
+	// write generator to meta data file
+	data.md = &GeneratorMetaData{
+		SelectedGeneratorId: cfs,
+	}
+	if data.Serialize() != nil {
+		AppErrorServePage(w, "An error occurred while storing session data. Please try again.", id)
+		return
+	}
+
+	// redirect to manage properties
+	http.Redirect(w, req, "/app/"+id+"/properties", 302)
+}
+
 func appGenParamsServePage(w http.ResponseWriter, data appGenParamsData) {
 	templates, err := NewBasicHtmlTemplateSet("app_cf.html.tpl", "app_cf_script.html.tpl")
 	if err != nil {
-		Error.Printf("Fatal error creating template set: %s\n", err)
+		Error.Fatalf("Fatal error creating template set: %s\n", err)
 	}
 
 	if err = templates.ExecuteTemplate(w, "root", data); err != nil {
-		Verbose.Printf("Error executing template: %s\n", err)
+		Error.Printf("Error executing template: %s\n", err)
 	}
 
 }

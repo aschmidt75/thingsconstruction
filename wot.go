@@ -19,7 +19,6 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"path/filepath"
 )
 
 type WebThingDescription struct {
@@ -28,21 +27,17 @@ type WebThingDescription struct {
 	Description string `json:description`
 }
 
-func (self *WebThingDescription) Serialize(id string) error {
+func (self *WebThingDescription) Serialize(id string, fileName string) error {
 	b, err := json.Marshal(self)
 	if err != nil {
 		return err
 	}
 
-	fileName := filepath.Join(ServerConfig.Paths.DataPath, ""+id+".json")
-
 	Debug.Printf("%s %s", fileName, b)
 	return ioutil.WriteFile(fileName, b, 0640)
 }
 
-func (self *WebThingDescription) Deserialize(id string) error {
-	fileName := filepath.Join(ServerConfig.Paths.DataPath, ""+id+".json")
-
+func (self *WebThingDescription) Deserialize(id string, fileName string) error {
 	b, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		Debug.Printf("Error reading %s: %s", fileName, err)

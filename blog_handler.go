@@ -118,7 +118,7 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 func collectTagChipData(blogMetaData *BlogMetaData, blogPageMetaData *BlogPageMetaData) []tagChipData {
 	// collect and sort all tags
 	t := make([]tagChipData, 0)
-	for tagName, _ := range blogMetaData.AllTags {
+	for tagName := range blogMetaData.AllTags {
 		bActive := false
 
 		if blogPageMetaData != nil {
@@ -165,8 +165,7 @@ func blogServePage(w http.ResponseWriter, data blogContentData) {
 
 	templates, err := NewHtmlTemplateSet("root", "blog.html.tpl", "blog_script.html.tpl")
 	if err != nil {
-		Verbose.Printf("Fatal error creating template set: %s\n", err)
-		panic(err)
+		Error.Fatalf("Fatal error creating template set: %s\n", err)
 	}
 
 	err = templates.ExecuteTemplate(w, "root", data)
@@ -181,8 +180,7 @@ func blogServeOverviewPage(w http.ResponseWriter, data blogOverviewData) {
 
 	templates, err := NewHtmlTemplateSet("root", "blog_overview.html.tpl", "blog_script.html.tpl")
 	if err != nil {
-		Verbose.Printf("Fatal error creating template set: %s\n", err)
-		panic(err)
+		Error.Fatalf("Fatal error creating template set: %s\n", err)
 	}
 
 	err = templates.ExecuteTemplate(w, "root", data)

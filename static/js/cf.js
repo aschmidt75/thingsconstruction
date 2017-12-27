@@ -184,7 +184,7 @@ function cf_lookup_matching_targets() {
  <i class="material-icons">keyboard_arrow_right</i>
  ${t.shortDesc}
  <span class="right col s1">
-  <button style="padding-left: 5px" class="deep-orange darken-3 btn-floating tooltipped waves-effect waves-light" data-tooltip="Use this generator" type="submit" name="go_${t.id}">
+  <button style="padding-left: 5px" class="deep-orange darken-3 btn-floating tooltipped waves-effect waves-light" data-tooltip="Use this generator" type="" id="go_${t.id}">
    <i class="material-icons">arrow_forward</i>
   </button>
  </span>
@@ -197,6 +197,9 @@ ${depsStr}
 </div>`
 
             cf_targets_matching.appendChild(li);
+
+            var b = document.getElementById("go_"+t.id)
+            b.addEventListener('click', cff_generator_clicked)
         }
     }
     document.getElementById('cf_targets_num_showing').innerText = ""+num_found;
@@ -268,6 +271,19 @@ function cff_feedback_submit(e) {
 
 }
 
+function cff_generator_clicked(e) {
+    e.preventDefault()
+
+    var d = document.getElementById('cf_selection_form');
+
+    var sel = document.getElementById('cf_selection');
+    sel.value = e.target.id.replace(/^go_/,"");
+
+/*    var id = document.getElementById('cf_id');
+    id.value = next_url.replace(/^.*\/app\/(.*)\/properties$/,"$1");
+*/
+    d.submit();
+}
 
 // run initially, produces an empty list if nothing is selected.
 cf_lookup_matching_targets();

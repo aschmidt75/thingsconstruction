@@ -18,24 +18,55 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
-func IndexHandler(w http.ResponseWriter, _ *http.Request) {
-	templates, err := NewBasicHtmlTemplateSet("index.html.tpl")
+type appManagePropertiesData struct {
+	AppPageData
+}
+
+func AppManagePropertiesHandleGet(w http.ResponseWriter, req *http.Request) {
+	if ServerConfig.Features.App == false {
+		http.Redirect(w, req, "/", 302)
+		return
+	}
+
+	// user selected a generator.
+	// check if id is valid
+	vars := mux.Vars(req)
+	id := vars["id"]
+
+	// read data from id
+
+	data := &appManagePropertiesData{
+		AppPageData: AppPageData{
+			PageData: PageData{
+				Title: "THNGS:CONSTR - Manage Properties",
+				InApp: true,
+			},
+			ThingId: id,
+		},
+	}
+	data.SetFeaturesFromConfig()
+
+	appManagePropertiesServePage(w, data)
+
+}
+
+func appManagePropertiesServePage(w http.ResponseWriter, data *appManagePropertiesData) {
+	templates, err := NewBasicHtmlTemplateSet("app_mp.html.tpl.tpl", "app_mp_script.html.tpl")
 	if err != nil {
 		Error.Fatalf("Fatal error creating template set: %s\n", err)
 	}
 
-	data := PageData{
-		Title: "THNGS:CONSTR - Index",
-	}
-	data.SetFeaturesFromConfig()
+	Verbose.Printf("appManagePropertiesServePage: %#v\n", data)
 
 	err = templates.ExecuteTemplate(w, "root", data)
 	if err != nil {
-		Error.Printf("Error executing template: %s", err)
+		Error.Printf("Error executing template: %s\n", err)
 		w.WriteHeader(500)
 		fmt.Fprint(w, "There was an internal error.")
 	}
+
 }

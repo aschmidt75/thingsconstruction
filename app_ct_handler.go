@@ -24,6 +24,7 @@ package main
 // to the next step of adding properties etc. to the Thing Description.
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/satori/go.uuid"
 	"net/http"
@@ -31,7 +32,7 @@ import (
 )
 
 type appEntryData struct {
-	PageData
+	AppPageData
 	Msg     string
 	CtfName string
 	CtfDesc string
@@ -44,22 +45,27 @@ func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	data := &appEntryData{}
+	data := &appEntryData{
+		AppPageData: AppPageData{
+			PageData: PageData{
+				Title: "THNGS:CONSTR - Create Thing Description",
+			},
+		},
+	}
 	data.SetFeaturesFromConfig()
 	data.InApp = true
 
 	vars := mux.Vars(req)
-	id := vars["id"]
-	if id != "" {
-		Debug.Printf("Loading data for id=%s\n", id)
-		wtd := WebThingDescription{}
+	data.AppPageData.ThingId = vars["id"]
+	if data.AppPageData.ThingId != "" {
+		Debug.Printf("Loading data for id=%s\n", data.AppPageData.ThingId)
 
-		if err := wtd.Deserialize(id); err != nil {
+		if err := data.Deserialize(); err != nil {
 			Error.Printf("Unable to load data: %s\n", err)
 		} else {
-			data.CtfName = wtd.Name
-			data.CtfDesc = wtd.Description
-			data.CtfType = wtd.Type
+			data.CtfName = data.AppPageData.wtd.Name
+			data.CtfDesc = data.AppPageData.wtd.Description
+			data.CtfType = data.AppPageData.wtd.Type
 		}
 	}
 
@@ -80,9 +86,11 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 	ctf := req.PostForm
 
 	data := &appEntryData{
-		PageData: PageData{
-			Title: "THNGS:CONSTR - Create new Thing Description",
-			InApp: true,
+		AppPageData: AppPageData{
+			PageData: PageData{
+				Title: "THNGS:CONSTR - Create new Thing Description",
+				InApp: true,
+			},
 		},
 		CtfName: ctf.Get("ctf_name"),
 		CtfDesc: strings.TrimSpace(ctf.Get("ctf_desc")),
@@ -102,35 +110,35 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 	} else {
 		// redirect to next steps
 		http.Redirect(w, req, "/app/"+id+"/framework", http.StatusFound)
-		appCreateThingServePage(w, *data)
+		//appCreateThingServePage(w, *data)
 
 	}
 }
 
 // creates a new Thing Description json, puts basic data in it,
-// returns unique id
+// returns unique thing id
 func appEntryCreateThing(data *appEntryData) (string, error) {
 
-	id := uuid.NewV4().String()
+	data.AppPageData.ThingId = uuid.NewV4().String()
 
-	wtd := WebThingDescription{
+	data.AppPageData.wtd = &WebThingDescription{
 		Name:        data.CtfName,
 		Description: data.CtfDesc,
 		Type:        data.CtfType,
 	}
 
-	err := wtd.Serialize(id)
+	err := data.AppPageData.Serialize()
 	if err != nil {
 		return "", err
 	}
 
-	return id, nil
+	return data.AppPageData.ThingId, nil
 }
 
 func appCreateThingServePage(w http.ResponseWriter, data appEntryData) {
 	templates, err := NewBasicHtmlTemplateSet("app_ct.html.tpl", "app_ct_script.html.tpl")
 	if err != nil {
-		Verbose.Printf("Fatal error creating template set: %s\n", err)
+		Error.Fatalf("Fatal error creating template set: %s\n", err)
 		panic(err)
 	}
 
@@ -138,7 +146,9 @@ func appCreateThingServePage(w http.ResponseWriter, data appEntryData) {
 
 	err = templates.ExecuteTemplate(w, "root", data)
 	if err != nil {
-		Verbose.Printf("Error executing template: %s\n", err)
+		Error.Printf("Error executing template: %s\n", err)
+		w.WriteHeader(500)
+		fmt.Fprint(w, "There was an internal error.")
 	}
 
 }

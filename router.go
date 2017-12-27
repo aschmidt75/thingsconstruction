@@ -42,7 +42,9 @@ var routes = Routes{
 	Route{"AppCreateThing", "GET", "/app", AppCreateThingHandleGet},
 	Route{"AppCreateThing", "GET", "/app/{id}", AppCreateThingHandleGet},
 	Route{"AppCreateThing", "POST", "/app", AppCreateThingHandlePost},
-	Route{"AppChooseFramework", "GET", "/app/{id}/framework", AppGenParamsHandleGet},
+	Route{"AppChooseFramework", "GET", "/app/{id}/framework", AppChooseFrameworkHandleGet},
+	Route{"AppChooseFramework", "POST", "/app/{id}/framework", AppChooseFrameworkHandlePost},
+	Route{"AppManageProperties", "GET", "/app/{id}/properties", AppManagePropertiesHandleGet},
 	Route{"Feedback", "GET", "/feedback", FeedbackHandleGet},
 	Route{"Feedback", "POST", "/feedback", FeedbackHandlePost},
 	Route{"FeedbackQuick", "POST", "/feedback/q", FeedbackQuickHandlePost},
@@ -80,7 +82,7 @@ func NewRouter() *mux.Router {
 	return router
 }
 
-func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+func notFoundHandler(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(404)
 	fmt.Fprint(w, "The page you're looking for has not been found.")
 }
@@ -123,7 +125,7 @@ func addNoCacheHeaders(inner http.Handler) http.Handler {
 
 func filterTooBigPayloads(inner http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// TODO!
+		r.Body = http.MaxBytesReader(w, r.Body, 4096)
 		inner.ServeHTTP(w, r)
 	})
 }

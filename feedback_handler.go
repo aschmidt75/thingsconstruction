@@ -27,6 +27,7 @@ import (
 )
 
 func FeedbackQuickHandlePost(w http.ResponseWriter, req *http.Request) {
+	req.Body = http.MaxBytesReader(w, req.Body, 1024)
 	err := req.ParseForm()
 	if err != nil {
 		Debug.Printf("Error parsing feedback form: %s\n", err)
@@ -59,6 +60,8 @@ func FeedbackQuickHandlePost(w http.ResponseWriter, req *http.Request) {
 }
 
 func FeedbackHandlePost(w http.ResponseWriter, req *http.Request) {
+	req.Body = http.MaxBytesReader(w, req.Body, 1024)
+
 	if ServerConfig.Features.Contact == false {
 		http.Redirect(w, req, "/", 302)
 		return
@@ -115,22 +118,23 @@ func FeedbackHandleGet(w http.ResponseWriter, req *http.Request) {
 	}
 
 	data := &appEntryData{
-		PageData: PageData{
-			Title:     "THNGS:CONSTR - Your feedback",
-			InContact: true,
+		AppPageData: AppPageData{
+			PageData: PageData{
+				Title:     "THNGS:CONSTR - Your feedback",
+				InContact: true,
+			},
 		},
 	}
 	data.SetFeaturesFromConfig()
 
 	templates, err := NewBasicHtmlTemplateSet("feedback.html.tpl", "feedback_script.html.tpl")
 	if err != nil {
-		Verbose.Printf("Fatal error creating template set: %s\n", err)
-		panic(err)
+		Error.Fatalf("Fatal error creating template set: %s\n", err)
 	}
 
 	err = templates.ExecuteTemplate(w, "root", data)
 	if err != nil {
-		Verbose.Printf("Error executing template: %s\n", err)
+		Error.Printf("Error executing template: %s\n", err)
 	}
 }
 

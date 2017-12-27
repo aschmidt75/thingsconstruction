@@ -31,7 +31,13 @@
                 <ul class="collapsible" data-collapsible="accordion" id="cf_targets_matching">
                 </ul>
             </div>
+            <div class="hide">
+                <form id="cf_selection_form" name="cf_selection_form" method="POST" action="">
+                    <input type="text" id="cf_selection" name="cfs">
+                    <input type="text" id="cf_id" name="cfid" value="">
+                </form>
+            </div>
         </div>
     </div>
-
+</div>
 {{end}}

@@ -54,7 +54,7 @@
         <p id="ct_form_validation_modal_reason"></p>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Got it!</a>
+        <a href="#!" class="modal-action modal-close waves-effect waves-green grey white-text btn-flat">Got it!</a>
     </div>
 </div>
 {{end}}

@@ -17,6 +17,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"html/template"
 	"io/ioutil"
@@ -34,7 +35,7 @@ type staticPageData struct {
 	HtmlOutput template.HTML
 }
 
-func ServeNotFound(w http.ResponseWriter, req *http.Request) {
+func ServeNotFound(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(404)
 
 	bp := filepath.Join(ServerConfig.Paths.StaticPagesPath, "notfound.html.tpl")
@@ -94,8 +95,7 @@ func initializeTemplates() {
 		var err error
 		StaticPagesTemplates, err = NewBasicHtmlTemplateSet("staticpage.html.tpl", "staticpage_script.html.tpl")
 		if err != nil {
-			Error.Printf("Fatal error creating template set: %s\n", err)
-			panic(err)
+			Error.Fatalf("Fatal error creating template set: %s\n", err)
 		}
 	}
 }
@@ -107,6 +107,8 @@ func staticPagesServePage(w http.ResponseWriter, data staticPageData) {
 	err := StaticPagesTemplates.ExecuteTemplate(w, "root", data)
 	if err != nil {
 		Error.Printf("Error executing template: %s\n", err)
+		w.WriteHeader(500)
+		fmt.Fprint(w, "There was an internal error.")
 	}
 
 }
