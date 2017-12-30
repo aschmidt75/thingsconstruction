@@ -28,7 +28,7 @@ func IndexHandler(w http.ResponseWriter, _ *http.Request) {
 	}
 
 	data := PageData{
-		Title: "THNGS:CONSTR - Index",
+		Title: "Index",
 	}
 	data.SetFeaturesFromConfig()
 

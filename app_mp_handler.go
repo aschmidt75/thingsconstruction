@@ -24,6 +24,8 @@ import (
 
 type appManagePropertiesData struct {
 	AppPageData
+	Msg string
+
 }
 
 func AppManagePropertiesHandleGet(w http.ResponseWriter, req *http.Request) {
@@ -42,7 +44,7 @@ func AppManagePropertiesHandleGet(w http.ResponseWriter, req *http.Request) {
 	data := &appManagePropertiesData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title: "THNGS:CONSTR - Manage Properties",
+				Title: "Manage Properties",
 				InApp: true,
 			},
 			ThingId: id,
@@ -55,7 +57,7 @@ func AppManagePropertiesHandleGet(w http.ResponseWriter, req *http.Request) {
 }
 
 func appManagePropertiesServePage(w http.ResponseWriter, data *appManagePropertiesData) {
-	templates, err := NewBasicHtmlTemplateSet("app_mp.html.tpl.tpl", "app_mp_script.html.tpl")
+	templates, err := NewBasicHtmlTemplateSet("app_mp.html.tpl", "app_mp_script.html.tpl")
 	if err != nil {
 		Error.Fatalf("Fatal error creating template set: %s\n", err)
 	}

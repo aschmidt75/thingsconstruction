@@ -120,7 +120,7 @@ func AppErrorServePage(w http.ResponseWriter, message string, id string) {
 	data := &AppErrorPageData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title: "THNGS:CONSTR - Error",
+				Title: "Error",
 			},
 			ThingId: id,
 		},

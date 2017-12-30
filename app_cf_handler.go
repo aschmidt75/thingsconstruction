@@ -42,6 +42,7 @@ type AppGenTarget struct {
 	Desc         string                `yaml:"desc"`
 	Tags         AppStringArray        `yaml:"tags"`
 	Dependencies AppGenDependencyArray `yaml:"dependencies"`
+	CodeGenInfo  string				   `yaml:"codegeninfo"`
 }
 
 type AppGenTargetArray []AppGenTarget
@@ -91,7 +92,7 @@ func AppChooseFrameworkHandleGet(w http.ResponseWriter, req *http.Request) {
 	var data = &appGenParamsData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title: "THNGS:CONSTR - Choose Embedded Development Framework",
+				Title: "Choose Embedded Development Framework",
 			},
 			ThingId: id,
 		},

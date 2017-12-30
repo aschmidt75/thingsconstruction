@@ -48,7 +48,7 @@ func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
 	data := &appEntryData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title: "THNGS:CONSTR - Create Thing Description",
+				Title: "Create Thing Description",
 			},
 		},
 	}
@@ -61,7 +61,7 @@ func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
 		Debug.Printf("Loading data for id=%s\n", data.AppPageData.ThingId)
 
 		if err := data.Deserialize(); err != nil {
-			Error.Printf("Unable to load data: %s\n", err)
+			Error.Printf("Unable to load data, err=%s\n", err)
 		} else {
 			data.CtfName = data.AppPageData.wtd.Name
 			data.CtfDesc = data.AppPageData.wtd.Description
@@ -88,7 +88,7 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 	data := &appEntryData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title: "THNGS:CONSTR - Create new Thing Description",
+				Title: "Create new Thing Description",
 				InApp: true,
 			},
 		},

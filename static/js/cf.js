@@ -191,7 +191,9 @@ function cf_lookup_matching_targets() {
 </div>
 <div class="collapsible-body">
  <span>${t.desc}</span><br/>
- <span><b>Dependencies/Library usages/License Information</b>
+ <span><b>License Information: </b>
+${t.codegeninfo}</span><br/>
+ <span><b>Dependencies/Library usages</b>
 ${depsStr}
 </span>
 </div>`

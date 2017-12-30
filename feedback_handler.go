@@ -120,7 +120,7 @@ func FeedbackHandleGet(w http.ResponseWriter, req *http.Request) {
 	data := &appEntryData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title:     "THNGS:CONSTR - Your feedback",
+				Title:     "Your feedback",
 				InContact: true,
 			},
 		},

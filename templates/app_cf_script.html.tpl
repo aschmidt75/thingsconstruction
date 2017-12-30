@@ -1,12 +1,13 @@
 {{define `script`}}
 <script>
-    function Target(id,shortDesc,desc,tags) {
+    function Target(id,shortDesc,desc,tags,codegeninfo) {
         this.id = id;
         this.shortDesc = shortDesc;
         this.desc = desc;
         this.tags = tags;
         this.selected = false;
         this.deps = []
+        this.codegeninfo = codegeninfo
     }
 
     function TargetDep(name,url,license,copyright,info) {
@@ -19,7 +20,7 @@
 
     var targets = [];
     {{ range .AppGenTargets.Targets }}
-    t = new Target('{{.Id}}', '{{.ShortDesc}}', '{{.Desc}}', [{{ range .Tags }}'{{.}}', {{end}} ]);
+    t = new Target('{{.Id}}', '{{.ShortDesc}}', '{{.Desc}}', [{{ range .Tags }}'{{.}}', {{end}} ], '{{ .CodeGenInfo}}');
     {{ range .Dependencies }}
     d = new TargetDep('{{.Name}}','{{.URL}}','{{.License}}','{{.Copyright}}','{{.Info}}');
     t.deps.push(d);

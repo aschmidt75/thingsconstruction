@@ -65,7 +65,7 @@ func BlogIndexHandler(w http.ResponseWriter, req *http.Request) {
 
 	data := blogOverviewData{
 		PageData: PageData{
-			Title:  "THNGS:CONSTR - Blog Index",
+			Title:  "Blog Index",
 			InBlog: true,
 		},
 		BlogMetaData:   Blog.MetaData,
