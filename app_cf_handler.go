@@ -139,17 +139,21 @@ func AppChooseFrameworkHandlePost(w http.ResponseWriter, req *http.Request) {
 		AppErrorServePage(w, "An error occurred while location session data. Please try again.", id)
 		return
 	}
-	if data.Deserialize() != nil {
+	if err := data.Deserialize(); err != nil {
+		Error.Println(err)
+
 		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", id)
 		return
 	}
-	Debug.Printf("id=%s, wtd=%s\n", spew.Sdump(data.wtd))
+	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
 	// write generator to meta data file
 	data.md = &GeneratorMetaData{
 		SelectedGeneratorId: cfs,
 	}
-	if data.Serialize() != nil {
+	if err := data.Serialize(); err != nil {
+		Error.Println(err)
+
 		AppErrorServePage(w, "An error occurred while storing session data. Please try again.", id)
 		return
 	}

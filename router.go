@@ -45,6 +45,8 @@ var routes = Routes{
 	Route{"AppChooseFramework", "GET", "/app/{id}/framework", AppChooseFrameworkHandleGet},
 	Route{"AppChooseFramework", "POST", "/app/{id}/framework", AppChooseFrameworkHandlePost},
 	Route{"AppManageProperties", "GET", "/app/{id}/properties", AppManagePropertiesHandleGet},
+	Route{"AppManageProperties", "GET", "/app/{id}/properties/data", AppManagePropertiesDataHandleGet},
+	Route{"AppManageProperties", "POST", "/app/{id}/properties", AppManagePropertiesHandlePost},
 	Route{"Feedback", "GET", "/feedback", FeedbackHandleGet},
 	Route{"Feedback", "POST", "/feedback", FeedbackHandlePost},
 	Route{"FeedbackQuick", "POST", "/feedback/q", FeedbackQuickHandlePost},

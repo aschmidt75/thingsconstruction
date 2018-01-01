@@ -64,7 +64,7 @@ func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
 			Error.Printf("Unable to load data, err=%s\n", err)
 		} else {
 			data.CtfName = data.AppPageData.wtd.Name
-			data.CtfDesc = data.AppPageData.wtd.Description
+			data.CtfDesc = *data.AppPageData.wtd.Description
 			data.CtfType = data.AppPageData.wtd.Type
 		}
 	}
@@ -123,9 +123,10 @@ func appEntryCreateThing(data *appEntryData) (string, error) {
 
 	data.AppPageData.wtd = &WebThingDescription{
 		Name:        data.CtfName,
-		Description: data.CtfDesc,
+		Description: new(string),
 		Type:        data.CtfType,
 	}
+	*data.AppPageData.wtd.Description = data.CtfDesc
 
 	err := data.AppPageData.Serialize()
 	if err != nil {

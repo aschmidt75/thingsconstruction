@@ -23,10 +23,12 @@
                     </div>
                     <div>
                         <p>
-                        <form id="mp">
+                        <form id="mpf" method="post" action="/app/{{.ThingId}}/properties">
                             <ul id="mp_list" class="collection">
                             </ul>
-                        </form>
+                            <input type="text" class="hide" id="mpf_id" name="mpfid" value="{{.ThingId}}">
+
+                    </form>
                         </p>
                     </div>
                     <div style="padding-bottom: 4em">
@@ -35,11 +37,13 @@
                         </button>
                     </div>
                 </div>
-            </div>
-            <div class="row section scrollspy" id="details_next_row" >
-                <div class="col">
-                    <button id="details_next" class="btn btn-large deep-orange tooltipped" data-delay="100" data-tooltip="Save changes, go to next step">Next <i class="material-icons">navigate_next</i>
-                    </button>
+                <div class="row section scrollspy" id="details_next_row" >
+                    <div class="col s6 offset-s6">
+                        <button id="details_next" class="btn-large deep-orange tooltipped right-align" data-delay="100" data-tooltip="Save changes, go to next step">
+                            Next step
+                            <i class="material-icons right">navigate_next</i>
+                        </button>
+                    </div>
                 </div>
             </div>
 

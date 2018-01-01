@@ -12,7 +12,6 @@ $('#mp_listitem_validation_modal').modal({
         endingTop: '10%', // Ending top style attribute
     }
 );
-$('#mp_listitem_validation_modal').modal();
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -22,12 +21,8 @@ String.prototype.replaceAll = function(search, replacement) {
 // connect add(+) button of properties list to mp_list_add
 document.getElementById('mp_add_btn').addEventListener('click', mp_list_add);
 
-// add content of tpl_mpl_list_item to mp_list.
-// Open "edit" part, connect buttons
-function mp_list_add(e) {
-    console.log(e)
-    e.preventDefault();
 
+function mp_list_add_existing(obj) {
     // add a new row to the ul #mp_list
     var mp_list = document.getElementById('mp_list');
 
@@ -44,7 +39,123 @@ function mp_list_add(e) {
     mp_list_item.className = "collection-item row";
     // template contains ## for each place where new id shall fit in
     var tplhtml = document.getElementById('tlp_mpl_list_item').innerHTML;
-    console.log(tplhtml)
+//    console.log(tplhtml)
+    mp_list_item.innerHTML = tplhtml
+        .replaceAll("##", ''+(last_id+1));
+    mp_list.appendChild(mp_list_item);
+
+    // activate dynamic type elements within
+    $(document).ready(function(){
+        $('ul.tabs').tabs();
+    });
+    $(document).ready(function() {
+        $('select').material_select();
+    });
+
+    // attach buttons to handlers
+    var btn_edit = document.getElementById('mp_listitem_'+(last_id+1)+'_btns_edit');
+    if ( obj == null) {
+        // no content yet, directly go to edit mode
+        mp_list_click_edit_showHide(btn_edit);
+        }
+    btn_edit.addEventListener('click', mp_list_click_edit);
+
+    var tab_item;
+    tab_item = document.getElementById('mp_listitem_'+(last_id+1)+'_type_bool_click');
+    tab_item.addEventListener('click', mp_listitem_typetab_click)
+    tab_item = document.getElementById('mp_listitem_'+(last_id+1)+'_type_number_click');
+    tab_item.addEventListener('click', mp_listitem_typetab_click)
+    tab_item = document.getElementById('mp_listitem_'+(last_id+1)+'_type_str_click');
+    tab_item.addEventListener('click', mp_listitem_typetab_click)
+
+    document.getElementById('mp_listitem_'+(last_id+1)+'_btns_delete').addEventListener('click', mp_list_click_delete);
+
+    if ( obj != null) {
+        console.log("set data from obj");
+        console.log(obj)
+
+        document.getElementById('mp_listitem_'+(last_id+1)+'_name').innerHTML = obj.Name;
+        document.getElementById('mp_listitem_'+(last_id+1)+'_edit_name').value = obj.Name;
+        document.getElementById('mp_listitem_'+(last_id+1)+'_edit_desc').value = obj.Description;
+
+        var tabBool = document.getElementById('mp_listitem_'+(last_id+1)+'_type_bool');
+        var tabNumber = document.getElementById('mp_listitem_'+(last_id+1)+'_type_number');
+        var tabString = document.getElementById('mp_listitem_'+(last_id+1)+'_type_str');
+        tabBool.className = "col"
+        tabNumber.className = "col"
+        tabString.className = "col"
+        var typeStr = obj.Type;
+        var typeStrForm;
+        if (obj.Type == "Bool") {
+            tabBool.className = "col active"
+            typeStrForm = "b";
+        }
+        if (obj.Type == "Float") {
+            tabNumber.className = "col active"
+            typeStrForm = "f";
+            if (obj.Min != undefined) {
+                document.getElementById('mp_listitem_'+(last_id+1)+'_type_number_min').value = obj.Min;
+                typeStrForm += ";"+obj.Min;
+            }
+            if (obj.Max != undefined) {
+                document.getElementById('mp_listitem_'+(last_id+1)+'_type_number_max').value = obj.Max;
+                typeStrForm += ";"+obj.Max;
+            }
+        }
+        if (obj.Type == "Integer") {
+            tabNumber.className = "col active"
+            typeStrForm = "i";
+            if (obj.Min != undefined) {
+                document.getElementById('mp_listitem_'+(last_id+1)+'_type_number_min').value = obj.Min;
+                typeStrForm += ";"+obj.Min;
+            }
+            if (obj.Max != undefined) {
+                document.getElementById('mp_listitem_'+(last_id+1)+'_type_number_max').value = obj.Max;
+                typeStrForm += ";"+obj.Max;
+            }
+        }
+        if (obj.Type == "String") {
+            tabString.className = "col active"
+            typeStrForm = "s";
+            if (obj.MaxLength != undefined) {
+                document.getElementById('mp_listitem_'+(last_id+1)+'_type_str_maxlength').value = obj.MaxLength;
+                typeStrForm += ";"+obj.MaxLength;
+            }
+        }
+
+        console.log(tabBool)
+        document.getElementById('mp_listitem_'+(last_id+1)+'_details').innerHTML = '<p>'+typeStr+'<br/><i>'+obj.Description+'</i></p>'+
+            '<input type=\"text\" name=\"mp_listitem_'+(last_id+1)+'_val\" class=\"hide\" value=\"'+obj.Name+';'+typeStrForm+'\">'+
+            '<input type=\"text\" name=\"mp_listitem_'+(last_id+1)+'_desc\" class=\"hide\" value=\"'+obj.Description+'\">';
+
+    }
+    //Materialize.updateTextFields();
+    mp_list_update_count_in_toc();
+
+
+}
+
+// add content of tpl_mpl_list_item to mp_list.
+// Open "edit" part, connect buttons
+function mp_list_add(e) {
+    e.preventDefault();
+    // add a new row to the ul #mp_list
+    var mp_list = document.getElementById('mp_list');
+
+    // extract the id of the last item in the list. The new div gets id+1
+    var last = mp_list.lastElementChild;
+    var last_id = 0;
+    if ( last != null) {
+        var last_ids = last.id.split('_');
+        last_id = parseInt(last_ids[last_ids.length-1]);
+    }
+
+    var mp_list_item = document.createElement('li');
+    mp_list_item.id = 'mp_listitem_'+(last_id+1);
+    mp_list_item.className = "collection-item row";
+    // template contains ## for each place where new id shall fit in
+    var tplhtml = document.getElementById('tlp_mpl_list_item').innerHTML;
+//    console.log(tplhtml)
     mp_list_item.innerHTML = tplhtml
         .replaceAll("##", ''+(last_id+1));
     mp_list.appendChild(mp_list_item);
@@ -73,7 +184,9 @@ function mp_list_add(e) {
     document.getElementById('mp_listitem_'+(last_id+1)+'_btns_delete').addEventListener('click', mp_list_click_delete);
 
     mp_list_update_count_in_toc();
+
     Materialize.updateTextFields();
+
 }
 
 function mp_listitem_typetab_click(e) {
@@ -239,9 +352,13 @@ function mp_list_click_edit_showHide(t) {
         g = document.getElementById(''+row.id+"_edit_desc");
         // pull out type
         typeStr = "n/a"
+        typeStrForm = ""
+        // look what tab is active, this determines the type. extract data for
+        // both presentation and form.
         te = document.getElementById(''+row.id+"_type_bool");
         if ( te != null && te.className == "col active") {
             typeStr = "Boolean"
+            typeStrForm = "b"
         }
         te = document.getElementById(''+row.id+"_type_number");
         if ( te != null && te.className == "col active") {
@@ -249,25 +366,32 @@ function mp_list_click_edit_showHide(t) {
             typeStr = "Number"
             if (k.selectedIndex == 0) {
                 typeStr = "Number: Integer"
+                typeStrForm = "i"
             }
             if (k.selectedIndex == 1) {
                 typeStr = "Number: Float"
+                typeStrForm = "f"
             }
             var i = document.getElementById(''+row.id+"_type_number_min");
             var j = document.getElementById(''+row.id+"_type_number_max");
             if ( i != "" || j != "") {
                 typeStr = typeStr + "["+i.value+".."+j.value+"]";
+                typeStrForm = typeStrForm + ";"+i.value+";"+j.value;
             }
         }
         te = document.getElementById(''+row.id+"_type_str");
         if ( te != null && te.className == "col active") {
             typeStr = "String"
+            typeStrForm = "s"
             var i = document.getElementById(''+row.id+"_type_str_maxlength");
             if ( i != null && i.value != "") {
                 typeStr = typeStr + "["+i.value+"]";
+                typeStrForm = "s;"+i.value;
             }
         }
-        e.innerHTML = '<p>'+typeStr+'<br/><i>'+g.value+'</i></p>';
+        e.innerHTML = '<p>'+typeStr+'<br/><i>'+g.value+'</i></p>'+
+            '<input type=\"text\" name=\"'+row.id+'_val\" class=\"hide\" value=\"'+f.value+';'+typeStrForm+'\">'+
+            '<input type=\"text\" name=\"'+row.id+'_desc\" class=\"hide\" value=\"'+g.value+'\">';
 
         // hide "edit" part
         var showPart = document.getElementById(''+row.id+"_show");
@@ -298,11 +422,12 @@ function mp_list_click_delete(e) {
 }
 
 function mp_list_update_count_in_toc() {
-    var mp_list = document.getElementById('mp_list');
+  /*  var mp_list = document.getElementById('mp_list');
     console.log("mp_list="+mp_list);
     var toc_elem = document.getElementById('mp_items_toc');
     console.log("toc_elem="+toc_elem);
     toc_elem.innerText = mp_list.children.length;
+*/
 }
 
 
@@ -338,7 +463,9 @@ function details_next(e) {
 
     if (details_ok) {
         //
-        console.log("submit TODO")
+        var frm = document.getElementById('mpf');
+        console.log(frm);
+        frm.submit();
     } else {
         document.getElementById('details_validation_modal_reason').innerHTML = errors;
         $('#details_validation_modal').modal('open');

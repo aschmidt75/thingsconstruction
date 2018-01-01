@@ -21,14 +21,34 @@ import (
 	"io/ioutil"
 )
 
+type WebThingProperty struct {
+	Name		string `json:name`
+	Type 		string `json:type`
+	MaxLength 		*int `json:maxlength,omitempty`
+	Min 			*int `json:maxlength,omitempty`
+	Max 			*int `json:maxlength,omitempty`
+	Description 	*string `json:description,omitempty`
+}
+type WebThingProperties []WebThingProperty
+
 type WebThingDescription struct {
 	Name        string `json:name`
 	Type        string `json:type`
-	Description string `json:description`
+	Description *string `json:description,omitempty`
+	Properties  *WebThingProperties `json:properties,omitempty`
 }
 
-func (self *WebThingDescription) Serialize(id string, fileName string) error {
-	b, err := json.Marshal(self)
+func (wtd *WebThingDescription) NewProperties() {
+	wtd.Properties = &WebThingProperties{}
+	*wtd.Properties = make([]WebThingProperty, 0, 10)
+}
+
+func (wtd *WebThingDescription) AppendProperty(p WebThingProperty) {
+	*wtd.Properties = append(*wtd.Properties, p)
+}
+
+func (wtd *WebThingDescription) Serialize(id string, fileName string) error {
+	b, err := json.Marshal(wtd)
 	if err != nil {
 		return err
 	}
@@ -37,14 +57,14 @@ func (self *WebThingDescription) Serialize(id string, fileName string) error {
 	return ioutil.WriteFile(fileName, b, 0640)
 }
 
-func (self *WebThingDescription) Deserialize(id string, fileName string) error {
+func (wtd *WebThingDescription) Deserialize(id string, fileName string) error {
 	b, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		Debug.Printf("Error reading %s: %s", fileName, err)
 		return err
 	}
 
-	err = json.Unmarshal(b, self)
+	err = json.Unmarshal(b, wtd)
 	if err != nil {
 		Debug.Printf("Error parsing %s: %s", fileName, err)
 		Debug.Println(string(b))
