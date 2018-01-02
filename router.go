@@ -33,23 +33,26 @@ type Route struct {
 type Routes []Route
 
 var routes = Routes{
-	Route{"FavIcon", "GET", "/favicon", faviconHandler},
-	Route{"Index", "GET", "/index.html", IndexHandler},
-	Route{"Index", "GET", "/", IndexHandler},
-	Route{"StaticPage", "GET", "/{page}.html", StaticPageHandler},
-	Route{"Blog", "GET", "/blog", BlogIndexHandler},
-	Route{"BlogPage", "GET", "/blog/{page}", MarkdownBlogHandler},
-	Route{"AppCreateThing", "GET", "/app", AppCreateThingHandleGet},
-	Route{"AppCreateThing", "GET", "/app/{id}", AppCreateThingHandleGet},
-	Route{"AppCreateThing", "POST", "/app", AppCreateThingHandlePost},
-	Route{"AppChooseFramework", "GET", "/app/{id}/framework", AppChooseFrameworkHandleGet},
-	Route{"AppChooseFramework", "POST", "/app/{id}/framework", AppChooseFrameworkHandlePost},
-	Route{"AppManageProperties", "GET", "/app/{id}/properties", AppManagePropertiesHandleGet},
-	Route{"AppManageProperties", "GET", "/app/{id}/properties/data", AppManagePropertiesDataHandleGet},
+	Route{"FavIcon", 				"GET", 	"/favicon", faviconHandler},
+	Route{"Index", 				"GET", 	"/index.html", IndexHandler},
+	Route{"Index", 				"GET", 	"/", IndexHandler},
+	Route{"StaticPage", 			"GET", 	"/{page}.html", StaticPageHandler},
+	Route{"Blog", 				"GET", 	"/blog", BlogIndexHandler},
+	Route{"BlogPage", 			"GET",	"/blog/{page}", MarkdownBlogHandler},
+	Route{"AppCreateThing", 		"GET", 	"/app", AppCreateThingHandleGet},
+	Route{"AppCreateThing", 		"GET", 	"/app/{id}", AppCreateThingHandleGet},
+	Route{"AppCreateThing", 		"POST", "/app", AppCreateThingHandlePost},
+	Route{"AppChooseFramework", 	"GET", 	"/app/{id}/framework", AppChooseFrameworkHandleGet},
+	Route{"AppChooseFramework", 	"POST", "/app/{id}/framework", AppChooseFrameworkHandlePost},
+	Route{"AppManageProperties", "GET", 	"/app/{id}/properties", AppManagePropertiesHandleGet},
+	Route{"AppManageProperties", "GET", 	"/app/{id}/properties/data", AppManagePropertiesDataHandleGet},
 	Route{"AppManageProperties", "POST", "/app/{id}/properties", AppManagePropertiesHandlePost},
-	Route{"Feedback", "GET", "/feedback", FeedbackHandleGet},
-	Route{"Feedback", "POST", "/feedback", FeedbackHandlePost},
-	Route{"FeedbackQuick", "POST", "/feedback/q", FeedbackQuickHandlePost},
+	Route{"AppManageActions", 	"GET", 	"/app/{id}/actions", AppManageActionsHandleGet},
+	Route{"AppManageActions", 	"GET", 	"/app/{id}/actions/data", AppManageActionsDataHandleGet},
+	Route{"AppManageActions", 	"POST", "/app/{id}/actions", AppManageActionsHandlePost},
+	Route{"Feedback", 			"GET", 	"/feedback", FeedbackHandleGet},
+	Route{"Feedback", 			"POST", "/feedback", FeedbackHandlePost},
+	Route{"FeedbackQuick", 		"POST", "/feedback/q", FeedbackQuickHandlePost},
 }
 
 func NewRouter() *mux.Router {
@@ -136,3 +139,4 @@ func filterTooBigPayloads(inner http.Handler) http.Handler {
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./static/img/favicon.ico")
 }
+

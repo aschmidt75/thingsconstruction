@@ -12,6 +12,14 @@ $('#mp_listitem_validation_modal').modal({
         endingTop: '10%', // Ending top style attribute
     }
 );
+// disable enter to prevent submitting the wrong form
+$('html').bind('keypress', function(e)
+{
+    if(e.keyCode == 13)
+    {
+        return false;
+    }
+});
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -86,7 +94,7 @@ function mp_list_add_existing(obj) {
         tabString.className = "col"
         var typeStr = obj.Type;
         var typeStrForm;
-        if (obj.Type == "Bool") {
+        if (obj.Type == "Boolean") {
             tabBool.className = "col active"
             typeStrForm = "b";
         }
@@ -129,10 +137,6 @@ function mp_list_add_existing(obj) {
             '<input type=\"text\" name=\"mp_listitem_'+(last_id+1)+'_desc\" class=\"hide\" value=\"'+obj.Description+'\">';
 
     }
-    //Materialize.updateTextFields();
-    mp_list_update_count_in_toc();
-
-
 }
 
 // add content of tpl_mpl_list_item to mp_list.
@@ -231,7 +235,7 @@ function mp_list_is_name_in_use_except(n, edit_id) {
 }
 
 function mp_list_has_items() {
-    var p_list = document.getElementById('mp_list');
+    var mp_list = document.getElementById('mp_list');
     var mp_list_items = mp_list.children;
     return mp_list_items.length > 0
 }
@@ -471,3 +475,4 @@ function details_next(e) {
         $('#details_validation_modal').modal('open');
     }
 }
+

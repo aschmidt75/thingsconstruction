@@ -17,7 +17,7 @@
 package main
 
 //
-// mp = manage properties
+// ma = Manage Actions
 //
 
 import (
@@ -25,18 +25,16 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"github.com/davecgh/go-spew/spew"
-	"strings"
 	"encoding/json"
-	"strconv"
 	"net/url"
 )
 
-type appManagePropertiesData struct {
+type appManageActionsData struct {
 	AppPageData
 	Msg string
 }
 
-func AppManagePropertiesHandleGet(w http.ResponseWriter, req *http.Request) {
+func AppManageActionsHandleGet(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
 		http.Redirect(w, req, "/", 302)
 		return
@@ -47,11 +45,10 @@ func AppManagePropertiesHandleGet(w http.ResponseWriter, req *http.Request) {
 	id := vars["id"]
 
 	// read data from id
-
-	data := &appManagePropertiesData{
+	data := &appManageActionsData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title: "Manage Properties",
+				Title: "Manage Actions",
 				InApp: true,
 			},
 			ThingId: id,
@@ -68,14 +65,13 @@ func AppManagePropertiesHandleGet(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-
-	appManagePropertiesServePage(w, data)
+	appManageActionsServePage(w, data)
 
 }
 
-func AppManagePropertiesDataHandleGet(w http.ResponseWriter, req *http.Request) {
+func AppManageActionsDataHandleGet(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
-		http.Redirect(w, req, "/", 302)
+		w.WriteHeader(501)
 		return
 	}
 
@@ -84,10 +80,10 @@ func AppManagePropertiesDataHandleGet(w http.ResponseWriter, req *http.Request) 
 	id := vars["id"]
 
 	// read data from id
-	data := &appManagePropertiesData{
+	data := &appManageActionsData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title: "Manage Properties",
+				Title: "Manage Actions",
 				InApp: true,
 			},
 			ThingId: id,
@@ -107,7 +103,7 @@ func AppManagePropertiesDataHandleGet(w http.ResponseWriter, req *http.Request) 
 	}
 	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
-	b, err := json.Marshal(data.wtd.Properties)
+	b, err := json.Marshal(data.wtd.Actions)
 	if err != nil {
 		Error.Println(err)
 		w.WriteHeader(500)
@@ -121,9 +117,9 @@ func AppManagePropertiesDataHandleGet(w http.ResponseWriter, req *http.Request) 
 	w.Write(b)
 }
 
-func AppManagePropertiesHandlePost(w http.ResponseWriter, req *http.Request) {
+func AppManageActionsHandlePost(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
-		http.Redirect(w, req, "/", 302)
+		w.WriteHeader(501)
 		return
 	}
 
@@ -138,17 +134,17 @@ func AppManagePropertiesHandlePost(w http.ResponseWriter, req *http.Request) {
 	// check if id is valid
 	vars := mux.Vars(req)
 	id := vars["id"]
-	mpfid := mpf.Get("mpfid")
-	Debug.Printf("got id=%s, mpfid=%s\n", id, mpfid)
-	if id != mpfid {
+	mafid := mpf.Get("mafid")
+	Debug.Printf("got id=%s, mafid=%s\n", id, mafid)
+	if id != mafid {
 		AppErrorServePage(w, "An error occurred while processing form data. Please try again.", id)
 		return
 	}
 
-	data := &appManagePropertiesData{
+	data := &appManageActionsData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title: "Manage Properties",
+				Title: "Manage Actions",
 				InApp: true,
 			},
 			ThingId: id,
@@ -165,7 +161,7 @@ func AppManagePropertiesHandlePost(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	parsePropertiesFormData(data.wtd, mpf)
+	parseActionsFormData(data.wtd, mpf)
 	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
 	// save..
@@ -175,93 +171,30 @@ func AppManagePropertiesHandlePost(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	url := fmt.Sprintf("/app/%s/actions", data.ThingId)
-	http.Redirect(w, req, url, 302)
+	appManageActionsServePage(w, data)
 
 }
 
-// given the form data (mpf), this function parses all properties
-// from form and appends these to wtd
-func parsePropertiesFormData(wtd *WebThingDescription, mpf url.Values) {
-	// parse properties
-	wtd.NewProperties()
+// given the form data , this function parses all actions from it and appends these to wtd
+func parseActionsFormData(wtd *WebThingDescription, formData url.Values) {
+	// parse action
+	wtd.NewActions()
 	for idx := 1; idx < 100; idx++ {
-		keyStr := fmt.Sprintf("mp_listitem_%d_val", idx)
-		key := mpf.Get(keyStr)
+		keyStr := fmt.Sprintf("ma_listitem_%d_val", idx)
+		key := formData.Get(keyStr)
 		if key == "" {
 			break
 		}
 
-		keyArr := strings.Split(key, ";")
-		Debug.Printf("idx=%d, key=%#v\n", idx, keyArr)
-		if len(keyArr) < 2 {
-			// error, we need at least name and type.
-			Verbose.Printf("Invalid wtd property spec: %s\n", key)
-			continue
-		}
+		keyStr = fmt.Sprintf("ma_listitem_%d_desc", idx)
+		desc := formData.Get(keyStr)
 
-		keyStr = fmt.Sprintf("mp_listitem_%d_desc", idx)
-		desc := mpf.Get(keyStr)
-
-		switch keyArr[1] {
-		case "b":
-			{
-				wtd.AppendProperty(WebThingProperty{Name: keyArr[0], Type: "Boolean", Description: &desc})
-			}
-		case "s":
-			{
-				var maxLength *int = nil
-				if len(keyArr) >= 3 {
-					if x, err := strconv.Atoi(keyArr[2]); err == nil {
-						maxLength = new(int)
-						*maxLength = x
-					}
-				}
-				wtd.AppendProperty(WebThingProperty{Name: keyArr[0], Type: "String", MaxLength: maxLength, Description: &desc})
-			}
-		case "i":
-			{
-				var minVal *int = nil
-				var maxVal *int = nil
-				if len(keyArr) >= 3 {
-					if x, err := strconv.Atoi(keyArr[2]); err == nil {
-						minVal = new(int)
-						*minVal = x
-					}
-				}
-				if len(keyArr) >= 4 {
-					if x, err := strconv.Atoi(keyArr[2]); err == nil {
-						maxVal = new(int)
-						*maxVal = x
-					}
-				}
-				wtd.AppendProperty(WebThingProperty{Name: keyArr[0], Type: "Integer", Min: minVal, Max: maxVal, Description: &desc})
-			}
-		case "f":
-			{
-				var minVal *int = nil
-				var maxVal *int = nil
-				if len(keyArr) >= 3 {
-					if x, err := strconv.Atoi(keyArr[2]); err == nil {
-						minVal = new(int)
-						*minVal = x
-					}
-				}
-				if len(keyArr) >= 4 {
-					if x, err := strconv.Atoi(keyArr[2]); err == nil {
-						maxVal = new(int)
-						*maxVal = x
-					}
-				}
-				wtd.AppendProperty(WebThingProperty{Name: keyArr[0], Type: "Float", Min: minVal, Max: maxVal, Description: &desc})
-			}
-		}
-
+		wtd.AppendAction(WebThingAction{Name: key, Description: &desc})
 	}
 }
 
-func appManagePropertiesServePage(w http.ResponseWriter, data *appManagePropertiesData) {
-	templates, err := NewBasicHtmlTemplateSet("app_mp.html.tpl", "app_mp_script.html.tpl")
+func appManageActionsServePage(w http.ResponseWriter, data *appManageActionsData) {
+	templates, err := NewBasicHtmlTemplateSet("app_ma.html.tpl", "app_ma_script.html.tpl")
 	if err != nil {
 		Error.Fatalf("Fatal error creating template set: %s\n", err)
 	}

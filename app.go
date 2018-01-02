@@ -56,6 +56,7 @@ func (gmd *GeneratorMetaData) Deserialize(id string, fileName string) error {
 type AppPageData struct {
 	PageData
 	ThingId string
+	TocInfo map[string]string
 	wtd     *WebThingDescription
 	md      *GeneratorMetaData
 }
@@ -132,5 +133,5 @@ func AppErrorServePage(w http.ResponseWriter, message string, id string) {
 		w.WriteHeader(500)
 		fmt.Fprint(w, "There was an internal error.")
 	}
-
 }
+

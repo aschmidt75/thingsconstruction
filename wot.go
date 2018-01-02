@@ -31,20 +31,42 @@ type WebThingProperty struct {
 }
 type WebThingProperties []WebThingProperty
 
+type WebThingAction struct {
+	Name		string `json:name`
+	Description 	*string `json:description,omitempty`
+}
+type WebThingActions []WebThingAction
+type WebThingEvent struct {
+	Name		string `json:name`
+	Description 	*string `json:description,omitempty`
+}
+type WebThingEvents []WebThingEvent
+
 type WebThingDescription struct {
 	Name        string `json:name`
 	Type        string `json:type`
 	Description *string `json:description,omitempty`
 	Properties  *WebThingProperties `json:properties,omitempty`
+	Actions  	*WebThingActions `json:actions,omitempty`
+	Events   	*WebThingEvents `json:events,omitempty`
 }
 
 func (wtd *WebThingDescription) NewProperties() {
 	wtd.Properties = &WebThingProperties{}
-	*wtd.Properties = make([]WebThingProperty, 0, 10)
+	*wtd.Properties = make([]WebThingProperty, 0, 3)
 }
 
 func (wtd *WebThingDescription) AppendProperty(p WebThingProperty) {
 	*wtd.Properties = append(*wtd.Properties, p)
+}
+
+func (wtd *WebThingDescription) NewActions() {
+	wtd.Actions = &WebThingActions{}
+	*wtd.Actions = make([]WebThingAction, 0, 3)
+}
+
+func (wtd *WebThingDescription) AppendAction(a WebThingAction) {
+	*wtd.Actions = append(*wtd.Actions, a)
 }
 
 func (wtd *WebThingDescription) Serialize(id string, fileName string) error {
@@ -71,3 +93,4 @@ func (wtd *WebThingDescription) Deserialize(id string, fileName string) error {
 	}
 	return err
 }
+

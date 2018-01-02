@@ -7,13 +7,14 @@
         </div>
         <div class="col s12">
             <p>
-               We' appreciate your feedback on this app and the code generators for
+                We appreciate your feedback on this app and the code generators for
                 embedded code! Please let us know what you think and how we could improve
                 this service. Additionally, feel free to use this form to contact us.
             </p>
             <p>
-                We're fans of Datensparsamkeit/data minimization: Please provide personal
-                contact information only if you agree that we will process it for the purpose of contacting you.
+                We're fans of data minimization: Please provide personal
+                contact information only if you agree that we will process
+                it for the purpose of contacting you.
             </p>
             <br/>
             <form id="fbf" name="fbf" method="POST" action="/feedback">
@@ -26,7 +27,7 @@
                             <option value="support">Support for a board/framework/...</option>
                             <option value="other">Other...</option>
                         </select>
-                        <label>Select a type.</label>
+                        <label>Category</label>
                     </div>
                 </div>
                 <div class="row">
