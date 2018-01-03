@@ -69,6 +69,15 @@ func (wtd *WebThingDescription) AppendAction(a WebThingAction) {
 	*wtd.Actions = append(*wtd.Actions, a)
 }
 
+func (wtd *WebThingDescription) NewEvents() {
+	wtd.Events = &WebThingEvents{}
+	*wtd.Events = make([]WebThingEvent, 0, 3)
+}
+
+func (wtd *WebThingDescription) AppendEvent(a WebThingEvent) {
+	*wtd.Events = append(*wtd.Events, a)
+}
+
 func (wtd *WebThingDescription) Serialize(id string, fileName string) error {
 	b, err := json.Marshal(wtd)
 	if err != nil {
@@ -93,4 +102,5 @@ func (wtd *WebThingDescription) Deserialize(id string, fileName string) error {
 	}
 	return err
 }
+
 

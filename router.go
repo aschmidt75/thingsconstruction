@@ -50,6 +50,9 @@ var routes = Routes{
 	Route{"AppManageActions", 	"GET", 	"/app/{id}/actions", AppManageActionsHandleGet},
 	Route{"AppManageActions", 	"GET", 	"/app/{id}/actions/data", AppManageActionsDataHandleGet},
 	Route{"AppManageActions", 	"POST", "/app/{id}/actions", AppManageActionsHandlePost},
+	Route{"AppManageEvents", 		"GET", 	"/app/{id}/events", AppManageEventsHandleGet},
+	Route{"AppManageEvents", 		"GET", 	"/app/{id}/events/data", AppManageEventsDataHandleGet},
+	Route{"AppManageEvents", 		"POST", "/app/{id}/events", AppManageEventsHandlePost},
 	Route{"Feedback", 			"GET", 	"/feedback", FeedbackHandleGet},
 	Route{"Feedback", 			"POST", "/feedback", FeedbackHandlePost},
 	Route{"FeedbackQuick", 		"POST", "/feedback/q", FeedbackQuickHandlePost},
@@ -139,4 +142,5 @@ func filterTooBigPayloads(inner http.Handler) http.Handler {
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./static/img/favicon.ico")
 }
+
 

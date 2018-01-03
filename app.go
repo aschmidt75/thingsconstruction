@@ -61,6 +61,31 @@ type AppPageData struct {
 	md      *GeneratorMetaData
 }
 
+func (ap *AppPageData) SetTocInfo() {
+	ap.TocInfo = map[string]string{}
+
+	if ap.wtd != nil {
+		var l int
+		l = 0
+		if ap.wtd.Properties != nil {
+			l = len(*ap.wtd.Properties)
+		}
+		ap.TocInfo["num_properties"] = fmt.Sprintf("%d", l)
+
+		l = 0
+		if ap.wtd.Actions != nil {
+			l = len(*ap.wtd.Actions)
+		}
+		ap.TocInfo["num_actions"] = fmt.Sprintf("%d", l)
+
+		l = 0
+		if ap.wtd.Events != nil {
+			l = len(*ap.wtd.Events)
+		}
+		ap.TocInfo["num_events"] = fmt.Sprintf("%d", l)
+	}
+}
+
 func (ap *AppPageData) IsIdValid() bool {
 	fileName := filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId+".json")
 	if _, err := os.Stat(fileName); os.IsNotExist(err) {

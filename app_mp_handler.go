@@ -36,18 +36,8 @@ type appManagePropertiesData struct {
 	Msg string
 }
 
-func AppManagePropertiesHandleGet(w http.ResponseWriter, req *http.Request) {
-	if ServerConfig.Features.App == false {
-		http.Redirect(w, req, "/", 302)
-		return
-	}
-
-	// check if id is valid
-	vars := mux.Vars(req)
-	id := vars["id"]
-
+func appManagePropertiesNewPageData(id string) (*appManagePropertiesData) {
 	// read data from id
-
 	data := &appManagePropertiesData{
 		AppPageData: AppPageData{
 			PageData: PageData{
@@ -59,18 +49,34 @@ func AppManagePropertiesHandleGet(w http.ResponseWriter, req *http.Request) {
 	}
 	data.SetFeaturesFromConfig()
 	if !data.IsIdValid() {
-		AppErrorServePage(w, "An error occurred while location session data. Please try again.", id)
-		return
+		return nil
 	}
 	if err := data.Deserialize(); err != nil {
 		Error.Println(err)
+		return nil
+	}
+	data.SetTocInfo()
+
+	return data
+}
+
+func AppManagePropertiesHandleGet(w http.ResponseWriter, req *http.Request) {
+	if ServerConfig.Features.App == false {
+		http.Redirect(w, req, "/", 302)
+		return
+	}
+
+	// check if id is valid
+	vars := mux.Vars(req)
+	id := vars["id"]
+
+	data := appManagePropertiesNewPageData(id)
+	if data == nil {
 		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", id)
 		return
 	}
 
-
 	appManagePropertiesServePage(w, data)
-
 }
 
 func AppManagePropertiesDataHandleGet(w http.ResponseWriter, req *http.Request) {
@@ -83,26 +89,10 @@ func AppManagePropertiesDataHandleGet(w http.ResponseWriter, req *http.Request) 
 	vars := mux.Vars(req)
 	id := vars["id"]
 
-	// read data from id
-	data := &appManagePropertiesData{
-		AppPageData: AppPageData{
-			PageData: PageData{
-				Title: "Manage Properties",
-				InApp: true,
-			},
-			ThingId: id,
-		},
-	}
-	data.SetFeaturesFromConfig()
-	if !data.IsIdValid() {
+	data := appManagePropertiesNewPageData(id)
+	if data == nil {
 		w.WriteHeader(500)
-		fmt.Fprint(w, "Thing Id is not valid.")
-		return
-	}
-	if err := data.Deserialize(); err != nil {
-		Error.Println(err)
-		w.WriteHeader(500)
-		fmt.Fprint(w, "Error deserializing session data")
+		fmt.Fprint(w, "Thing Id is not valid or Error deserializing session data.")
 		return
 	}
 	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
@@ -145,22 +135,8 @@ func AppManagePropertiesHandlePost(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	data := &appManagePropertiesData{
-		AppPageData: AppPageData{
-			PageData: PageData{
-				Title: "Manage Properties",
-				InApp: true,
-			},
-			ThingId: id,
-		},
-	}
-	data.SetFeaturesFromConfig()
-	if !data.IsIdValid() {
-		AppErrorServePage(w, "An error occurred while location session data. Please try again.", id)
-		return
-	}
-	if err := data.Deserialize(); err != nil {
-		Error.Println(err)
+	data := appManagePropertiesNewPageData(id)
+	if data == nil {
 		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", id)
 		return
 	}
@@ -272,5 +248,4 @@ func appManagePropertiesServePage(w http.ResponseWriter, data *appManageProperti
 		w.WriteHeader(500)
 		fmt.Fprint(w, "There was an internal error.")
 	}
-
 }

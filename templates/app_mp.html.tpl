@@ -37,6 +37,19 @@
                         </button>
                     </div>
                 </div>
+                <div class="col s2 offset-s1 hide-on-med-and-down">
+                    <p>
+                    <ul class="section table-of-contents">
+                        <li>Create</li>
+                        <li>Framework{{ if .TocInfo.framework }}&nbsp;(<span>{{ index .TocInfo "framework" }}</span>){{end}}</li>
+                        <li><strong class="deep-orange-text">Properties</strong>&nbsp;(<span id="toc_current_info">0</span>){{end}}</li>
+                        <li>Actions{{ if .TocInfo.num_actions }}&nbsp;(<span>{{ index .TocInfo "num_actions" }}</span>){{end}}</li>
+                        <li>Events{{ if .TocInfo.num_properties }}&nbsp;(<span>{{ index .TocInfo "num_events" }})</li>
+                        <li>Generate!</li>
+                    </ul>
+                    </p>
+                </div>
+
                 <div class="row">
                     <div class="col s9">
                         <button id="details_next" class="btn-large deep-orange tooltipped right" data-delay="100" data-tooltip="Save changes, go to next step">

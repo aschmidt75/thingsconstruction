@@ -1,5 +1,5 @@
 {{define `script`}}
-<script src="/js/ma.js"></script>
+<script src="/js/me.js"></script>
 <script>
     var propertiesJson = ""
     // load properties on startup..
@@ -18,11 +18,11 @@
                 // inject empty arr
                 propertiesJson = '[]'
             }
-
             var obj = JSON.parse(propertiesJson)
+            console.log(obj)
             for (var i = 0; i < obj.length; i++) {
                 var prop = obj[i]
-                ma_list_add_existing(prop)
+                me_list_add_existing(prop)
             }
         },
     });

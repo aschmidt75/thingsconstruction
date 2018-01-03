@@ -17,7 +17,7 @@
 package main
 
 //
-// ma = Manage Actions
+// ma = Manage Events
 //
 
 import (
@@ -29,18 +29,17 @@ import (
 	"net/url"
 )
 
-type appManageActionsData struct {
+type appManageEventsData struct {
 	AppPageData
 	Msg string
 }
 
-
-func appManageActionsNewPageData(id string) (*appManageActionsData) {
+func appManageEventsNewPageData(id string) (*appManageEventsData) {
 	// read data from id
-	data := &appManageActionsData{
+	data := &appManageEventsData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title: "Manage Actions",
+				Title: "Manage Events",
 				InApp: true,
 			},
 			ThingId: id,
@@ -59,7 +58,7 @@ func appManageActionsNewPageData(id string) (*appManageActionsData) {
 	return data
 }
 
-func AppManageActionsHandleGet(w http.ResponseWriter, req *http.Request) {
+func AppManageEventsHandleGet(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
 		http.Redirect(w, req, "/", 302)
 		return
@@ -67,19 +66,16 @@ func AppManageActionsHandleGet(w http.ResponseWriter, req *http.Request) {
 
 	// check if id is valid
 	vars := mux.Vars(req)
-	id := vars["id"]
-
-	data := appManageActionsNewPageData(id)
+	data := appManageEventsNewPageData(vars["id"])
 	if data == nil {
-		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", id)
-		return
+		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", vars["id"])
 	}
 
-	appManageActionsServePage(w, data)
+	appManageEventsServePage(w, data)
 
 }
 
-func AppManageActionsDataHandleGet(w http.ResponseWriter, req *http.Request) {
+func AppManageEventsDataHandleGet(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
 		w.WriteHeader(501)
 		return
@@ -89,22 +85,22 @@ func AppManageActionsDataHandleGet(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
 
-	data := appManageActionsNewPageData(id)
+	data := appManageEventsNewPageData(id)
 	if data == nil {
 		w.WriteHeader(500)
-		fmt.Fprint(w, "Thing Id is not valid or Error deserializing session data.")
+		fmt.Fprint(w, "Error deserializing session data")
 		return
 	}
 	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
-	b, err := json.Marshal(data.wtd.Actions)
+	b, err := json.Marshal(data.wtd.Events)
 	if err != nil {
 		Error.Println(err)
 		w.WriteHeader(500)
 		fmt.Fprint(w, "Error marshaling data")
 		return
 	}
-	Debug.Printf("actions-data: %s\n", b)
+	Debug.Printf("events-data: %s\n", b)
 
 	w.WriteHeader(200)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -112,7 +108,7 @@ func AppManageActionsDataHandleGet(w http.ResponseWriter, req *http.Request) {
 	w.Write(b)
 }
 
-func AppManageActionsHandlePost(w http.ResponseWriter, req *http.Request) {
+func AppManageEventsHandlePost(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
 		http.Redirect(w, req, "/", 302)
 		return
@@ -123,23 +119,23 @@ func AppManageActionsHandlePost(w http.ResponseWriter, req *http.Request) {
 		Debug.Printf("Error parsing create thing form: %s\n", err)
 		appCreateThingServePage(w, appEntryData{Msg: "There was an error processing your data."})
 	}
-	mpf := req.PostForm
-	Debug.Printf(spew.Sdump(mpf))
+	formData := req.PostForm
+	Debug.Printf(spew.Sdump(formData))
 
 	// check if id is valid
 	vars := mux.Vars(req)
 	id := vars["id"]
-	mafid := mpf.Get("mafid")
-	Debug.Printf("got id=%s, mafid=%s\n", id, mafid)
-	if id != mafid {
+	mefid := formData.Get("mefid")
+	Debug.Printf("got id=%s, mefid=%s\n", id, mefid)
+	if id != mefid {
 		AppErrorServePage(w, "An error occurred while processing form data. Please try again.", id)
 		return
 	}
 
-	data := &appManageActionsData{
+	data := &appManageEventsData{
 		AppPageData: AppPageData{
 			PageData: PageData{
-				Title: "Manage Actions",
+				Title: "Manage Events",
 				InApp: true,
 			},
 			ThingId: id,
@@ -156,7 +152,7 @@ func AppManageActionsHandlePost(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	parseActionsFormData(data.wtd, mpf)
+	parseEventsFormData(data.wtd, formData)
 	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
 	// save..
@@ -170,26 +166,26 @@ func AppManageActionsHandlePost(w http.ResponseWriter, req *http.Request) {
 
 }
 
-// given the form data , this function parses all actions from it and appends these to wtd
-func parseActionsFormData(wtd *WebThingDescription, formData url.Values) {
-	// parse action
-	wtd.NewActions()
+// given the form data , this function parses all events from it and appends these to wtd
+func parseEventsFormData(wtd *WebThingDescription, formData url.Values) {
+	// parse Event
+	wtd.NewEvents()
 	for idx := 1; idx < 100; idx++ {
-		keyStr := fmt.Sprintf("ma_listitem_%d_val", idx)
+		keyStr := fmt.Sprintf("me_listitem_%d_val", idx)
 		key := formData.Get(keyStr)
 		if key == "" {
 			break
 		}
 
-		keyStr = fmt.Sprintf("ma_listitem_%d_desc", idx)
+		keyStr = fmt.Sprintf("me_listitem_%d_desc", idx)
 		desc := formData.Get(keyStr)
 
-		wtd.AppendAction(WebThingAction{Name: key, Description: &desc})
+		wtd.AppendEvent(WebThingEvent{Name: key, Description: &desc})
 	}
 }
 
-func appManageActionsServePage(w http.ResponseWriter, data *appManageActionsData) {
-	templates, err := NewBasicHtmlTemplateSet("app_ma.html.tpl", "app_ma_script.html.tpl")
+func appManageEventsServePage(w http.ResponseWriter, data *appManageEventsData) {
+	templates, err := NewBasicHtmlTemplateSet("app_me.html.tpl", "app_me_script.html.tpl")
 	if err != nil {
 		Error.Fatalf("Fatal error creating template set: %s\n", err)
 	}
@@ -202,4 +198,3 @@ func appManageActionsServePage(w http.ResponseWriter, data *appManageActionsData
 	}
 
 }
-
