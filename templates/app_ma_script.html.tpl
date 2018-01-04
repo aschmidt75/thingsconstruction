@@ -1,29 +1,34 @@
 {{define `script`}}
 <script src="/js/ma.js"></script>
 <script>
-    var propertiesJson = ""
-    // load properties on startup..
+    var progress = document.getElementById("progress");
+    var actionsJson = ""
+    var url = document.URL;
+    url = url.replace(/^(.*\/actions).*/, "$1/data")
+
     $.ajax({
         type: "GET",
-        url: document.URL+"/data",
+        url: url,
         async: true,
         success: function (data) {
-            propertiesJson = propertiesJson + data
+            actionsJson = actionsJson + data
         },
         error: function (data) {
             console.log(data);
+            progress.className += " hide";
         },
         complete: function() {
-            if (propertiesJson.length == 0) {
+            if (actionsJson.length == 0) {
                 // inject empty arr
-                propertiesJson = '[]'
+                actionsJson = '[]'
             }
 
-            var obj = JSON.parse(propertiesJson)
+            var obj = JSON.parse(actionsJson)
             for (var i = 0; i < obj.length; i++) {
                 var prop = obj[i]
                 ma_list_add_existing(prop)
             }
+            progress.className += " hide";
         },
     });
 

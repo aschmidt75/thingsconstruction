@@ -13,7 +13,7 @@
             <!-- ma == manage actions -->
             <div class="row" id="ma">
                 <div class="col s9">
-                    <h4>Action</h4>
+                    <h4>Actions</h4>
                     <div>
                         <p>
                             A WoT thing can have actions, such as "reset". Create them here
@@ -24,6 +24,20 @@
                     </div>
                     <div>
                         <p>
+                            <div class="preloader-wrapper small active" id="progress">
+                                <div class="spinner-layer spinner-red-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <form id="maf" method="post" action="/app/{{.ThingId}}/actions">
                                 <ul id="ma_list" class="collection">
                                 </ul>
@@ -44,7 +58,7 @@
                         <li>Create</li>
                         <li>Framework{{ if .TocInfo.framework }}&nbsp;(<span>{{ index .TocInfo "framework" }}</span>){{end}}</li>
                         <li>Properties{{ if .TocInfo.num_properties }}&nbsp;(<span>{{ index .TocInfo "num_properties" }}</span>){{end}}</li>
-                        <li><strong class="deep-orange-text">Actions</strong>&nbsp;(<span id="toc_actions_info">0</span>)</li>
+                        <li><strong class="deep-orange-text">Actions</strong>&nbsp;(<span id="toc_current_info">0</span>)</li>
                         <li>Events{{ if .TocInfo.num_events }}&nbsp;(<span>{{ index .TocInfo "num_events" }}</span>){{end}}</li>
                         <li>Generate!</li>
                     </ul>
@@ -53,12 +67,12 @@
 
                 <div class="row">
                     <div class="col s9">
-                        <button id="ma_prev" class="btn-large deep-orange tooltipped left hide" data-delay="100" data-tooltip="Discard changes, go to previous step">
-                            <i class="material-icons left">navigate_before</i>Previous step
+                        <button id="ma_prev" class="btn-large deep-orange tooltipped left" data-delay="100" data-tooltip="Discard changes, go to previous step">
+                            <i class="material-icons left">navigate_before</i>Properties
 
                         </button>
                         <button id="ma_next" class="btn-large deep-orange tooltipped right" data-delay="100" data-tooltip="Save changes, go to next step">
-                            Next step
+                            Events
                             <i class="material-icons right">navigate_next</i>
                         </button>
                     </div>

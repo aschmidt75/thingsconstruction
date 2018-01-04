@@ -51,10 +51,43 @@ type AppGenTargets struct {
 	Targets AppGenTargetArray `yaml:"targets"`
 }
 
+
 type appGenParamsData struct {
 	AppPageData
 	NumGenerators int
 	AppGenTargets *AppGenTargets
+}
+
+func appGenParamsNewPageData(id string) (*appGenParamsData) {
+
+	t, err := readGeneratorsConfig()
+	if err != nil {
+		Error.Printf("Unable to present generators. FIX CONFIG!\n")
+	}
+
+	var data = &appGenParamsData{
+		AppPageData: AppPageData{
+			PageData: PageData{
+				Title: "Choose Embedded Development Framework",
+			},
+			ThingId: id,
+		},
+		NumGenerators: 1,
+		AppGenTargets: t,
+	}
+	data.SetFeaturesFromConfig()
+	data.InApp = true
+	if !data.IsIdValid() {
+		return nil
+	}
+	if err := data.Deserialize(); err != nil {
+		Error.Println(err)
+		return nil
+	}
+
+	data.SetTocInfo()
+
+	return data
 }
 
 func readGeneratorsConfig() (*AppGenTargets, error) {
@@ -82,25 +115,7 @@ func AppChooseFrameworkHandleGet(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
 
-	// Todo: Check id, must be valid
-
-	t, err := readGeneratorsConfig()
-
-	if err != nil {
-		t = &AppGenTargets{}
-	}
-	var data = &appGenParamsData{
-		AppPageData: AppPageData{
-			PageData: PageData{
-				Title: "Choose Embedded Development Framework",
-			},
-			ThingId: id,
-		},
-		NumGenerators: 1,
-		AppGenTargets: t,
-	}
-	data.SetFeaturesFromConfig()
-	data.InApp = true
+	var data = appGenParamsNewPageData(id)
 
 	appGenParamsServePage(w, *data)
 }

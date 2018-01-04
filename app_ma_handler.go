@@ -114,14 +114,15 @@ func AppManageActionsDataHandleGet(w http.ResponseWriter, req *http.Request) {
 
 func AppManageActionsHandlePost(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
-		http.Redirect(w, req, "/", 302)
+		w.WriteHeader(http.StatusNotImplemented)
 		return
 	}
 
 	err := req.ParseForm()
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "There was an error processing your data. Please try again.")
 		Debug.Printf("Error parsing create thing form: %s\n", err)
-		appCreateThingServePage(w, appEntryData{Msg: "There was an error processing your data."})
 	}
 	mpf := req.PostForm
 	Debug.Printf(spew.Sdump(mpf))
@@ -132,7 +133,8 @@ func AppManageActionsHandlePost(w http.ResponseWriter, req *http.Request) {
 	mafid := mpf.Get("mafid")
 	Debug.Printf("got id=%s, mafid=%s\n", id, mafid)
 	if id != mafid {
-		AppErrorServePage(w, "An error occurred while processing form data. Please try again.", id)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "An error occurred while processing form data. Please try again.")
 		return
 	}
 
@@ -147,12 +149,14 @@ func AppManageActionsHandlePost(w http.ResponseWriter, req *http.Request) {
 	}
 	data.SetFeaturesFromConfig()
 	if !data.IsIdValid() {
-		AppErrorServePage(w, "An error occurred while location session data. Please try again.", id)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "An error occurred while location session data. Please try again.")
 		return
 	}
 	if err := data.Deserialize(); err != nil {
 		Error.Println(err)
-		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", id)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "An error occurred while reading session data. Please try again.")
 		return
 	}
 
@@ -162,12 +166,12 @@ func AppManageActionsHandlePost(w http.ResponseWriter, req *http.Request) {
 	// save..
 	if data.Serialize() != nil {
 		Error.Println(err)
-		AppErrorServePage(w, "An error occurred while writing session data. Please try again.", id)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "An error occurred while writing session data. Please try again.")
 		return
 	}
 
-	http.Redirect(w, req, fmt.Sprintf("/app/%s/events", data.ThingId), 302)
-
+	w.WriteHeader(http.StatusOK)
 }
 
 // given the form data , this function parses all actions from it and appends these to wtd

@@ -23,6 +23,17 @@
                     </div>
                     <div>
                         <p>
+                            <div class="preloader-wrapper small active" id="progress">
+                                <div class="spinner-layer spinner-red-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                    <div class="circle"></div>
+                                </div><div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                                </div>
+                            </div>
                             <form id="mef" method="post" action="/app/{{.ThingId}}/events">
                                 <ul id="me_list" class="collection">
                                 </ul>
@@ -51,12 +62,12 @@
                 </div>
                 <div class="row">
                     <div class="col s9">
-                        <button id="me_prev" class="btn-large deep-orange tooltipped left hide" data-delay="100" data-tooltip="Discard changes, go to previous step">
-                            <i class="material-icons left">navigate_before</i>Previous step
+                        <button id="me_prev" class="btn-large deep-orange tooltipped left" data-delay="100" data-tooltip="Discard changes, go to previous step">
+                            <i class="material-icons left">navigate_before</i>Actions
 
                         </button>
                         <button id="me_next" class="btn-large deep-orange tooltipped right" data-delay="100" data-tooltip="Save changes, go to next step">
-                            Next step
+                            Generate
                             <i class="material-icons right">navigate_next</i>
                         </button>
                     </div>

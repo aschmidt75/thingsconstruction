@@ -42,6 +42,11 @@ type Config struct {
 		Blog    bool `yaml:"blog"`
 		App     bool `yaml:"app"`
 		Contact bool `yaml:"contact"`
+		Twitter bool `yaml:"twitter"`
+		GitHub bool  `yaml:"github"`
+	}
+	StaticTexts struct {
+		CopyrightLine string `yaml:"copyrightline"`
 	}
 }
 

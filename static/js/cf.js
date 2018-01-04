@@ -179,7 +179,6 @@ function cf_lookup_matching_targets() {
                 depsStr += "<li><a target=\"tcext\" href=\""+dep.url+"\"><b>"+dep.name+"</a></b>: "+dep.copyright+" - "+dep.license+"</li>"
             }
             depsStr += "</ul>"
-            console.log(depsStr)
             li.innerHTML = `<div class="collapsible-header">
  <i class="material-icons">keyboard_arrow_right</i>
  ${t.shortDesc}
@@ -248,7 +247,6 @@ function cff_feedback_submit(e) {
         data: frm.serialize(),
         async: true,
         success: function (data) {
-            console.log(data)
             response = data;
         },
         error: function (data) {

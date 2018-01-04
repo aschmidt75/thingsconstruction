@@ -10,17 +10,17 @@
             <li>
               <a href="/about.html">About</a>
             </li>
-            {{ if .BlogFeature }}
+            {{ if .Feature.Blog }}
             <li>
               <a {{ if .InBlog }}class="active"{{end}} href="/blog">Blog</a>
             </li>
             {{ end }}
-            {{ if .AppFeature }}
+            {{ if .Feature.App }}
             <li>
                 <a {{ if .InApp }}class="active"{{end}} href="/app"></i><i class="material-icons">apps</i></a>
             </li>
             {{ end }}
-            {{ if .ContactFeature }}
+            {{ if .Feature.Contact }}
               <li>
                   <a {{ if .InContact }}class="active"{{end}} href="/feedback"><i class="material-icons">comment</i></a>
               </li>
@@ -36,21 +36,15 @@
         <li>
             <a href="/about.html">About</a>
         </li>
-    {{ if .BlogFeature }}
+    {{ if .Feature.Blog }}
         <li>
             <a href="/blog">Blog</a>
         </li>
     {{ end }}
-    {{ if .AppFeature }}
-    {{ if .InApp }}
+    {{ if .Feature.App }}
         <li>
             <a class="active" href="#"></i>App</a>
         </li>
-    {{ else }}
-        <li>
-            <a class="waves-effect waves-light btn grey accent-2" href="/app"><i class="material-icons left">launch</i>Get Started</a>
-        </li>
-    {{ end }}
     {{ end }}
     </ul>
 </header>

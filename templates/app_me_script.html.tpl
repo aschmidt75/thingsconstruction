@@ -1,29 +1,32 @@
 {{define `script`}}
 <script src="/js/me.js"></script>
 <script>
-    var propertiesJson = ""
-    // load properties on startup..
+    var progress = document.getElementById("progress");
+    var eventsJson = ""
+    var url = document.URL;
+    url = url.replace(/^(.*\/events).*/, "$1/data")
     $.ajax({
         type: "GET",
-        url: document.URL+"/data",
+        url: url,
         async: true,
         success: function (data) {
-            propertiesJson = propertiesJson + data
+            eventsJson = eventsJson + data
         },
         error: function (data) {
             console.log(data);
         },
         complete: function() {
-            if (propertiesJson.length == 0) {
+            if (eventsJson.length == 0) {
                 // inject empty arr
-                propertiesJson = '[]'
+                eventsJson = '[]'
             }
-            var obj = JSON.parse(propertiesJson)
-            console.log(obj)
+            var obj = JSON.parse(eventsJson)
             for (var i = 0; i < obj.length; i++) {
                 var prop = obj[i]
                 me_list_add_existing(prop)
             }
+            progress.className += " hide";
+
         },
     });
 

@@ -36,7 +36,6 @@ document.getElementById('ct_next').addEventListener('click', ct_next);
 
 // validate form, post to backend
 function ct_next(e) {
-    console.log(e);
     e.preventDefault();
 
     var n = document.getElementById('ctf_name').value;

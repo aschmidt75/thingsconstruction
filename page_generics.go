@@ -21,9 +21,8 @@ package main
 type PageData struct {
 	Title string
 
-	BlogFeature    bool
-	AppFeature     bool
-	ContactFeature bool
+	Feature	   map[string]bool
+	CopyrightLine	string
 
 	InBlog    bool
 	InApp     bool
@@ -31,8 +30,13 @@ type PageData struct {
 }
 
 func (pd *PageData) SetFeaturesFromConfig() {
-	pd.BlogFeature = ServerConfig.Features.Blog
-	pd.AppFeature = ServerConfig.Features.App
+	pd.Feature = map[string]bool{
+		"Blog": ServerConfig.Features.Blog,
+		"App": ServerConfig.Features.App,
+		"Contact":  ServerConfig.Features.Contact,
+		"Twitter": ServerConfig.Features.Twitter,
+		"GitHub": ServerConfig.Features.GitHub,
+	}
+	pd.CopyrightLine = ServerConfig.StaticTexts.CopyrightLine
 	pd.InApp = false
-	pd.ContactFeature = ServerConfig.Features.Contact
 }

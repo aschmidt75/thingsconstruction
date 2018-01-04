@@ -110,7 +110,7 @@ func AppManageEventsDataHandleGet(w http.ResponseWriter, req *http.Request) {
 
 func AppManageEventsHandlePost(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
-		http.Redirect(w, req, "/", 302)
+		w.WriteHeader(http.StatusNotImplemented)
 		return
 	}
 
@@ -128,7 +128,8 @@ func AppManageEventsHandlePost(w http.ResponseWriter, req *http.Request) {
 	mefid := formData.Get("mefid")
 	Debug.Printf("got id=%s, mefid=%s\n", id, mefid)
 	if id != mefid {
-		AppErrorServePage(w, "An error occurred while processing form data. Please try again.", id)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "An error occurred while processing form data. Please try again.")
 		return
 	}
 
@@ -143,12 +144,14 @@ func AppManageEventsHandlePost(w http.ResponseWriter, req *http.Request) {
 	}
 	data.SetFeaturesFromConfig()
 	if !data.IsIdValid() {
-		AppErrorServePage(w, "An error occurred while location session data. Please try again.", id)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "An error occurred while location session data. Please try again.")
 		return
 	}
 	if err := data.Deserialize(); err != nil {
 		Error.Println(err)
-		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", id)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "An error occurred while reading session data. Please try again.")
 		return
 	}
 
@@ -158,12 +161,12 @@ func AppManageEventsHandlePost(w http.ResponseWriter, req *http.Request) {
 	// save..
 	if data.Serialize() != nil {
 		Error.Println(err)
-		AppErrorServePage(w, "An error occurred while writing session data. Please try again.", id)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "An error occurred while writing session data. Please try again.")
 		return
 	}
 
-	http.Redirect(w, req, fmt.Sprintf("/app/%s/events", data.ThingId), 302)
-
+	w.WriteHeader(http.StatusOK)
 }
 
 // given the form data , this function parses all events from it and appends these to wtd

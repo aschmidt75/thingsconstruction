@@ -113,14 +113,15 @@ func AppManagePropertiesDataHandleGet(w http.ResponseWriter, req *http.Request) 
 
 func AppManagePropertiesHandlePost(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
-		http.Redirect(w, req, "/", 302)
+		w.WriteHeader(http.StatusNotImplemented)
 		return
 	}
 
 	err := req.ParseForm()
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "There was an error processing your data. Please try again.")
 		Debug.Printf("Error parsing create thing form: %s\n", err)
-		appCreateThingServePage(w, appEntryData{Msg: "There was an error processing your data."})
 	}
 	mpf := req.PostForm
 	Debug.Printf(spew.Sdump(mpf))
@@ -131,13 +132,15 @@ func AppManagePropertiesHandlePost(w http.ResponseWriter, req *http.Request) {
 	mpfid := mpf.Get("mpfid")
 	Debug.Printf("got id=%s, mpfid=%s\n", id, mpfid)
 	if id != mpfid {
-		AppErrorServePage(w, "An error occurred while processing form data. Please try again.", id)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "An error occurred while processing form data. Please try again.")
 		return
 	}
 
 	data := appManagePropertiesNewPageData(id)
 	if data == nil {
-		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", id)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "An error occurred while location/reading session data. Please try again.")
 		return
 	}
 
@@ -147,13 +150,12 @@ func AppManagePropertiesHandlePost(w http.ResponseWriter, req *http.Request) {
 	// save..
 	if data.Serialize() != nil {
 		Error.Println(err)
-		AppErrorServePage(w, "An error occurred while writing session data. Please try again.", id)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "An error occurred while writing session data. Please try again.")
 		return
 	}
 
-	url := fmt.Sprintf("/app/%s/actions", data.ThingId)
-	http.Redirect(w, req, url, 302)
-
+	w.WriteHeader(http.StatusOK)
 }
 
 // given the form data (mpf), this function parses all properties

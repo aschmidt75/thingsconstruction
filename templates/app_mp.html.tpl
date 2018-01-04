@@ -23,12 +23,22 @@
                     </div>
                     <div>
                         <p>
-                        <form id="mpf" method="post" action="/app/{{.ThingId}}/properties">
-                            <ul id="mp_list" class="collection">
-                            </ul>
-                            <input type="text" class="hide" id="mpf_id" name="mpfid" value="{{.ThingId}}">
-
-                    </form>
+                            <div class="preloader-wrapper small active" id="progress">
+                                <div class="spinner-layer spinner-red-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                    <div class="circle"></div>
+                                </div><div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                                </div>
+                            </div>
+                            <form id="mpf" method="post" action="/app/{{.ThingId}}/properties">
+                                <ul id="mp_list" class="collection">
+                                </ul>
+                                <input type="text" class="hide" id="mpf_id" name="mpfid" value="{{.ThingId}}">
+                            </form>
                         </p>
                     </div>
                     <div style="padding-bottom: 4em">
@@ -52,8 +62,12 @@
 
                 <div class="row">
                     <div class="col s9">
-                        <button id="details_next" class="btn-large deep-orange tooltipped right" data-delay="100" data-tooltip="Save changes, go to next step">
-                            Next step
+                        <button id="mp_prev" class="btn-large deep-orange tooltipped left" data-delay="100" data-tooltip="Save changes, go to previous step">
+                            Framework
+                            <i class="material-icons right">navigate_before</i>
+                        </button>
+                        <button id="mp_next" class="btn-large deep-orange tooltipped right" data-delay="100" data-tooltip="Save changes, go to next step">
+                            Actions
                             <i class="material-icons right">navigate_next</i>
                         </button>
                     </div>

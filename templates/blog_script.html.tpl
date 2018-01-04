@@ -32,7 +32,6 @@ if (all_posts != null) {
 bp_update_list_filter()
 
 function bp_update_list_filter() {
-    console.log(""+bp_selected_tags.size)
     var all_on = (bp_selected_tags.size == 0)
     var total = 0
     var active = 0

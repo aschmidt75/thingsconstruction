@@ -27,6 +27,10 @@
             <p>
                 <a href="/blog"><span><i class="material-icons tiny">arrow_back</i></span>See all</a>
             </p>
+            <p style="padding-top: 1em">
+                <a rel="license" target="tc-ext" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            </p>
+
         </div>
     </div>
 

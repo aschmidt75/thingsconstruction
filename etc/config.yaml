@@ -16,3 +16,7 @@ features:
   blog: true
   app: true
   contact: true
+  twitter: true
+  github: true 
+statictexts:
+  copyrightline: "© 2017 @aschmidt75, AGPLv3/dual licensed. Blog content is CC BY-SA 4.0"

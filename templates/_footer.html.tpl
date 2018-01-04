@@ -10,15 +10,19 @@
         </div>
         <div class="col s12 m4 l4 right-align">
             <ul>
+                {{ if .Feature.GitHub }}
                     <a target="tc-ext" style="padding-right: 10px" href="https://github.com/aschmidt75/thingsconstruction"><i class="white-text fab fa-github fa-2x"></i></a>
+                {{ end }}
+                {{ if .Feature.Twitter }}
                     <a target="tc-ext" style="padding-right: 10px" href="https://twitter.com/aschmidt75"><i class="white-text fab fa-twitter fa-2x"></i></a>
+                {{ end }}
             </ul>
         </div>
       </div>
     </div>
     <div class="footer-copyright">
       <div class="container">
-        © 2017 @aschmidt75
+        {{ .CopyrightLine }}
         <a class="grey-text text-lighten-4 right" href="/imprint.html">Imprint</a>
       </div>
     </div>
