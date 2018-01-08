@@ -345,14 +345,14 @@ function me_submit(e) {
     e.preventDefault();
 
     var details_ok = true;
-
+/*
     var errors = "<ul>";
     if ( !me_list_has_items()) {
         errors += "<li>You should at least have one property.</li>";
         details_ok = false
     }
     errors += "</ul>";
-
+*/
     if (details_ok) {
         //
         var frm = document.getElementById("mef");
@@ -375,7 +375,7 @@ function me_submit(e) {
                 // redirect to next page
                 var url = document.URL;
                 // TODO: do not fiddle with url, create link from scratch
-                window.location.replace(url.replace(/(.*)\/events.*/,"$1/events"));
+                window.location.replace(url.replace(/(.*)\/events.*/,"$1/generate"));
             },
         });
 

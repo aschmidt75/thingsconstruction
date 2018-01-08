@@ -16,14 +16,12 @@
             console.log(data);
         },
         complete: function() {
-            if (eventsJson.length == 0) {
-                // inject empty arr
-                eventsJson = '[]'
-            }
             var obj = JSON.parse(eventsJson)
-            for (var i = 0; i < obj.length; i++) {
-                var prop = obj[i]
-                me_list_add_existing(prop)
+            if (obj !== null) {
+                for (var i = 0; i < obj.length; i++) {
+                    var prop = obj[i]
+                    me_list_add_existing(prop)
+                }
             }
             progress.className += " hide";
 

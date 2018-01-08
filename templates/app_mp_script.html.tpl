@@ -18,15 +18,12 @@
             console.log(data);
         },
         complete: function() {
-            if (propertiesJson.length == 0) {
-                // inject empty arr
-                propertiesJson = '[]'
-            }
-
-            var obj = JSON.parse(propertiesJson)
-            for (var i = 0; i < obj.length; i++) {
-                var prop = obj[i]
-                mp_list_add_existing(prop)
+            var obj = JSON.parse(propertiesJson);
+            if (obj !== null) {
+                for (var i = 0; i < obj.length; i++) {
+                    var prop = obj[i]
+                    mp_list_add_existing(prop)
+                }
             }
             if (progress != undefined) {
                 progress.className += " hide";
