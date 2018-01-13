@@ -8,7 +8,7 @@
         <p style="padding-bottom: 2em">
             To start a new WoT Thing Description, start with a Name and Description.
         </p>
-    {{ if .Msg }}
+    {{ if .Message }}
         <div class="card red darken-2">
             <div class="card-content white-text">
             {{ .Msg }}
@@ -16,7 +16,7 @@
         </div>
     {{ end }}
         <br/>
-        <form id="ctf" name="ctf" method="POST" action="/app">
+        <form id="ctf" name="ctf" method="POST" action="/app{{ if .ThingId }}/{{ .ThingId}}{{end}}">
             <div class="row">
                 <div class="input-field col s8">
                     <input placeholder="some fancy name for your shiny device (required)" type="text" name="ctf_name" value="{{ .CtfName }}" id="ctf_name" size="20" />

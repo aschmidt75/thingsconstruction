@@ -116,8 +116,11 @@ func AppManageEventsHandlePost(w http.ResponseWriter, req *http.Request) {
 
 	err := req.ParseForm()
 	if err != nil {
-		Debug.Printf("Error parsing create thing form: %s\n", err)
-		appCreateThingServePage(w, appEntryData{Msg: "There was an error processing your data."})
+		Debug.Printf("Error parsing events form: %s\n", err)
+		appCreateThingServePage(w, appEntryData{
+			AppPageData: AppPageData{
+				Message: "There was an error processing your data.",
+			}})
 	}
 	formData := req.PostForm
 	Debug.Printf(spew.Sdump(formData))

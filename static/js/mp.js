@@ -21,6 +21,8 @@ $("html").bind("keypress", function(e)
     }
 });
 
+$.encoder.init();
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, "g"), replacement);
@@ -46,7 +48,6 @@ function mp_list_add_existing(obj) {
     mp_list_item.id = "mp_listitem_"+(last_id+1);
     mp_list_item.className = "collection-item row";
 
-    console.log(mp_list_item)
     // template contains ## for each place where new id shall fit in
     var tplhtml = document.getElementById("tlp_mpl_list_item").innerHTML;
     mp_list_item.innerHTML = tplhtml
@@ -74,74 +75,139 @@ function mp_list_add_existing(obj) {
     if ( obj === null) {
         // no content yet, directly go to edit mode
         mp_list_click_edit_showHide(btn_edit);
-        }
+    }
     btn_edit.addEventListener("click", mp_list_click_edit);
 
     var tab_item;
     tab_item = document.getElementById("mp_listitem_"+(last_id+1)+"_type_bool_click");
-    tab_item.addEventListener("click", mp_listitem_typetab_click)
+    tab_item.addEventListener("click", mp_listitem_typetab_click);
     tab_item = document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_click");
-    tab_item.addEventListener("click", mp_listitem_typetab_click)
+    tab_item.addEventListener("click", mp_listitem_typetab_click);
     tab_item = document.getElementById("mp_listitem_"+(last_id+1)+"_type_str_click");
-    tab_item.addEventListener("click", mp_listitem_typetab_click)
+    tab_item.addEventListener("click", mp_listitem_typetab_click);
 
     document.getElementById("mp_listitem_"+(last_id+1)+"_btns_delete").addEventListener("click", mp_list_click_delete);
 
     if ( obj != null) {
-        document.getElementById("mp_listitem_"+(last_id+1)+"_name").innerHTML = obj.Name;
-        document.getElementById("mp_listitem_"+(last_id+1)+"_edit_name").value = obj.Name;
-        document.getElementById("mp_listitem_"+(last_id+1)+"_edit_desc").value = obj.Description;
+        console.log(obj)
+        document.getElementById("mp_listitem_"+(last_id+1)+"_name").innerHTML = $.encoder.encodeForHTML(obj.Name);
+        document.getElementById("mp_listitem_"+(last_id+1)+"_edit_name").value = $.encoder.encodeForHTML(obj.Name);
+        document.getElementById("mp_listitem_"+(last_id+1)+"_edit_desc").value = $.encoder.encodeForHTML(obj.Description);
 
         var tabBool = document.getElementById("mp_listitem_"+(last_id+1)+"_type_bool");
         var tabNumber = document.getElementById("mp_listitem_"+(last_id+1)+"_type_number");
         var tabString = document.getElementById("mp_listitem_"+(last_id+1)+"_type_str");
-        tabBool.className = "col"
-        tabNumber.className = "col"
-        tabString.className = "col"
+        tabBool.className = "col";
+        tabNumber.className = "col";
+        tabString.className = "col";
+        var tabBoolA = document.getElementById("mp_listitem_a_"+(last_id+1)+"_type_bool_click");
+        var tabNumberA = document.getElementById("mp_listitem_a_"+(last_id+1)+"_type_number_click");
+        var tabStringA = document.getElementById("mp_listitem_a_"+(last_id+1)+"_type_str_click");
+        tabBoolA.className = "";
+        tabNumberA.className = "";
+        tabStringA.className = "";
+
         var typeStr = obj.Type;
         var typeStrForm;
         if (obj.Type === "Boolean") {
-            tabBool.className = "col active"
+            tabBool.className = "col active";
+            tabBoolA.className = "active";
             typeStrForm = "b";
         }
         if (obj.Type === "Float") {
-            tabNumber.className = "col active"
+            var selectId = "mp_listitem_"+(last_id+1)+"_type_number_type";
+            document.getElementById(selectId).value = "Float";
+            $("#"+selectId).find('option[value="2"]').prop('selected', true);
+            $("#"+selectId).material_select();
+            tabNumber.className = "col active";
+            tabNumberA.className = "active";
             typeStrForm = "f";
-            if (obj.Min != undefined) {
-                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_min").value = obj.Min;
+            if (obj.Min !== undefined) {
+                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_min").value = $.encoder.encodeForHTML(obj.Min);
                 typeStrForm += ";"+obj.Min;
             }
-            if (obj.Max != undefined) {
-                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_max").value = obj.Max;
+            if (obj.Max !== undefined) {
+                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_max").value = $.encoder.encodeForHTML(obj.Max);
                 typeStrForm += ";"+obj.Max;
+            }
+            if (obj.Min !== undefined && obj.Max !== undefined) {
+                typeStr = typeStr + "["+$.encoder.encodeForHTML(obj.Min)+".."+$.encoder.encodeForHTML(obj.Max)+"]";
             }
         }
         if (obj.Type === "Integer") {
-            tabNumber.className = "col active"
+            var selectId = "mp_listitem_"+(last_id+1)+"_type_number_type";
+            document.getElementById(selectId).value = "Integer";
+            $("#"+selectId).find('option[value="1"]').prop('selected', true);
+            $("#"+selectId).material_select();
+            tabNumber.className = "col active";
+            tabNumberA.className = "active";
             typeStrForm = "i";
-            if (obj.Min != undefined) {
-                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_min").value = obj.Min;
+            if (obj.Min !== undefined) {
+                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_min").value = $.encoder.encodeForHTML(obj.Min);
                 typeStrForm += ";"+obj.Min;
             }
-            if (obj.Max != undefined) {
-                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_max").value = obj.Max;
+            if (obj.Max !== undefined) {
+                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_max").value = $.encoder.encodeForHTML(obj.Max);
                 typeStrForm += ";"+obj.Max;
+            }
+            if (obj.Min !== undefined && obj.Max !== undefined) {
+                typeStr = typeStr + "["+$.encoder.encodeForHTML(obj.Min)+".."+$.encoder.encodeForHTML(obj.Max)+"]";
             }
         }
         if (obj.Type === "String") {
-            tabString.className = "col active"
+            tabString.className = "col active";
+            tabStringA.className = "active";
             typeStrForm = "s";
-            if (obj.MaxLength != undefined) {
-                document.getElementById("mp_listitem_"+(last_id+1)+"_type_str_maxlength").value = obj.MaxLength;
+            if (obj.MaxLength !== undefined) {
+                var i = $.encoder.encodeForHTML(obj.MaxLength);
+                document.getElementById("mp_listitem_"+(last_id+1)+"_type_str_maxlength").value = i;
                 typeStrForm += ";"+obj.MaxLength;
+                typeStr = typeStr + "["+i+"]";
             }
         }
 
-        document.getElementById("mp_listitem_"+(last_id+1)+"_details").innerHTML = "<p>"+typeStr+"<br/><i>"+obj.Description+"</i></p>"+
-            "<input type=\"text\" name=\"mp_listitem_"+(last_id+1)+"_val\" class=\"hide\" value=\""+obj.Name+";"+typeStrForm+"\">"+
-            "<input type=\"text\" name=\"mp_listitem_"+(last_id+1)+"_desc\" class=\"hide\" value=\""+obj.Description+"\">";
+        document.getElementById("mp_listitem_"+(last_id+1)+"_details").innerHTML =
+            "<p>"+$.encoder.encodeForHTML(typeStr)+"<br/><i>"+$.encoder.encodeForHTML(obj.Description)+"</i></p>"+
+            "<input type=\"text\" name=\"mp_listitem_"+(last_id+1)+"_val\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value",""+obj.Name+";"+typeStrForm)+">"+
+            "<input type=\"text\" name=\"mp_listitem_"+(last_id+1)+"_desc\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value",""+obj.Description)+">";
 
     }
+}
+
+// only allow inputs which would make up a valid identifier in
+// code.
+function mp_list_limit_name(e) {
+    var k = e.key;
+    if ( e.charCode === 0 && e.keyCode !== 0) return true;
+    if ( k >= '0' && k <= '9') return true;
+    if ( k >= 'a' && k <= 'z') return true;
+    if ( k >= 'A' && k <= 'Z') return true;
+    if ( k === '_' || k === '-') return true;
+    e.preventDefault();
+}
+
+function mp_list_limit_int(e) {
+    var k = e.key;
+    if ( e.charCode === 0 && e.keyCode !== 0) return true;
+    if ( k >= '0' && k <= '9') return true;
+    if ( k === '-') return true;
+    e.preventDefault();
+}
+
+function mp_list_limit_uint(e) {
+    var k = e.key;
+    if ( e.charCode === 0 && e.keyCode !== 0) return true;
+    if ( k >= '0' && k <= '9') return true;
+    e.preventDefault();
+}
+
+function mp_list_limit_float(e) {
+    var k = e.key;
+    if ( e.charCode === 0 && e.keyCode !== 0) return true;
+    if ( k >= '0' && k <= '9') return true;
+    if ( k === '-') return true;
+    if ( k === '.') return true;
+    e.preventDefault();
 }
 
 // add content of tpl_mpl_list_item to mp_list.
@@ -183,11 +249,17 @@ function mp_list_add(e) {
 
     var tab_item;
     tab_item = document.getElementById("mp_listitem_"+(last_id+1)+"_type_bool_click");
-    tab_item.addEventListener("click", mp_listitem_typetab_click)
+    tab_item.addEventListener("click", mp_listitem_typetab_click);
     tab_item = document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_click");
-    tab_item.addEventListener("click", mp_listitem_typetab_click)
+    tab_item.addEventListener("click", mp_listitem_typetab_click);
     tab_item = document.getElementById("mp_listitem_"+(last_id+1)+"_type_str_click");
-    tab_item.addEventListener("click", mp_listitem_typetab_click)
+    tab_item.addEventListener("click", mp_listitem_typetab_click);
+
+    // attach keyinput handlers
+    document.getElementById("mp_listitem_"+(last_id+1)+"_type_str_maxlength").addEventListener("keypress", mp_list_limit_uint);
+    document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_min").addEventListener("keypress", mp_list_limit_float);
+    document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_max").addEventListener("keypress", mp_list_limit_float);
+    document.getElementById("mp_listitem_"+(last_id+1)+"_edit_name").addEventListener("keypress", mp_list_limit_name);
 
     document.getElementById("mp_listitem_"+(last_id+1)+"_btns_delete").addEventListener("click", mp_list_click_delete);
 
@@ -239,7 +311,7 @@ function mp_list_is_name_in_use_except(n, edit_id) {
 function mp_list_has_items() {
     var mp_list = document.getElementById("mp_list");
     var mp_list_items = mp_list.children;
-    return mp_list_items.length > 0
+    return mp_list_items.length > 0;
 }
 
 // disable all edit/delete buttons
@@ -289,6 +361,8 @@ function mp_list_click_edit_showHide(t) {
         t = t.parentElement;
     }
 
+    var row, showPart, editPart;
+
     // Look whether this element is in "show" or in "edit" mode.
     // switch between two, do logic.
     var btn_text = t.children[0].innerText;
@@ -298,13 +372,13 @@ function mp_list_click_edit_showHide(t) {
         // change icon of button
         t.children[0].innerText = "check"
 
-        var row = t.parentElement.parentElement.parentElement;
+        row = t.parentElement.parentElement.parentElement;
 
         // hide "show" part
-        var showPart = document.getElementById(""+row.id+"_show");
+        showPart = document.getElementById(""+row.id+"_show");
         showPart.className += " hide";
         // unhide "edit" part
-        var editPart = document.getElementById(""+row.id+"_edit");
+        editPart = document.getElementById(""+row.id+"_edit");
         editPart.className = " col s8";
 
         // disable edit/delete buttons for all others.
@@ -316,8 +390,9 @@ function mp_list_click_edit_showHide(t) {
     if (btn_text === "check" || btn_text === "CHECK") {
         // Button shows save icon, so it"s in edit mode, and user wants to save
 
-        var row = t.parentElement.parentElement.parentElement;
+        row = t.parentElement.parentElement.parentElement;
         var newName = document.getElementById(""+row.id+"_edit_name").value;
+        newName = $.encoder.encodeForHTML( $.encoder.canonicalize(newName));
 
         // validate fields. In case of error, color items, open modal, exit.
         // 1. name
@@ -325,13 +400,30 @@ function mp_list_click_edit_showHide(t) {
             document.getElementById(""+row.id+"_edit_name").style.borderBottom = "solid 2px #ee2222";
             $("#mp_listitem_validation_modal").modal("open");
             return;
-        };
+        }
 
         // 2. name must be unique, compare to all others
         if ( mp_list_is_name_in_use_except(newName, row.id)) {
             document.getElementById(""+row.id+"_edit_name").style.borderBottom = "solid 2px #ee2222";
             document.getElementById("mp_listitem_validation_modal_reason").innerText =
                 "The name "+newName+" was already chosen for another property.";
+            $("#mp_listitem_validation_modal").modal("open");
+            return;
+        }
+
+        // 3. sanitize check
+        try {
+            f = $.encoder.canonicalize(document.getElementById(""+row.id+"_edit_name").value);
+            $.encoder.encodeForHTML(f);
+
+            e = document.getElementById(""+row.id+"_details");
+            g = $.encoder.canonicalize(document.getElementById(""+row.id+"_edit_desc").value);
+            $.encoder.encodeForHTML(g);
+
+            $.encoder.encodeForHTMLAttribute("value", f);
+            $.encoder.encodeForHTMLAttribute("value", g);
+        } catch (e) {
+            document.getElementById("mp_listitem_validation_modal_reason").innerText = e;
             $("#mp_listitem_validation_modal").modal("open");
             return;
         }
@@ -346,59 +438,70 @@ function mp_list_click_edit_showHide(t) {
         // save values..
         var e, f, g;
 
-        e = document.getElementById(""+row.id+"_name");
-        f = document.getElementById(""+row.id+"_edit_name");
-        e.innerText =  f.value;
-        e = document.getElementById(""+row.id+"_details");
-        g = document.getElementById(""+row.id+"_edit_desc");
-        // pull out type
-        var typeStr = "n/a";
-        var typeStrForm = "";
-        // look what tab is active, this determines the type. extract data for
-        // both presentation and form.
-        var te = document.getElementById(""+row.id+"_type_bool");
-        if ( te != null && te.className === "col active") {
-            typeStr = "Boolean";
-            typeStrForm = "b";
+        try {
+
+            e = document.getElementById(""+row.id+"_name");
+            f = $.encoder.canonicalize(document.getElementById(""+row.id+"_edit_name").value);
+            e.textContent = $.encoder.encodeForHTML(f);
+
+            e = document.getElementById(""+row.id+"_details");
+            g = $.encoder.canonicalize(document.getElementById(""+row.id+"_edit_desc").value);
+
+            // pull out type
+            var typeStr = "n/a";
+            var typeStrForm = "";
+            // look what tab is active, this determines the type. extract data for
+            // both presentation and form.
+            var te = document.getElementById(""+row.id+"_type_bool");
+            console.log(te)
+            if ( te != null && te.className === "col active") {
+                typeStr = "Boolean";
+                typeStrForm = "b";
+            }
+            te = document.getElementById(""+row.id+"_type_number");
+            if ( te != null && te.className === "col active") {
+                var k = document.getElementById(""+row.id+"_type_number_type");
+                typeStr = "Number";
+                if (k.selectedIndex === 0) {
+                    typeStr = "Number: Integer";
+                    typeStrForm = "i";
+                }
+                if (k.selectedIndex === 1) {
+                    typeStr = "Number: Float";
+                    typeStrForm = "f";
+                }
+                var i = document.getElementById(""+row.id+"_type_number_min").value;
+                i = $.encoder.canonicalize(i);
+                var j = document.getElementById(""+row.id+"_type_number_max").value;
+                j = $.encoder.canonicalize(j);
+                if ( i !== "" || j !== "") {
+                    typeStr = typeStr + "["+i+".."+j+"]";
+                    typeStrForm = typeStrForm + ";"+i+";"+j;
+                }
+            }
+            te = document.getElementById(""+row.id+"_type_str");
+            if ( te != null && te.className === "col active") {
+                typeStr = "String";
+                typeStrForm = "s";
+                var i = document.getElementById(""+row.id+"_type_str_maxlength").value;
+                i = $.encoder.canonicalize(i);
+                if ( i != null && i.value !== "") {
+                    typeStr = typeStr + "["+i+"]";
+                    typeStrForm = "s;"+i;
+                }
+            }
+            e.innerHTML = "<p>"+typeStr+"<br/><i>"+$.encoder.encodeForHTML(g)+"</i></p>"+
+                "<input type=\"text\" name=\""+row.id+"_val\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", f+";"+typeStrForm)+">"+
+                "<input type=\"text\" name=\""+row.id+"_desc\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", g)+">";
+        } catch (e) {
+            console.log(e);
         }
-        te = document.getElementById(""+row.id+"_type_number");
-        if ( te != null && te.className === "col active") {
-            var k = document.getElementById(""+row.id+"_type_number_type");
-            typeStr = "Number";
-            if (k.selectedIndex === 0) {
-                typeStr = "Number: Integer";
-                typeStrForm = "i";
-            }
-            if (k.selectedIndex === 1) {
-                typeStr = "Number: Float";
-                typeStrForm = "f";
-            }
-            var i = document.getElementById(""+row.id+"_type_number_min");
-            var j = document.getElementById(""+row.id+"_type_number_max");
-            if ( i !== "" || j !== "") {
-                typeStr = typeStr + "["+i.value+".."+j.value+"]";
-                typeStrForm = typeStrForm + ";"+i.value+";"+j.value;
-            }
-        }
-        te = document.getElementById(""+row.id+"_type_str");
-        if ( te != null && te.className === "col active") {
-            typeStr = "String";
-            typeStrForm = "s";
-            var i = document.getElementById(""+row.id+"_type_str_maxlength");
-            if ( i != null && i.value !== "") {
-                typeStr = typeStr + "["+i.value+"]";
-                typeStrForm = "s;"+i.value;
-            }
-        }
-        e.innerHTML = "<p>"+typeStr+"<br/><i>"+g.value+"</i></p>"+
-            "<input type=\"text\" name=\""+row.id+"_val\" class=\"hide\" value=\""+f.value+";"+typeStrForm+"\">"+
-            "<input type=\"text\" name=\""+row.id+"_desc\" class=\"hide\" value=\""+g.value+"\">";
 
         // hide "edit" part
-        var showPart = document.getElementById(""+row.id+"_show");
+        showPart = document.getElementById(""+row.id+"_show");
         showPart.className = " col s8";
         // unhide "show" part
-        var editPart = document.getElementById(""+row.id+"_edit");
+        editPart = document.getElementById(""+row.id+"_edit");
         editPart.className += " hide";
 
     }
@@ -488,22 +591,20 @@ function mp_to_framework(e) {
         $.ajax({
             type: frm.method,
             url: frm.action,
-            async: true,
+            data: $("#mpf").serialize(),
             success: function (data) {
+                // redirect to next page
+                var url = document.URL;
+                window.location.replace(url.replace(/^(.*)\/properties.*/,"$1/framework"));
             },
             error: function (data) {
-                //
-                console.log(data);
-
                 // stay on page
-                mp_enable_navbtns();
+                ma_enable_navbtns();
+
+                document.getElementById("details_validation_modal_reason").textContent =
+                    "An error occured while saving your data.";
+                $("#details_validation_modal").modal("open");
             },
-            complete: function() {
-                // redirect to next page
-                var url = document.URL
-                // TODO: do not fiddle with url, create link from scratch
-                window.location.replace(url.replace(/(.*)\/properties.*/,"$1/framework"));
-            }
         });
     } else {
         document.getElementById("details_validation_modal_reason").innerHTML = errors;
@@ -532,21 +633,20 @@ function submit_mpf(e) {
         $.ajax({
             type: frm.method,
             url: frm.action,
-            async: true,
+            data: $("#mpf").serialize(),
             success: function (data) {
-            },
-            error: function (data) {
-                //
-                console.log(data);
-
-                // stay on page
-                mp_enable_navbtns();
-            },
-            complete: function() {
                 // redirect to next page
                 var url = document.URL;
-                window.location.replace(url.replace(/(.*)\/properties.*/,"$1/actions"));
-            }
+                window.location.replace(url.replace(/^(.*)\/properties.*/,"$1/actions"));
+            },
+            error: function (data) {
+                // stay on page
+                ma_enable_navbtns();
+
+                document.getElementById("details_validation_modal_reason").textContent =
+                    "An error occured while saving your data.";
+                $("#details_validation_modal").modal("open");
+            },
         });
     } else {
         document.getElementById("details_validation_modal_reason").innerHTML = errors;

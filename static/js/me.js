@@ -22,6 +22,8 @@ $("html").bind("keypress", function(e)
     }
 });
 
+$.encoder.init();
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, "g"), replacement);
@@ -79,13 +81,13 @@ function me_list_add_existing(obj) {
     document.getElementById("me_listitem_"+(last_id+1)+"_btns_delete").addEventListener("click", me_list_click_delete);
 
     if ( obj != null) {
-        document.getElementById("me_listitem_"+(last_id+1)+"_name").innerHTML = obj.Name;
-        document.getElementById("me_listitem_"+(last_id+1)+"_edit_name").value = obj.Name;
-        document.getElementById("me_listitem_"+(last_id+1)+"_edit_desc").value = obj.Description;
+        document.getElementById("me_listitem_"+(last_id+1)+"_name").textContent = $.encoder.encodeForHTML(obj.Name);
+        document.getElementById("me_listitem_"+(last_id+1)+"_edit_name").value = $.encoder.encodeForHTML(obj.Name);
+        document.getElementById("me_listitem_"+(last_id+1)+"_edit_desc").value = $.encoder.encodeForHTML(obj.Description);
 
-        document.getElementById("me_listitem_"+(last_id+1)+"_details").innerHTML = "<p><i>"+obj.Description+"</i></p>"+
-            "<input type=\"text\" name=\"me_listitem_"+(last_id+1)+"_val\" class=\"hide\" value=\""+obj.Name+"\">"+
-            "<input type=\"text\" name=\"me_listitem_"+(last_id+1)+"_desc\" class=\"hide\" value=\""+obj.Description+"\">";
+        document.getElementById("me_listitem_"+(last_id+1)+"_details").innerHTML = "<p><i>"+$.encoder.encodeForHTML(obj.Description)+"</i></p>"+
+            "<input type=\"text\" name=\"me_listitem_"+(last_id+1)+"_val\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", obj.Name)+">"+
+            "<input type=\"text\" name=\"me_listitem_"+(last_id+1)+"_desc\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", obj.Description)+">";
 
     }
 }
@@ -130,22 +132,6 @@ function me_list_has_items() {
     return me_list_items.length > 0;
 }
 
-// disable all edit/delete buttons
-function me_list_disable_buttons() {
-    var me_list = document.getElementById("me_list");
-    var me_list_items = me_list.children;
-    for ( var i = 0; i < me_list_items.length; i++) {
-        var id;
-        id = ""+me_list_items[i].id+"_btns_edit";
-        document.getElementById(id).className += " disabled";
-        id = ""+me_list_items[i].id+"_btns_delete";
-        document.getElementById(id).className += " disabled";
-    }
-    document.getElementById("me_add_btn").className += " disabled";
-    document.getElementById("me_next").className += " disabled";
-    document.getElementById("me_prev").className += " disabled";
-}
-
 // removes the disabled class from an id
 function me_list_enable_button(id) {
     var cn = document.getElementById(id).className;
@@ -166,6 +152,35 @@ function me_list_enable_buttons() {
     me_list_enable_button("me_add_btn");
     me_list_enable_button("me_next");
     me_list_enable_button("me_prev");
+}
+
+// disable all edit/delete buttons
+function me_list_disable_buttons() {
+    var me_list = document.getElementById("me_list");
+    var me_list_items = me_list.children;
+    for ( var i = 0; i < me_list_items.length; i++) {
+        var id;
+        id = ""+me_list_items[i].id+"_btns_edit";
+        document.getElementById(id).className += " disabled";
+        id = ""+me_list_items[i].id+"_btns_delete";
+        document.getElementById(id).className += " disabled";
+    }
+    document.getElementById("me_add_btn").className += " disabled";
+    document.getElementById("me_next").className += " disabled";
+    document.getElementById("me_prev").className += " disabled";
+}
+
+
+// only allow inputs which would make up a valid identifier in
+// code.
+function me_list_limit_name(e) {
+    var k = e.key;
+    if ( e.charCode === 0 && e.keyCode !== 0) return true;
+    if ( k >= '0' && k <= '9') return;
+    if ( k >= 'a' && k <= 'z') return;
+    if ( k >= 'A' && k <= 'Z') return;
+    if ( k === '_' || k === '-') return;
+    e.preventDefault();
 }
 
 // given the node of the edit button, this method
@@ -200,12 +215,17 @@ function me_list_click_edit_showHide(t) {
         me_list_disable_buttons();
         // enable the save button again
         me_list_enable_button(t.id);
+
+        //
+        document.getElementById(""+row.id+"_edit_name").addEventListener("keypress", me_list_limit_name)
+
     }
     if (btn_text === "check" || btn_text === "CHECK") {
         // Button shows save icon, so it"s in edit mode, and user wants to save
 
          row = t.parentElement.parentElement.parentElement;
         var newName = document.getElementById(""+row.id+"_edit_name").value;
+        newName = $.encoder.encodeForHTML( $.encoder.canonicalize(newName));
 
         // validate fields. In case of error, color items, open modal, exit.
         // 1. name
@@ -224,6 +244,23 @@ function me_list_click_edit_showHide(t) {
             return;
         }
 
+        // 3. sanitize check
+        try {
+            f = $.encoder.canonicalize(document.getElementById(""+row.id+"_edit_name").value);
+            $.encoder.encodeForHTML(f);
+
+            e = document.getElementById(""+row.id+"_details");
+            g = $.encoder.canonicalize(document.getElementById(""+row.id+"_edit_desc").value);
+            $.encoder.encodeForHTML(g);
+
+            $.encoder.encodeForHTMLAttribute("value", f);
+            $.encoder.encodeForHTMLAttribute("value", g);
+        } catch (e) {
+            document.getElementById("me_listitem_validation_modal_reason").innerText = e;
+            $("#me_listitem_validation_modal").modal("open");
+            return;
+        }
+
         // if we get here, all is valid. un-color, continue.
         document.getElementById(""+row.id+"_edit_name").style.borderBottom = "";
         me_list_enable_buttons();
@@ -234,14 +271,19 @@ function me_list_click_edit_showHide(t) {
         // save values..
         var e, f, g;
 
-        e = document.getElementById(""+row.id+"_name");
-        f = document.getElementById(""+row.id+"_edit_name");
-        e.innerText =  f.value;
-        e = document.getElementById(""+row.id+"_details");
-        g = document.getElementById(""+row.id+"_edit_desc");
-        e.innerHTML = "<p><i>"+g.value+"</i></p>"+
-            "<input type=\"text\" name=\""+row.id+"_val\" class=\"hide\" value=\""+f.value+"\">"+
-            "<input type=\"text\" name=\""+row.id+"_desc\" class=\"hide\" value=\""+g.value+"\">";
+        try {
+            e = document.getElementById(""+row.id+"_name");
+            f = $.encoder.canonicalize(document.getElementById(""+row.id+"_edit_name").value);
+            e.textContent = $.encoder.encodeForHTML(f);
+
+            e = document.getElementById(""+row.id+"_details");
+            g = $.encoder.canonicalize(document.getElementById(""+row.id+"_edit_desc").value);
+            e.innerHTML = "<p><i>"+$.encoder.encodeForHTML(g)+"</i></p>"+
+                "<input type=\"text\" name=\""+row.id+"_val\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", f)+">"+
+                "<input type=\"text\" name=\""+row.id+"_desc\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", g)+">";
+        } catch (e) {
+            console.log(e);
+        }
 
         // hide "edit" part
         showPart = document.getElementById(""+row.id+"_show");
@@ -302,8 +344,8 @@ function me_disable_navbtns() {
 function me_enable_navbtns() {
     var btn1 = document.getElementById("me_next");
     var btn2 = document.getElementById("me_prev");
-    btn1.className.replaceAll("disabled", "")
-    btn2.className.replaceAll("disabled", "")
+    btn1.className = btn1.className.replaceAll("disabled", "");
+    btn2.className = btn2.className.replaceAll("disabled", "");
 }
 
 function me_to_actions(e) {
@@ -318,20 +360,19 @@ function me_to_actions(e) {
         $.ajax({
             type: frm.method,
             url: frm.action,
-            async: true,
+            data: $("#mef").serialize(),
             success: function (data) {
-            },
-            error: function (data) {
-                //
-                console.log(data);
-
-                // stay on page
-                me_enable_navbtns();
-            },
-            complete: function() {
                 // redirect to next page
                 var url = document.URL;
-                window.location.replace(url.replace(/(.*)\/events.*/,"$1/actions"));
+                window.location.replace(url.replace(/^(.*)\/events.*/,"$1/actions"));
+            },
+            error: function (data) {
+                // stay on page
+                ma_enable_navbtns();
+
+                document.getElementById("details_validation_modal_reason").textContent =
+                    "An error occured while saving your data.";
+                $("#details_validation_modal").modal("open");
             },
         });
 
@@ -361,21 +402,19 @@ function me_submit(e) {
         $.ajax({
             type: frm.method,
             url: frm.action,
-            async: true,
+            data: $("#mef").serialize(),
             success: function (data) {
-            },
-            error: function (data) {
-                //
-                console.log(data);
-
-                // stay on page
-                me_enable_navbtns();
-            },
-            complete: function() {
                 // redirect to next page
                 var url = document.URL;
-                // TODO: do not fiddle with url, create link from scratch
-                window.location.replace(url.replace(/(.*)\/events.*/,"$1/generate"));
+                window.location.replace(url.replace(/^(.*)\/events.*/,"$1/generate"));
+            },
+            error: function (data) {
+                // stay on page
+                ma_enable_navbtns();
+
+                document.getElementById("details_validation_modal_reason").textContent =
+                    "An error occured while saving your data.";
+                $("#details_validation_modal").modal("open");
             },
         });
 

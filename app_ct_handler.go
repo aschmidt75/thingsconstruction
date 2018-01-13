@@ -29,11 +29,11 @@ import (
 	"github.com/satori/go.uuid"
 	"net/http"
 	"strings"
+	"github.com/davecgh/go-spew/spew"
 )
 
 type appEntryData struct {
 	AppPageData
-	Msg     string
 	CtfName string
 	CtfDesc string
 	CtfType string
@@ -81,38 +81,90 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		Debug.Printf("Error parsing create thing form: %s\n", err)
-		appCreateThingServePage(w, appEntryData{Msg: "There was an error processing your data."})
+		appCreateThingServePage(w, appEntryData{
+			AppPageData:AppPageData{
+				Message: "There was an error processing your data.",
+			},
+		})
+		return
 	}
 	ctf := req.PostForm
 
-	data := &appEntryData{
-		AppPageData: AppPageData{
-			PageData: PageData{
-				Title: "Create new Thing Description",
-				InApp: true,
+	// check if id is valid
+	vars := mux.Vars(req)
+	id := vars["id"]
+	if id != "" {
+		// this is an edit of an existing ThingId
+		data := &appManageActionsData{
+			AppPageData: AppPageData{
+				PageData: PageData{
+					Title: "Manage Actions",
+					InApp: true,
+				},
+				ThingId: id,
 			},
-		},
-		CtfName: ctf.Get("ctf_name"),
-		CtfDesc: strings.TrimSpace(ctf.Get("ctf_desc")),
-		CtfType: ctf.Get("ctf_type"),
-	}
-	data.SetFeaturesFromConfig()
+		}
+		if !data.IsIdValid() {
+			appCreateThingServePage(w, appEntryData{
+				AppPageData:AppPageData{
+					Message: "There was an error locating WoT data by ID.",
+				},
+			})
+			return
+		}
+		if err := data.Deserialize(); err != nil {
+			Error.Println(err)
+			appCreateThingServePage(w, appEntryData{
+				AppPageData:AppPageData{
+					Message: "There was an error locating WoT data by ID.",
+				},
+			})
+		}
 
-	// validate
-	if data.CtfType != "thing" {
-		data.Msg = "I'm sorry, at present only type \"Thing\" is supported."
-	}
+		data.wtd.Name = ctf.Get("ctf_name")
+		data.wtd.Type = ctf.Get("ctf_type")
+		data.wtd.Description = new(string)
+		*data.wtd.Description = ctf.Get("ctf_desc")
+		Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
-	id, err := appEntryCreateThing(data)
-	if err != nil {
-		data.Msg = "There was an error creating your Thing Description. Please try again."
-		appCreateThingServePage(w, *data)
-	} else {
+		// save..
+		if data.Serialize() != nil {
+			Error.Println(err)
+			appCreateThingServePage(w, appEntryData{
+				AppPageData:AppPageData{
+					Message: "There was an error writing session data.",
+				},
+			})
+			return
+		}
 		// redirect to next steps
 		http.Redirect(w, req, "/app/"+id+"/framework", http.StatusFound)
-		//appCreateThingServePage(w, *data)
 
+	} else {
+		// create new one
+		data := &appEntryData{
+			AppPageData: AppPageData{
+				PageData: PageData{
+					Title: "Create new Thing Description",
+					InApp: true,
+				},
+			},
+			CtfName: ctf.Get("ctf_name"),
+			CtfDesc: strings.TrimSpace(ctf.Get("ctf_desc")),
+			CtfType: ctf.Get("ctf_type"),
+		}
+		data.SetFeaturesFromConfig()
+
+		id, err := appEntryCreateThing(data)
+		if err != nil {
+			data.AppPageData.Message = "There was an error creating your Thing Description. Please try again."
+			appCreateThingServePage(w, *data)
+		} else {
+			// redirect to next steps
+			http.Redirect(w, req, "/app/"+id+"/framework", http.StatusFound)
+		}
 	}
+
 }
 
 // creates a new Thing Description json, puts basic data in it,
