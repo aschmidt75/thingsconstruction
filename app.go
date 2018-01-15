@@ -24,6 +24,14 @@ import (
 	"path/filepath"
 )
 
+type AppError struct {
+	Message 	string
+}
+
+func (ae *AppError) Error() string {
+	return ae.Message
+}
+
 type GeneratorMetaData struct {
 	SelectedGeneratorId string `json:"genid"`
 }
@@ -59,6 +67,7 @@ type AppPageData struct {
 	TocInfo map[string]string
 	wtd     *WebThingDescription
 	md      *GeneratorMetaData
+	Message string
 }
 
 func (ap *AppPageData) SetTocInfo() {

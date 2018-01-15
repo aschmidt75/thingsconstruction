@@ -29,6 +29,8 @@
   </footer>
   <script src="/js/jquery-3.2.1.min.js"></script>
   <script src="/js/jquery.form.js"></script>
+  <script src="/js/class.min.js"></script>
+  <script src="/js/jquery.jquery-encoder.min.js"></script>
   <script src="/js/materialize.min.js"></script>
   <script src="/js/main.js"></script>
 {{ template `script` . }}

@@ -129,13 +129,13 @@
                <input type="text" id="mp_listitem_##_type_" class="input-field hide" value="mp_listitem_##_type_str">
                <ul class="tabs deep-orange lighten-5 tabs-fixed-width">
                   <li id="mp_listitem_##_type_bool_click" class="tab col">
-                    <a href="#mp_listitem_##_type_bool">Bool</a>
+                    <a id="mp_listitem_a_##_type_bool_click" href="#mp_listitem_##_type_bool">Bool</a>
                   </li>
-                  <li  id="mp_listitem_##_type_number_click" class="tab col">
-                    <a href="#mp_listitem_##_type_number">Number</a>
+                  <li id="mp_listitem_##_type_number_click" class="tab col">
+                    <a id="mp_listitem_a_##_type_number_click" href="#mp_listitem_##_type_number">Number</a>
                   </li>
                   <li id="mp_listitem_##_type_str_click" class="tab col">
-                    <a class="active" href="#mp_listitem_##_type_str">String</a>
+                    <a id="mp_listitem_a_##_type_str_click" href="#mp_listitem_##_type_str">String</a>
                   </li>
                 </ul>
               </div>

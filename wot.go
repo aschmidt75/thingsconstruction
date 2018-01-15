@@ -25,8 +25,8 @@ type WebThingProperty struct {
 	Name		string `json:name`
 	Type 		string `json:type`
 	MaxLength 		*int `json:maxlength,omitempty`
-	Min 			*int `json:maxlength,omitempty`
-	Max 			*int `json:maxlength,omitempty`
+	Min 			*float64 `json:maxlength,omitempty`
+	Max 			*float64 `json:maxlength,omitempty`
 	Description 	*string `json:description,omitempty`
 }
 type WebThingProperties []WebThingProperty

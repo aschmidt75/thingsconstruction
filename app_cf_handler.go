@@ -19,37 +19,8 @@ package main
 import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
 	"net/http"
 )
-
-type AppStringArray []string
-
-type AppGenDependency struct {
-	Name      string `yaml:"name"`
-	URL       string `yaml:"url"`
-	Copyright string `yaml:"copyright"`
-	License   string `yaml:"license"`
-	Info      string `yaml:"info"`
-}
-type AppGenDependencyArray []AppGenDependency
-
-type AppGenTarget struct {
-	Id           string                `yaml:"id"`
-	Image        string                `yaml:"image"`
-	ShortDesc    string                `yaml:"shortdesc"`
-	Desc         string                `yaml:"desc"`
-	Tags         AppStringArray        `yaml:"tags"`
-	Dependencies AppGenDependencyArray `yaml:"dependencies"`
-	CodeGenInfo  string				   `yaml:"codegeninfo"`
-}
-
-type AppGenTargetArray []AppGenTarget
-
-type AppGenTargets struct {
-	Targets AppGenTargetArray `yaml:"targets"`
-}
 
 
 type appGenParamsData struct {
@@ -58,11 +29,12 @@ type appGenParamsData struct {
 	AppGenTargets *AppGenTargets
 }
 
-func appGenParamsNewPageData(id string) (*appGenParamsData) {
+func appGenParamsNewPageData(id string) (*appGenParamsData, error) {
 
-	t, err := readGeneratorsConfig()
+	t, err := ReadGeneratorsConfig()
 	if err != nil {
 		Error.Printf("Unable to present generators. FIX CONFIG!\n")
+		return nil, err
 	}
 
 	var data = &appGenParamsData{
@@ -78,32 +50,17 @@ func appGenParamsNewPageData(id string) (*appGenParamsData) {
 	data.SetFeaturesFromConfig()
 	data.InApp = true
 	if !data.IsIdValid() {
-		return nil
+		Error.Printf("Invalid ID=%s\n", id)
+		return nil, &AppError{"Unable to locate WoT data for given ID"}
 	}
 	if err := data.Deserialize(); err != nil {
 		Error.Println(err)
-		return nil
+		return nil, &AppError{"Unable to locate WoT data for given ID"}
 	}
 
 	data.SetTocInfo()
 
-	return data
-}
-
-func readGeneratorsConfig() (*AppGenTargets, error) {
-	b, err := ioutil.ReadFile(ServerConfig.Paths.GeneratorsDataPath)
-	if err != nil {
-		return nil, err
-	}
-
-	var t = &AppGenTargets{}
-	if err := yaml.Unmarshal(b, t); err != nil {
-		Error.Printf("Error reading generators config file. Check YAML: %s", err)
-		return t, err
-	}
-
-	Debug.Printf("targets=%s\n", spew.Sdump(t))
-	return t, nil
+	return data, nil
 }
 
 func AppChooseFrameworkHandleGet(w http.ResponseWriter, req *http.Request) {
@@ -115,8 +72,12 @@ func AppChooseFrameworkHandleGet(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
 
-	var data = appGenParamsNewPageData(id)
-
+	data, err := appGenParamsNewPageData(id)
+	if err != nil {
+		// send back to create page
+		http.Redirect(w, req, "/app", 302)
+		return
+	}
 	appGenParamsServePage(w, *data)
 }
 
@@ -128,8 +89,11 @@ func AppChooseFrameworkHandlePost(w http.ResponseWriter, req *http.Request) {
 
 	err := req.ParseForm()
 	if err != nil {
-		Debug.Printf("Error parsing create thing form: %s\n", err)
-		appCreateThingServePage(w, appEntryData{Msg: "There was an error processing your data."})
+		Debug.Printf("Error parsing choose framework form: %s\n", err)
+		appCreateThingServePage(w, appEntryData{
+			AppPageData: AppPageData{
+				Message: "There was an error processing your data.",
+			}})
 	}
 	ctf := req.PostForm
 	Debug.Printf(spew.Sdump(ctf))

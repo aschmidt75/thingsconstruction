@@ -199,35 +199,35 @@ func parsePropertiesFormData(wtd *WebThingDescription, mpf url.Values) {
 			}
 		case "i":
 			{
-				var minVal *int = nil
-				var maxVal *int = nil
+				var minVal *float64 = nil
+				var maxVal *float64 = nil
 				if len(keyArr) >= 3 {
 					if x, err := strconv.Atoi(keyArr[2]); err == nil {
-						minVal = new(int)
-						*minVal = x
+						minVal = new(float64)
+						*minVal = float64(x)
 					}
 				}
 				if len(keyArr) >= 4 {
-					if x, err := strconv.Atoi(keyArr[2]); err == nil {
-						maxVal = new(int)
-						*maxVal = x
+					if x, err := strconv.Atoi(keyArr[3]); err == nil {
+						maxVal = new(float64)
+						*maxVal = float64(x)
 					}
 				}
 				wtd.AppendProperty(WebThingProperty{Name: keyArr[0], Type: "Integer", Min: minVal, Max: maxVal, Description: &desc})
 			}
 		case "f":
 			{
-				var minVal *int = nil
-				var maxVal *int = nil
+				var minVal *float64 = nil
+				var maxVal *float64 = nil
 				if len(keyArr) >= 3 {
-					if x, err := strconv.Atoi(keyArr[2]); err == nil {
-						minVal = new(int)
+					if x, err := strconv.ParseFloat(keyArr[2], 64); err == nil {
+						minVal = new(float64)
 						*minVal = x
 					}
 				}
 				if len(keyArr) >= 4 {
-					if x, err := strconv.Atoi(keyArr[2]); err == nil {
-						maxVal = new(int)
+					if x, err := strconv.ParseFloat(keyArr[3], 64); err == nil {
+						maxVal = new(float64)
 						*maxVal = x
 					}
 				}

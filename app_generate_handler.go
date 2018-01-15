@@ -92,9 +92,18 @@ func AppGenerateDataHandleGet(w http.ResponseWriter, req *http.Request) {
 	}
 	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
+	t, err := ReadGeneratorsConfig()
+	if err != nil {
+		Error.Printf("Unable to present generators. FIX CONFIG!\n")
+		w.WriteHeader(500)
+		fmt.Fprint(w, "Error loading generator data")
+		return
+	}
+
 	pageData := struct{
 		Wtd *WebThingDescription `json:"wtd"`
-	}{ Wtd: data.wtd}
+		Target *AppGenTarget `json:"target"`
+	}{ Wtd: data.wtd, Target: t.AppGenTargetById(data.md.SelectedGeneratorId)}
 
 	b, err := json.Marshal(pageData)
 	if err != nil {
@@ -149,8 +158,11 @@ func AppGenerateAcceptHandlePost(w http.ResponseWriter, req *http.Request) {
 
 	err := req.ParseForm()
 	if err != nil {
-		Debug.Printf("Error parsing create thing form: %s\n", err)
-		appCreateThingServePage(w, appEntryData{Msg: "There was an error processing your data."})
+		Debug.Printf("Error parsing generate form: %s\n", err)
+		appCreateThingServePage(w, appEntryData{
+			AppPageData: AppPageData{
+				Message: "There was an error processing your data.",
+			}})
 	}
 	formData := req.PostForm
 	Debug.Printf(spew.Sdump(formData))
