@@ -32,6 +32,10 @@
   <script src="/js/class.min.js"></script>
   <script src="/js/jquery.jquery-encoder.min.js"></script>
   <script src="/js/materialize.min.js"></script>
+  <!-- 1.0 alpha Compiled and minified JavaScript
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
+          -->
+
   <script src="/js/main.js"></script>
 {{ template `script` . }}
 

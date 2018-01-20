@@ -7,9 +7,12 @@
   <title>THNGS:CONSTR - {{ .Title }}</title>
   <!-- Material Icon CDN -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- Path of the materialize.min.css file -->
+  <!-- Path of the 0.9 materialize.min.css file -->
   <link rel="stylesheet" href="/css/materialize.min.css" media="screen,projection">
-  <!-- Custom css file path -->
+  <!-- 1.0 Compiled and minified CSS
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">-->
+
+    <!-- Custom css file path -->
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">

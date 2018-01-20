@@ -21,11 +21,11 @@ package main
 //
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"net/http"
-	"github.com/davecgh/go-spew/spew"
-	"encoding/json"
 	"net/url"
 )
 
@@ -34,7 +34,7 @@ type appManageEventsData struct {
 	Msg string
 }
 
-func appManageEventsNewPageData(id string) (*appManageEventsData) {
+func appManageEventsNewPageData(id string) *appManageEventsData {
 	// read data from id
 	data := &appManageEventsData{
 		AppPageData: AppPageData{

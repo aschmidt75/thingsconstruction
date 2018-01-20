@@ -37,13 +37,14 @@ type Config struct {
 		FeedbackPath       string `yaml:"feedback"`
 		GeneratorsDataPath string `yaml:"generators"`
 		DataPath           string `yaml:"data"`
+		URLPrefix          string `yaml:"urlprefix"`
 	}
 	Features struct {
 		Blog    bool `yaml:"blog"`
 		App     bool `yaml:"app"`
 		Contact bool `yaml:"contact"`
 		Twitter bool `yaml:"twitter"`
-		GitHub bool  `yaml:"github"`
+		GitHub  bool `yaml:"github"`
 	}
 	StaticTexts struct {
 		CopyrightLine string `yaml:"copyrightline"`

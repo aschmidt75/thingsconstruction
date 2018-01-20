@@ -21,14 +21,14 @@ package main
 //
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"net/http"
-	"github.com/davecgh/go-spew/spew"
-	"strings"
-	"encoding/json"
-	"strconv"
 	"net/url"
+	"strconv"
+	"strings"
 )
 
 type appManagePropertiesData struct {
@@ -36,7 +36,7 @@ type appManagePropertiesData struct {
 	Msg string
 }
 
-func appManagePropertiesNewPageData(id string) (*appManagePropertiesData) {
+func appManagePropertiesNewPageData(id string) *appManagePropertiesData {
 	// read data from id
 	data := &appManagePropertiesData{
 		AppPageData: AppPageData{

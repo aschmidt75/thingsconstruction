@@ -14,7 +14,7 @@ fi
 cat ${INJSON} | jq -e . >/dev/null 2>&1
 if [[ $? -eq 0 ]]; then
     # valid JSON as STDIN input, process. Here: default, dummy processing
-    # place two statuc files in output folder, return metadata about
+    # place two static files in output folder, return metadata about
     # these files.
     touch ${OUT}/readme.md
     touch ${OUT}/sample.ino

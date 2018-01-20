@@ -22,7 +22,6 @@ import (
 	"net/http"
 )
 
-
 type appGenParamsData struct {
 	AppPageData
 	NumGenerators int

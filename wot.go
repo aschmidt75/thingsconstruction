@@ -22,33 +22,33 @@ import (
 )
 
 type WebThingProperty struct {
-	Name		string `json:name`
-	Type 		string `json:type`
-	MaxLength 		*int `json:maxlength,omitempty`
-	Min 			*float64 `json:maxlength,omitempty`
-	Max 			*float64 `json:maxlength,omitempty`
-	Description 	*string `json:description,omitempty`
+	Name        string   `json:name`
+	Type        string   `json:type`
+	MaxLength   *int     `json:maxlength,omitempty`
+	Min         *float64 `json:maxlength,omitempty`
+	Max         *float64 `json:maxlength,omitempty`
+	Description *string  `json:description,omitempty`
 }
 type WebThingProperties []WebThingProperty
 
 type WebThingAction struct {
-	Name		string `json:name`
-	Description 	*string `json:description,omitempty`
+	Name        string  `json:name`
+	Description *string `json:description,omitempty`
 }
 type WebThingActions []WebThingAction
 type WebThingEvent struct {
-	Name		string `json:name`
-	Description 	*string `json:description,omitempty`
+	Name        string  `json:name`
+	Description *string `json:description,omitempty`
 }
 type WebThingEvents []WebThingEvent
 
 type WebThingDescription struct {
-	Name        string `json:name`
-	Type        string `json:type`
-	Description *string `json:description,omitempty`
+	Name        string              `json:name`
+	Type        string              `json:type`
+	Description *string             `json:description,omitempty`
 	Properties  *WebThingProperties `json:properties,omitempty`
-	Actions  	*WebThingActions `json:actions,omitempty`
-	Events   	*WebThingEvents `json:events,omitempty`
+	Actions     *WebThingActions    `json:actions,omitempty`
+	Events      *WebThingEvents     `json:events,omitempty`
 }
 
 func (wtd *WebThingDescription) NewProperties() {
@@ -102,5 +102,3 @@ func (wtd *WebThingDescription) Deserialize(id string, fileName string) error {
 	}
 	return err
 }
-
-

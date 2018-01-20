@@ -17,15 +17,27 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/satori/go.uuid"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
+	"sync"
+	"time"
 )
 
+type AppTokens struct {
+	tokens map[string]time.Time
+	mux    sync.Mutex
+}
+
+var CurrentAppTokens AppTokens
+
 type AppError struct {
-	Message 	string
+	Message string
 }
 
 func (ae *AppError) Error() string {
@@ -59,6 +71,41 @@ func (gmd *GeneratorMetaData) Deserialize(id string, fileName string) error {
 		Debug.Println(string(b))
 	}
 	return err
+}
+
+func AppTokensNew() {
+	CurrentAppTokens.mux.Lock()
+	defer CurrentAppTokens.mux.Unlock()
+	CurrentAppTokens.tokens = make(map[string]time.Time)
+}
+
+// create a new token and store it
+func AppGenerateToken() string {
+	CurrentAppTokens.mux.Lock()
+	defer CurrentAppTokens.mux.Unlock()
+
+	t := uuid.NewV4().String()
+
+	CurrentAppTokens.tokens[t] = time.Now().Add(time.Hour * 1)
+
+	return t
+}
+
+func AppCheckToken(t string) bool {
+
+	exp, ok := CurrentAppTokens.tokens[t]
+	if !ok {
+		return false
+	}
+	if exp.Before(time.Now()) {
+		return false
+	}
+
+	// todo:sweep through all tokens, remove expired ones.
+	CurrentAppTokens.mux.Lock()
+	defer CurrentAppTokens.mux.Unlock()
+
+	return true
 }
 
 type AppPageData struct {
@@ -95,24 +142,71 @@ func (ap *AppPageData) SetTocInfo() {
 	}
 }
 
+// checks if ap.ThingId has valid format and is stored
+// on local data path
 func (ap *AppPageData) IsIdValid() bool {
-	fileName := filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId+".json")
+	id := "" + ap.ThingId
+	if len(id) == 0 {
+		return false
+	}
+	r := regexp.MustCompile("[0-9a-zA-Z_-]+")
+	if r.MatchString(id) == false {
+		Debug.Printf("Invalid ID form: %s", id)
+		return false
+	}
+
+	dirName := filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId)
+	if s, err := os.Stat(dirName); os.IsNotExist(err) || s.IsDir() == false {
+		return false
+	}
+
+	fileName := filepath.Join(dirName, "data.json")
 	if _, err := os.Stat(fileName); os.IsNotExist(err) {
 		return false
 	}
 	return true
 }
 
-func (ap *AppPageData) Serialize() error {
-	var fileName string
+func GetBasePathByThingId(thingId string) (string, error) {
 	var err error
-	fileName = filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId+".json")
+
+	dirName := filepath.Join(ServerConfig.Paths.DataPath, ""+thingId)
+	s, err := os.Stat(dirName)
+	if os.IsNotExist(err) {
+		return "", errors.New("unable to access thing data")
+	} else {
+		if s.IsDir() == false {
+			return "", errors.New("unable to access thing data (file exist but is not a dir)")
+		}
+	}
+	return dirName, nil
+}
+
+func (ap *AppPageData) Serialize() error {
+	var err error
+
+	dirName := filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId)
+	s, err := os.Stat(dirName)
+	if os.IsNotExist(err) {
+		// make dir
+		err = os.Mkdir(dirName, 0777)
+		if err != nil {
+			return err
+		}
+	} else {
+		if s.IsDir() == false {
+			return errors.New("unable to store thing data (file exist but is not a dir)")
+		}
+	}
+
+	var fileName string
+	fileName = filepath.Join(dirName, "data.json")
 	if err = ap.wtd.Serialize(ap.ThingId, fileName); err != nil {
 		Error.Printf("Serialize() for wtd id=%s, err=%s\n", ap.ThingId, err)
 		return err
 	}
 
-	fileName = filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId+".meta.json")
+	fileName = filepath.Join(dirName, "meta.json")
 	if err = ap.md.Serialize(ap.ThingId, fileName); err != nil {
 		Error.Printf("Serialize() for md id=%s, err=%s\n", ap.ThingId, err)
 		return err
@@ -122,16 +216,21 @@ func (ap *AppPageData) Serialize() error {
 }
 
 func (ap *AppPageData) Deserialize() error {
+	if !ap.IsIdValid() {
+		Error.Printf("Deserialize() for wtd id=%s: not a valid id\n", ap.ThingId)
+		return errors.New("not a valid id")
+	}
+
 	var fileName string
 	var err error
-	fileName = filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId+".json")
+	fileName = filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId, "data.json")
 	ap.wtd = &WebThingDescription{}
 	if err = ap.wtd.Deserialize(ap.ThingId, fileName); err != nil {
 		Error.Printf("Deserialize() for wtd id=%s, err=%s\n", ap.ThingId, err)
 		return err
 	}
 
-	fileName = filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId+".meta.json")
+	fileName = filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId, "meta.json")
 	ap.md = &GeneratorMetaData{}
 	if err = ap.md.Deserialize(ap.ThingId, fileName); err != nil {
 		Error.Printf("Deserialize() for md, id=%s, err=%s\n", ap.ThingId, err)
@@ -168,4 +267,3 @@ func AppErrorServePage(w http.ResponseWriter, message string, id string) {
 		fmt.Fprint(w, "There was an internal error.")
 	}
 }
-

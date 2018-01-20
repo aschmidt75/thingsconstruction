@@ -1,6 +1,7 @@
 ---
 targets:
  - id: 1
+   repotag: samplemod:0.1
    shortdesc: Arduino-compatible JSON/REST-API, for use with EthernetServer
    desc: "This generates a single .ino sketch suitable for working with the Arduino IDE. The sketch
    will run an HTTP server, which serves the Web Of Things API. Understands JSON.

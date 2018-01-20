@@ -17,21 +17,25 @@
 package main
 
 import (
-	"fmt"
-	"github.com/gorilla/mux"
-	"net/http"
-	"github.com/davecgh/go-spew/spew"
+	"bytes"
 	"encoding/json"
+	"fmt"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/fsouza/go-dockerclient"
+	"github.com/gorilla/mux"
 	"github.com/satori/go.uuid"
+	"io/ioutil"
+	"net/http"
+	"os"
 )
 
 type appGenerateData struct {
 	AppPageData
-	Msg string
+	Msg      string
 	Accepted bool
 }
 
-func appGenerateNewPageData(id string) (*appGenerateData) {
+func appGenerateNewPageData(id string) *appGenerateData {
 	// read data from id
 	data := &appGenerateData{
 		AppPageData: AppPageData{
@@ -42,6 +46,30 @@ func appGenerateNewPageData(id string) (*appGenerateData) {
 			ThingId: id,
 		},
 		Accepted: false,
+	}
+	data.SetFeaturesFromConfig()
+	if !data.IsIdValid() {
+		return nil
+	}
+	if err := data.Deserialize(); err != nil {
+		Error.Println(err)
+		return nil
+	}
+	data.SetTocInfo()
+
+	return data
+}
+
+func appGenerateNewResultPageData(id string) *appGenerateResultData {
+	// read data from id
+	data := &appGenerateResultData{
+		AppPageData: AppPageData{
+			PageData: PageData{
+				Title: "Generate WoT code",
+				InApp: true,
+			},
+			ThingId: id,
+		},
 	}
 	data.SetFeaturesFromConfig()
 	if !data.IsIdValid() {
@@ -73,7 +101,6 @@ func AppGenerateHandleGet(w http.ResponseWriter, req *http.Request) {
 
 }
 
-
 func AppGenerateDataHandleGet(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
 		w.WriteHeader(501)
@@ -100,10 +127,10 @@ func AppGenerateDataHandleGet(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	pageData := struct{
-		Wtd *WebThingDescription `json:"wtd"`
-		Target *AppGenTarget `json:"target"`
-	}{ Wtd: data.wtd, Target: t.AppGenTargetById(data.md.SelectedGeneratorId)}
+	pageData := struct {
+		Wtd    *WebThingDescription `json:"wtd"`
+		Target *AppGenTarget        `json:"target"`
+	}{Wtd: data.wtd, Target: t.AppGenTargetById(data.md.SelectedGeneratorId)}
 
 	b, err := json.Marshal(pageData)
 	if err != nil {
@@ -119,37 +146,6 @@ func AppGenerateDataHandleGet(w http.ResponseWriter, req *http.Request) {
 	w.Write(b)
 }
 
-func AppGenerateWtdHandleGet(w http.ResponseWriter, req *http.Request) {
-	if ServerConfig.Features.App == false {
-		w.WriteHeader(501)
-		return
-	}
-
-	// check if id is valid
-	vars := mux.Vars(req)
-	id := vars["id"]
-
-	data := appGenerateNewPageData(id)
-	if data == nil {
-		w.WriteHeader(500)
-		fmt.Fprint(w, "Error deserializing session data")
-		return
-	}
-
-	b, err := json.MarshalIndent(data.wtd, "", "\t")
-	if err != nil {
-		Error.Println(err)
-		w.WriteHeader(500)
-		fmt.Fprint(w, "Error marshaling data")
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.Header().Set("Content-Disposition", "attachment; filename=\""+data.ThingId+".json\"")
-	w.WriteHeader(200)
-	w.Write(b)
-}
-
 func AppGenerateAcceptHandlePost(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
 		w.WriteHeader(http.StatusNotImplemented)
@@ -159,7 +155,7 @@ func AppGenerateAcceptHandlePost(w http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		Debug.Printf("Error parsing generate form: %s\n", err)
-		appCreateThingServePage(w, appEntryData{
+		appGenerateServePage(w, &appGenerateData{
 			AppPageData: AppPageData{
 				Message: "There was an error processing your data.",
 			}})
@@ -171,10 +167,10 @@ func AppGenerateAcceptHandlePost(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
 
-	pageData := struct{
-		Id string
+	pageData := struct {
+		Id    string
 		Token string
-	}{ Id: id, Token: uuid.NewV4().String()}
+	}{Id: id, Token: AppGenerateToken()}
 
 	b, err := json.Marshal(pageData)
 	if err != nil {
@@ -190,25 +186,190 @@ func AppGenerateAcceptHandlePost(w http.ResponseWriter, req *http.Request) {
 	w.Write(b)
 }
 
-/*
-// given the form data , this function parses all events from it and appends these to wtd
-func parseEventsFormData(wtd *WebThingDescription, formData url.Values) {
-	// parse Event
-	wtd.NewEvents()
-	for idx := 1; idx < 100; idx++ {
-		keyStr := fmt.Sprintf("me_listitem_%d_val", idx)
-		key := formData.Get(keyStr)
-		if key == "" {
-			break
-		}
+func AppGenerateHandlePost(w http.ResponseWriter, req *http.Request) {
+	if ServerConfig.Features.App == false {
+		w.WriteHeader(http.StatusNotImplemented)
+		return
+	}
 
-		keyStr = fmt.Sprintf("me_listitem_%d_desc", idx)
-		desc := formData.Get(keyStr)
+	err := req.ParseForm()
+	if err != nil {
+		Debug.Printf("Error parsing generate form: %s\n", err)
+		appGenerateServePage(w, &appGenerateData{
+			AppPageData: AppPageData{
+				Message: "There was an error processing your data.",
+			}})
+	}
+	formData := req.PostForm
+	Debug.Printf(spew.Sdump(formData))
 
-		wtd.AppendEvent(WebThingEvent{Name: key, Description: &desc})
+	// check if id and token is valid
+	vars := mux.Vars(req)
+	id := vars["id"]
+	_ = formData.Get("id")
+	token := formData.Get("token")
+
+	data := appGenerateNewPageData(id)
+
+	if AppCheckToken(token) {
+		runModule(data)
+
+		http.Redirect(w, req, fmt.Sprintf("/app/%s/result", id), 302)
+	} else {
+		appGenerateServePage(w, &appGenerateData{
+			AppPageData: AppPageData{
+				Message: "There was an error processing your data.",
+			}})
 	}
 }
-*/
+
+func runModule(data *appGenerateData) {
+	targets, err := ReadGeneratorsConfig()
+	if err != nil || targets == nil {
+		data.AppPageData.Message = "Internal Error while generating code: Backend module not found."
+		return
+	}
+
+	target := targets.AppGenTargetById(data.md.SelectedGeneratorId)
+	Verbose.Printf("Using target=%#v", target)
+
+	client, err := docker.NewClient("unix:///var/run/docker.sock")
+	if err != nil {
+		Error.Println(err)
+		return
+	}
+	client.SkipServerVersionCheck = true
+
+	Debug.Printf("cli=%#v\n", client)
+
+	// create or renew i/o folders in basepath
+	basePath, err := GetBasePathByThingId(data.ThingId)
+	if err != nil {
+		Error.Println(err)
+		return
+	}
+
+	runId := uuid.NewV4().String()
+	Debug.Printf("runId=%s", runId)
+
+	inPath := fmt.Sprintf("%s/%s-in", basePath, runId)
+	outPath := fmt.Sprintf("%s/%s-out", basePath, runId)
+	err = os.Mkdir(inPath, 0777)
+	if err != nil {
+		Error.Println(err)
+		return
+	}
+	err = os.Mkdir(outPath, 0777)
+	if err != nil {
+		Error.Println(err)
+		return
+	}
+
+	hostMounts := make([]docker.HostMount, 2)
+	hostMounts[0] = docker.HostMount{
+		Target:   "/in",
+		Source:   inPath,
+		Type:     "bind",
+		ReadOnly: false,
+	}
+	hostMounts[1] = docker.HostMount{
+		Target:   "/out",
+		Source:   outPath,
+		Type:     "bind",
+		ReadOnly: false,
+	}
+
+	opts := docker.CreateContainerOptions{
+		Config: &docker.Config{
+			Image:     target.ImageRepoTag,
+			OpenStdin: true,
+			StdinOnce: true,
+		},
+		HostConfig: &docker.HostConfig{
+			Mounts: hostMounts,
+		},
+	}
+
+	// Create the container, start the container
+	container, err := client.CreateContainer(opts)
+	if err != nil {
+		Error.Println(err)
+	}
+
+	Debug.Printf("container=%#v\n", container)
+
+	err = client.StartContainer(container.ID, &docker.HostConfig{})
+	if err != nil {
+		Error.Println(err)
+	}
+
+	// attach stdin, stdout and stderr to container.
+	Debug.Printf("Started, attaching\n")
+
+	mr := NewModuleRequest(data.ThingId)
+
+	// for simulating stdin, we use a string reader with predefined content.
+	var reader = mr.ShipRequest()
+	var buf bytes.Buffer
+	var buferr bytes.Buffer
+
+	attachOpts := docker.AttachToContainerOptions{
+		Container:    container.ID,
+		Stdin:        true,
+		Stdout:       true,
+		Stderr:       true,
+		InputStream:  reader,
+		OutputStream: &buf,
+		ErrorStream:  &buferr,
+		Stream:       true,
+		Logs:         true,
+	}
+
+	err = client.AttachToContainer(attachOpts)
+	if err != nil {
+		Error.Println(err)
+	}
+
+	// Wait until container has finished. TODO: WaitContainerWithContext, timeout, ...
+	exitCode, err := client.WaitContainer(container.ID)
+	if err != nil {
+		Error.Println(err)
+	}
+
+	// dump some results.
+	Debug.Printf("Exitcode=%#v\n", exitCode)
+	if exitCode != 0 {
+		Error.Printf("Module returned non-zero exit code: %d. Will not continue", exitCode)
+		data.Message = "An internal error occurred during code generation (1)"
+		return
+	}
+
+	Debug.Println(buf.String())
+	// save to file for later usage
+	ioutil.WriteFile(fmt.Sprintf("%s/last-result.json", basePath), buf.Bytes(), 0640)
+	ioutil.WriteFile(fmt.Sprintf("%s/last-result.id", basePath), []byte(runId), 0640)
+	// Parse this reponse, construct data for web page.
+	moduleResponse, err := ParseResponseFromModule(buf.Bytes())
+	if err != nil {
+		Error.Printf("Error in parsing response from module. CHECK MODULE. %s", err)
+		data.Message = "An internal error occurred during code generation (2)"
+		return
+	}
+	Debug.Printf("%s", spew.Sdump(moduleResponse))
+	if moduleResponse.Status == "error" {
+		data.Message = fmt.Sprintf("Module reported an error while generating your code: %s // ID: %s", *moduleResponse.Message, data.ThingId)
+		return
+	}
+
+	Debug.Printf("%s", spew.Sdump(moduleResponse.Files))
+	// if we get have, things probably went well.
+	//data.Files = moduleResponse.Files
+
+	Verbose.Println(buferr.String())
+
+	buf.Reset()
+	buferr.Reset()
+}
 
 func appGenerateServePage(w http.ResponseWriter, data *appGenerateData) {
 	templates, err := NewBasicHtmlTemplateSet("app_generate.html.tpl", "app_generate_script.html.tpl")

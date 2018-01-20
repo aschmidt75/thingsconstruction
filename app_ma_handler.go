@@ -21,11 +21,11 @@ package main
 //
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"net/http"
-	"github.com/davecgh/go-spew/spew"
-	"encoding/json"
 	"net/url"
 )
 
@@ -34,8 +34,7 @@ type appManageActionsData struct {
 	Msg string
 }
 
-
-func appManageActionsNewPageData(id string) (*appManageActionsData) {
+func appManageActionsNewPageData(id string) *appManageActionsData {
 	// read data from id
 	data := &appManageActionsData{
 		AppPageData: AppPageData{
@@ -206,4 +205,3 @@ func appManageActionsServePage(w http.ResponseWriter, data *appManageActionsData
 	}
 
 }
-

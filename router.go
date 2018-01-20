@@ -33,34 +33,39 @@ type Route struct {
 type Routes []Route
 
 var routes = Routes{
-	Route{"FavIcon", 				"GET", 	"/favicon", faviconHandler},
-	Route{"Index", 				"GET", 	"/index.html", IndexHandler},
-	Route{"Index", 				"GET", 	"/", IndexHandler},
-	Route{"StaticPage", 			"GET", 	"/{page}.html", StaticPageHandler},
-	Route{"Blog", 				"GET", 	"/blog", BlogIndexHandler},
-	Route{"BlogPage", 			"GET",	"/blog/{page}", MarkdownBlogHandler},
-	Route{"AppCreateThing", 		"GET", 	"/app", AppCreateThingHandleGet},
-	Route{"AppCreateThing", 		"POST", "/app", AppCreateThingHandlePost},
-	Route{"AppCreateThing", 		"GET", 	"/app/{id}", AppCreateThingHandleGet},
-	Route{"AppCreateThing", 		"POST", "/app/{id}", AppCreateThingHandlePost},
-	Route{"AppChooseFramework", 	"GET", 	"/app/{id}/framework", AppChooseFrameworkHandleGet},
-	Route{"AppChooseFramework", 	"POST", "/app/{id}/framework", AppChooseFrameworkHandlePost},
-	Route{"AppManageProperties", "GET", 	"/app/{id}/properties", AppManagePropertiesHandleGet},
-	Route{"AppManageProperties", "GET", 	"/app/{id}/properties/data", AppManagePropertiesDataHandleGet},
+	Route{"FavIcon", "GET", "/favicon", faviconHandler},
+	Route{"Index", "GET", "/index.html", IndexHandler},
+	Route{"Index", "GET", "/", IndexHandler},
+	Route{"StaticPage", "GET", "/{page}.html", StaticPageHandler},
+	Route{"Blog", "GET", "/blog", BlogIndexHandler},
+	Route{"BlogPage", "GET", "/blog/{page}", MarkdownBlogHandler},
+	Route{"AppCreateThing", "GET", "/app", AppCreateThingHandleGet},
+	Route{"AppCreateThing", "POST", "/app", AppCreateThingHandlePost},
+	Route{"AppCreateThing", "GET", "/app/{id}", AppCreateThingHandleGet},
+	Route{"AppCreateThing", "POST", "/app/{id}", AppCreateThingHandlePost},
+	Route{"AppChooseFramework", "GET", "/app/{id}/framework", AppChooseFrameworkHandleGet},
+	Route{"AppChooseFramework", "POST", "/app/{id}/framework", AppChooseFrameworkHandlePost},
+	Route{"AppManageProperties", "GET", "/app/{id}/properties", AppManagePropertiesHandleGet},
+	Route{"AppManageProperties", "GET", "/app/{id}/properties/data", AppManagePropertiesDataHandleGet},
 	Route{"AppManageProperties", "POST", "/app/{id}/properties", AppManagePropertiesHandlePost},
-	Route{"AppManageActions", 	"GET", 	"/app/{id}/actions", AppManageActionsHandleGet},
-	Route{"AppManageActions", 	"GET", 	"/app/{id}/actions/data", AppManageActionsDataHandleGet},
-	Route{"AppManageActions", 	"POST", "/app/{id}/actions", AppManageActionsHandlePost},
-	Route{"AppManageEvents", 		"GET", 	"/app/{id}/events", AppManageEventsHandleGet},
-	Route{"AppManageEvents", 		"GET", 	"/app/{id}/events/data", AppManageEventsDataHandleGet},
-	Route{"AppManageEvents", 		"POST", "/app/{id}/events", AppManageEventsHandlePost},
-	Route{"AppGenerate", 			"GET",  "/app/{id}/generate", AppGenerateHandleGet},
-	Route{"AppGenerate", 			"GET",  "/app/{id}/generate/data", AppGenerateDataHandleGet},
-	Route{"AppGenerate", 			"GET",  "/app/{id}/generate/wtd", AppGenerateWtdHandleGet},
-	Route{"AppGenerate", 			"POST", "/app/{id}/generate/accept", AppGenerateAcceptHandlePost},
-	Route{"Feedback", 			"GET", 	"/feedback", FeedbackHandleGet},
-	Route{"Feedback", 			"POST", "/feedback", FeedbackHandlePost},
-	Route{"FeedbackQuick", 		"POST", "/feedback/q", FeedbackQuickHandlePost},
+	Route{"AppManageActions", "GET", "/app/{id}/actions", AppManageActionsHandleGet},
+	Route{"AppManageActions", "GET", "/app/{id}/actions/data", AppManageActionsDataHandleGet},
+	Route{"AppManageActions", "POST", "/app/{id}/actions", AppManageActionsHandlePost},
+	Route{"AppManageEvents", "GET", "/app/{id}/events", AppManageEventsHandleGet},
+	Route{"AppManageEvents", "GET", "/app/{id}/events/data", AppManageEventsDataHandleGet},
+	Route{"AppManageEvents", "POST", "/app/{id}/events", AppManageEventsHandlePost},
+	Route{"AppGenerate", "GET", "/app/{id}/generate", AppGenerateHandleGet},
+	Route{"AppGenerate", "GET", "/app/{id}/generate/data", AppGenerateDataHandleGet},
+	Route{"AppGenerate", "POST", "/app/{id}/generate/accept", AppGenerateAcceptHandlePost},
+	Route{"AppGenerate", "POST", "/app/{id}/generate", AppGenerateHandlePost},
+	Route{"AppResult", "GET", "/app/{id}/result", AppGenerateResultHandleGet},
+	Route{"AppResult", "GET", "/app/{id}/result/wtd", AppGenerateResultWtdHandleGet},
+	Route{"AppResult", "GET", "/app/{id}/result/asset/{permalink}", AppGenerateResultAssetHandleGet},
+	Route{"AppResult", "GET", "/app/{id}/result/assetview/{permalink}", AppGenerateResultAssetViewHandleGet},
+	Route{"AppResult", "GET", "/app/{id}/result/asset-archive/{format}", AppGenerateResultAssetArchiveHandleGet},
+	Route{"Feedback", "GET", "/feedback", FeedbackHandleGet},
+	Route{"Feedback", "POST", "/feedback", FeedbackHandlePost},
+	Route{"FeedbackQuick", "POST", "/feedback/q", FeedbackQuickHandlePost},
 }
 
 func NewRouter() *mux.Router {
@@ -96,8 +101,30 @@ func NewRouter() *mux.Router {
 }
 
 func notFoundHandler(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(404)
-	fmt.Fprint(w, "The page you're looking for has not been found.")
+	templates, err := NewBasicHtmlTemplateSet("_404.html.tpl")
+	if err != nil {
+		Error.Println(err)
+		w.WriteHeader(404)
+		fmt.Fprint(w, "The page you're looking for has not been found.")
+	}
+
+	//
+	data := &appGenerateResultData{
+		AppPageData: AppPageData{
+			PageData: PageData{
+				Title: "Not found",
+				InApp: true,
+			},
+		},
+	}
+	data.SetFeaturesFromConfig()
+
+	err = templates.ExecuteTemplate(w, "root", data)
+	if err != nil {
+		Error.Println(err)
+		w.WriteHeader(404)
+		fmt.Fprint(w, "The page you're looking for has not been found.")
+	}
 }
 
 func logger(inner http.Handler, name string) http.Handler {
@@ -147,5 +174,3 @@ func filterTooBigPayloads(inner http.Handler) http.Handler {
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./static/img/favicon.ico")
 }
-
-

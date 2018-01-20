@@ -11,7 +11,7 @@
     {{ if .Message }}
         <div class="card red darken-2">
             <div class="card-content white-text">
-            {{ .Msg }}
+            {{ .Message }}
             </div>
         </div>
     {{ end }}

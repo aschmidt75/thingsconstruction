@@ -69,6 +69,8 @@ func main() {
 
 	InitializeBlogPages()
 
+	AppTokensNew()
+
 	router := NewRouter()
 	Debug.Printf("router=%#v\n", router)
 

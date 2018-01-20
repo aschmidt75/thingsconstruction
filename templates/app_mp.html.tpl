@@ -2,10 +2,10 @@
 <div id="main" class="no-container">
     <div class="row">
         <div class="col s12">
-        {{ if .Msg }}
+        {{ if .Message }}
             <div class="card red darken-2">
                 <div class="card-content white-text">
-                {{ .Msg }}
+                {{ .Message }}
                 </div>
             </div>
         {{ else }}

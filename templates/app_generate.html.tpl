@@ -2,10 +2,10 @@
 <div id="main" class="no-container">
     <div class="row">
         <div class="col s12">
-        {{ if .Msg }}
+        {{ if .Message }}
             <div class="card red darken-2">
                 <div class="card-content white-text">
-                {{ .Msg }}
+                {{ .Message }}
                 </div>
             </div>
         {{ else }}
@@ -17,13 +17,6 @@
                             Congrats, all items necessary for generating your device code are present!<br>
                             You can review your settings here. If you need modifications, you may jump back
                             to previous pages.
-                        </p>
-                        <p>
-                            Download the WoT file in JSON here.<br>
-                            <a target="tc-ext" href="/app/{{.ThingId}}/generate/wtd">
-                                <i class="material-icons">file_download</i>
-                            </a>
-
                         </p>
                     </div>
                     <div id="gen_review" class=" z-depth-1">
@@ -66,7 +59,7 @@
                                 </p>
                             </div>
                             <div class="card-action ">
-                                <p>Please click the checkbox below if you agree with the above.</p>
+                                <p>Please tick the checkbox below if you agree with the conditions above.</p>
 
                                 <input id="gen_accept_cb" type="checkbox" class="filled-in deep-orange" />
                                 <label for="gen_accept_cb" class="teal-text">
@@ -74,7 +67,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div id="gen_go_div" class="col s3 right">
+                        <div id="gen_go_div" class="col s12">
 
                         </div>
                     </div>
@@ -92,15 +85,6 @@
                     </ul>
                     </p>
                 </div>
-                <div class="row">
-                    <div class="col s9">
-                        <!--
-                        <button id="me_prev" class="btn-large deep-orange tooltipped left" data-delay="100" data-tooltip="Discard changes, go to previous step">
-                            <i class="material-icons left">navigate_before</i>Events
-                        </button>
-                        -->
-                    </div>
-                </div>
             </div>
 
         {{ end }}
@@ -110,12 +94,12 @@
 
     <!-- hidden, tools -->
     <div id="tpl_gen_go_div" class="hide">
-        <form id="gen_go_f" name="gen_go_f">
-            <input type="hidden" value="" id="gen_go_token">
-            <input type="hidden" value="{{.ThingId}}" id="gen_go_id">
-            <button id="gen_go" class="btn deep-orange waves-effect waves-light" type="submit" name="gen_go">
+        <form id="gen_go_f" name="gen_go_f" method="POST" action="/app/{{ .ThingId }}/generate">
+            <input type="hidden" value="" id="gen_go_token" name="token">
+            <input type="hidden" value="{{.ThingId}}" id="gen_go_id" name="id">
+            <button id="gen_go" class="btn deep-orange waves-effect waves-light col s5 right" type="submit" name="gen_go">
                 Generate!
-                <i class="material-icons right">send</i>
+                <i class="material-icons right">build</i>
             </button>
         </form>
     </div>

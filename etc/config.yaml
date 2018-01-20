@@ -12,6 +12,7 @@ paths:
   feedback: "/tmp/"
   generators: "./etc/generators.yaml"
   data: "/tmp/"
+  urlprefix: "http://127.0.0.1:8088/"
 features:
   blog: true
   app: true

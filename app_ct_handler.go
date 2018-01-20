@@ -25,11 +25,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"github.com/satori/go.uuid"
 	"net/http"
 	"strings"
-	"github.com/davecgh/go-spew/spew"
 )
 
 type appEntryData struct {
@@ -82,7 +82,7 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		Debug.Printf("Error parsing create thing form: %s\n", err)
 		appCreateThingServePage(w, appEntryData{
-			AppPageData:AppPageData{
+			AppPageData: AppPageData{
 				Message: "There was an error processing your data.",
 			},
 		})
@@ -93,6 +93,7 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 	// check if id is valid
 	vars := mux.Vars(req)
 	id := vars["id"]
+	Debug.Printf("id=%s", id)
 	if id != "" {
 		// this is an edit of an existing ThingId
 		data := &appManageActionsData{
@@ -106,7 +107,7 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 		}
 		if !data.IsIdValid() {
 			appCreateThingServePage(w, appEntryData{
-				AppPageData:AppPageData{
+				AppPageData: AppPageData{
 					Message: "There was an error locating WoT data by ID.",
 				},
 			})
@@ -115,7 +116,7 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 		if err := data.Deserialize(); err != nil {
 			Error.Println(err)
 			appCreateThingServePage(w, appEntryData{
-				AppPageData:AppPageData{
+				AppPageData: AppPageData{
 					Message: "There was an error locating WoT data by ID.",
 				},
 			})
@@ -131,7 +132,7 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 		if data.Serialize() != nil {
 			Error.Println(err)
 			appCreateThingServePage(w, appEntryData{
-				AppPageData:AppPageData{
+				AppPageData: AppPageData{
 					Message: "There was an error writing session data.",
 				},
 			})

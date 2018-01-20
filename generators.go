@@ -1,8 +1,8 @@
 package main
 
 import (
-	"io/ioutil"
 	"gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
 type AppStringArray []string
@@ -16,15 +16,15 @@ type AppGenDependency struct {
 }
 type AppGenDependencyArray []AppGenDependency
 
-
 type AppGenTarget struct {
 	Id           string                `yaml:"id"`
+	ImageRepoTag string                `yaml:"repotag"`
 	Image        string                `yaml:"image"`
 	ShortDesc    string                `yaml:"shortdesc"`
 	Desc         string                `yaml:"desc"`
 	Tags         AppStringArray        `yaml:"tags"`
 	Dependencies AppGenDependencyArray `yaml:"dependencies"`
-	CodeGenInfo  string				   `yaml:"codegeninfo"`
+	CodeGenInfo  string                `yaml:"codegeninfo"`
 }
 
 type AppGenTargetArray []AppGenTarget
@@ -54,7 +54,6 @@ func ReadGeneratorsConfig() (*AppGenTargets, error) {
 		return t, err
 	}
 
-//	Debug.Printf("targets=%s\n", spew.Sdump(t))
+	//	Debug.Printf("targets=%s\n", spew.Sdump(t))
 	return t, nil
 }
-
