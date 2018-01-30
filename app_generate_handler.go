@@ -27,6 +27,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"errors"
 )
 
 type appGenerateData struct {
@@ -212,7 +213,19 @@ func AppGenerateHandlePost(w http.ResponseWriter, req *http.Request) {
 	data := appGenerateNewPageData(id)
 
 	if AppCheckToken(token) {
-		runModule(data)
+		if err := runModule(data); err != nil {
+			Error.Println(err)
+			var msg = fmt.Sprintf("An internal error occurred while generating your code. (%s)", err)
+			data.AppPageData.Message = msg
+
+
+			appGenerateServePage(w, &appGenerateData{
+				AppPageData: AppPageData{
+					Message: msg,
+				}})
+
+			return
+		}
 
 		http.Redirect(w, req, fmt.Sprintf("/app/%s/result", id), 302)
 	} else {
@@ -220,14 +233,15 @@ func AppGenerateHandlePost(w http.ResponseWriter, req *http.Request) {
 			AppPageData: AppPageData{
 				Message: "There was an error processing your data.",
 			}})
+
+		return
 	}
 }
 
-func runModule(data *appGenerateData) {
+func runModule(data *appGenerateData) error {
 	targets, err := ReadGeneratorsConfig()
 	if err != nil || targets == nil {
-		data.AppPageData.Message = "Internal Error while generating code: Backend module not found."
-		return
+		return errors.New("i1")
 	}
 
 	target := targets.AppGenTargetById(data.md.SelectedGeneratorId)
@@ -236,7 +250,7 @@ func runModule(data *appGenerateData) {
 	client, err := docker.NewClient("unix:///var/run/docker.sock")
 	if err != nil {
 		Error.Println(err)
-		return
+		return errors.New("i2")
 	}
 	client.SkipServerVersionCheck = true
 
@@ -246,7 +260,7 @@ func runModule(data *appGenerateData) {
 	basePath, err := GetBasePathByThingId(data.ThingId)
 	if err != nil {
 		Error.Println(err)
-		return
+		return errors.New("i3")
 	}
 
 	runId := uuid.NewV4().String()
@@ -257,12 +271,12 @@ func runModule(data *appGenerateData) {
 	err = os.Mkdir(inPath, 0777)
 	if err != nil {
 		Error.Println(err)
-		return
+		return errors.New("i4")
 	}
 	err = os.Mkdir(outPath, 0777)
 	if err != nil {
 		Error.Println(err)
-		return
+		return errors.New("i5")
 	}
 
 	hostMounts := make([]docker.HostMount, 2)
@@ -294,6 +308,7 @@ func runModule(data *appGenerateData) {
 	container, err := client.CreateContainer(opts)
 	if err != nil {
 		Error.Println(err)
+		return errors.New("i10")
 	}
 
 	Debug.Printf("container=%#v\n", container)
@@ -301,6 +316,7 @@ func runModule(data *appGenerateData) {
 	err = client.StartContainer(container.ID, &docker.HostConfig{})
 	if err != nil {
 		Error.Println(err)
+		return errors.New("i11")
 	}
 
 	// attach stdin, stdout and stderr to container.
@@ -328,20 +344,21 @@ func runModule(data *appGenerateData) {
 	err = client.AttachToContainer(attachOpts)
 	if err != nil {
 		Error.Println(err)
+		return errors.New("i12")
 	}
 
 	// Wait until container has finished. TODO: WaitContainerWithContext, timeout, ...
 	exitCode, err := client.WaitContainer(container.ID)
 	if err != nil {
 		Error.Println(err)
+		return errors.New("i13")
 	}
 
 	// dump some results.
 	Debug.Printf("Exitcode=%#v\n", exitCode)
 	if exitCode != 0 {
 		Error.Printf("Module returned non-zero exit code: %d. Will not continue", exitCode)
-		data.Message = "An internal error occurred during code generation (1)"
-		return
+		return errors.New("i14")
 	}
 
 	Debug.Println(buf.String())
@@ -352,13 +369,12 @@ func runModule(data *appGenerateData) {
 	moduleResponse, err := ParseResponseFromModule(buf.Bytes())
 	if err != nil {
 		Error.Printf("Error in parsing response from module. CHECK MODULE. %s", err)
-		data.Message = "An internal error occurred during code generation (2)"
-		return
+		return errors.New("i15")
 	}
 	Debug.Printf("%s", spew.Sdump(moduleResponse))
 	if moduleResponse.Status == "error" {
 		data.Message = fmt.Sprintf("Module reported an error while generating your code: %s // ID: %s", *moduleResponse.Message, data.ThingId)
-		return
+		return errors.New("i16")
 	}
 
 	Debug.Printf("%s", spew.Sdump(moduleResponse.Files))
@@ -369,6 +385,8 @@ func runModule(data *appGenerateData) {
 
 	buf.Reset()
 	buferr.Reset()
+
+	return nil
 }
 
 func appGenerateServePage(w http.ResponseWriter, data *appGenerateData) {

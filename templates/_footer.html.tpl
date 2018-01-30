@@ -5,8 +5,8 @@
         <div class="col s12 m8 l8">
           <h5 class="white-text">Web Of Things</h5>
             <p class="grey-text text-lighten-4">
-                Read more about <a class="grey-text text-lighten-1" target="tc-wot-ext" href="https://www.w3.org/WoT/"><i class="tiny material-icons">link</i>WoT</a> and the
-                <a class="grey-text text-lighten-1" target="tc-wot-ext" href="https://iot.mozilla.org/wot/"><i class="tiny material-icons">link</i>Web Thing Description</a></p>
+                Read more about <a class="grey-text text-lighten-1" target="tc-wot-ext" href="https://www.w3.org/WoT/"><i class="tiny material-icons">exit_to_app</i>WoT</a> and the
+                <a class="grey-text text-lighten-1" target="tc-wot-ext" href="https://iot.mozilla.org/wot/"><i class="tiny material-icons">exit_to_app</i>Web Thing Description</a></p>
         </div>
         <div class="col s12 m4 l4 right-align">
             <ul>
