@@ -18,11 +18,14 @@
             progress.className += " hide";
         },
         complete: function() {
-            var obj = JSON.parse(actionsJson)
+            var obj = JSON.parse(actionsJson);
             if (obj !== null) {
-                for (var i = 0; i < obj.length; i++) {
-                    var prop = obj[i]
-                    ma_list_add_existing(prop)
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        action = obj[key];
+                        action.name = key;
+                        ma_list_add_existing(action)
+                    }
                 }
             }
             progress.className += " hide";

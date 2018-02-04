@@ -22,60 +22,55 @@ import (
 )
 
 type WebThingProperty struct {
-	Name        string   `json:name`
-	Type        string   `json:type`
-	MaxLength   *int     `json:maxlength,omitempty`
-	Min         *float64 `json:maxlength,omitempty`
-	Max         *float64 `json:maxlength,omitempty`
-	Description *string  `json:description,omitempty`
+	Name        string   `json:"-"`
+	Type        string   `json:"type"`
+	MaxLength   *int     `json:"maxlength,omitempty"`
+	Min         *float64 `json:"min,omitempty"`
+	Max         *float64 `json:"max,omitempty"`
+	Description *string  `json:"description,omitempty"`
 }
-type WebThingProperties []WebThingProperty
 
 type WebThingAction struct {
-	Name        string  `json:name`
-	Description *string `json:description,omitempty`
+	Name        string  `json:"-"`
+	Description *string `json:"description,omitempty"`
 }
-type WebThingActions []WebThingAction
+
 type WebThingEvent struct {
-	Name        string  `json:name`
-	Description *string `json:description,omitempty`
+	Name        string  `json:"-"`
+	Description *string `json:"description,omitempty"`
 }
-type WebThingEvents []WebThingEvent
 
 type WebThingDescription struct {
-	Name        string              `json:name`
-	Type        string              `json:type`
-	Description *string             `json:description,omitempty`
-	Properties  *WebThingProperties `json:properties,omitempty`
-	Actions     *WebThingActions    `json:actions,omitempty`
-	Events      *WebThingEvents     `json:events,omitempty`
+	Name        string                      `json:"name"`
+	Type        string                      `json:"type"`
+	Description *string                     `json:"description,omitempty"`
+	Properties  map[string]WebThingProperty `json:"properties,omitempty"`
+	Actions     map[string]WebThingAction   `json:"actions,omitempty"`
+	Events      map[string]WebThingEvent    `json:"events,omitempty"`
 }
 
 func (wtd *WebThingDescription) NewProperties() {
-	wtd.Properties = &WebThingProperties{}
-	*wtd.Properties = make([]WebThingProperty, 0, 3)
+	wtd.Properties = make(map[string]WebThingProperty)
 }
 
 func (wtd *WebThingDescription) AppendProperty(p WebThingProperty) {
-	*wtd.Properties = append(*wtd.Properties, p)
+	wtd.Properties[p.Name] = p
 }
 
 func (wtd *WebThingDescription) NewActions() {
-	wtd.Actions = &WebThingActions{}
-	*wtd.Actions = make([]WebThingAction, 0, 3)
+	wtd.Actions = make(map[string]WebThingAction)
 }
 
 func (wtd *WebThingDescription) AppendAction(a WebThingAction) {
-	*wtd.Actions = append(*wtd.Actions, a)
+	wtd.Actions[a.Name] = a
 }
 
 func (wtd *WebThingDescription) NewEvents() {
-	wtd.Events = &WebThingEvents{}
-	*wtd.Events = make([]WebThingEvent, 0, 3)
+	wtd.Events = make(map[string]WebThingEvent)
 }
 
 func (wtd *WebThingDescription) AppendEvent(a WebThingEvent) {
-	*wtd.Events = append(*wtd.Events, a)
+	wtd.Events[a.Name] = a
 }
 
 func (wtd *WebThingDescription) Serialize(id string, fileName string) error {

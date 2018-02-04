@@ -26,8 +26,11 @@ import (
 )
 
 var whiteListPages = map[string]string{
-	"about":   "about.html.tpl",
-	"imprint": "imprint.html.tpl",
+	"about":      "about.html",
+	"imprint":    "imprint.html",
+	"imprint_de": "imprint_de.html",
+	"privacy":    "privacy.html",
+	"privacy_de": "privacy_de.html",
 }
 
 type staticPageData struct {

@@ -4,7 +4,7 @@
     <nav class="deep-orange darken-1">
       <div class="nav-wrapper">
         <div class="container">
-          <a href="/index.html" class="brand-logo"><img style="height:40px; margin-top: 10px" src="/img/p0small.png"></a>
+          <a href="/index.html" class="brand-logo"><img style="height:40px; margin-top: 10px" src="/img/logosmall.png"></a>
           <a href="#" data-activates="mobile" class="button-collapse"><i class="material-icons">menu</i></a>
           <ul class="right hide-on-med-and-down">
             <li>

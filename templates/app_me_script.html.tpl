@@ -17,10 +17,14 @@
         },
         complete: function() {
             var obj = JSON.parse(eventsJson)
+            console.log(obj)
             if (obj !== null) {
-                for (var i = 0; i < obj.length; i++) {
-                    var prop = obj[i]
-                    me_list_add_existing(prop)
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        prop = obj[key]
+                        prop.name = key
+                        me_list_add_existing(prop)
+                    }
                 }
             }
             progress.className += " hide";

@@ -20,9 +20,12 @@
         complete: function() {
             var obj = JSON.parse(propertiesJson);
             if (obj !== null) {
-                for (var i = 0; i < obj.length; i++) {
-                    var prop = obj[i]
-                    mp_list_add_existing(prop)
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        prop = obj[key];
+                        prop.name = key;
+                        mp_list_add_existing(prop)
+                    }
                 }
             }
             if (progress != undefined) {

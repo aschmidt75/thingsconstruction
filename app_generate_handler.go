@@ -19,6 +19,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/fsouza/go-dockerclient"
@@ -27,7 +28,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"errors"
 )
 
 type appGenerateData struct {
@@ -217,7 +217,6 @@ func AppGenerateHandlePost(w http.ResponseWriter, req *http.Request) {
 			Error.Println(err)
 			var msg = fmt.Sprintf("An internal error occurred while generating your code. (%s)", err)
 			data.AppPageData.Message = msg
-
 
 			appGenerateServePage(w, &appGenerateData{
 				AppPageData: AppPageData{

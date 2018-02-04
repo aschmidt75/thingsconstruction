@@ -80,14 +80,14 @@ function me_list_add_existing(obj) {
 
     document.getElementById("me_listitem_"+(last_id+1)+"_btns_delete").addEventListener("click", me_list_click_delete);
 
-    if ( obj != null) {
-        document.getElementById("me_listitem_"+(last_id+1)+"_name").textContent = $.encoder.encodeForHTML(obj.Name);
-        document.getElementById("me_listitem_"+(last_id+1)+"_edit_name").value = $.encoder.encodeForHTML(obj.Name);
-        document.getElementById("me_listitem_"+(last_id+1)+"_edit_desc").value = $.encoder.encodeForHTML(obj.Description);
+    if ( obj !== null) {
+        document.getElementById("me_listitem_"+(last_id+1)+"_name").textContent = $.encoder.encodeForHTML(obj.name);
+        document.getElementById("me_listitem_"+(last_id+1)+"_edit_name").value = $.encoder.encodeForHTML(obj.name);
+        document.getElementById("me_listitem_"+(last_id+1)+"_edit_desc").value = $.encoder.encodeForHTML(obj.description);
 
-        document.getElementById("me_listitem_"+(last_id+1)+"_details").innerHTML = "<p><i>"+$.encoder.encodeForHTML(obj.Description)+"</i></p>"+
-            "<input type=\"text\" name=\"me_listitem_"+(last_id+1)+"_val\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", obj.Name)+">"+
-            "<input type=\"text\" name=\"me_listitem_"+(last_id+1)+"_desc\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", obj.Description)+">";
+        document.getElementById("me_listitem_"+(last_id+1)+"_details").innerHTML = "<p><i>"+$.encoder.encodeForHTML(obj.description)+"</i></p>"+
+            "<input type=\"text\" name=\"me_listitem_"+(last_id+1)+"_val\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", obj.name)+">"+
+            "<input type=\"text\" name=\"me_listitem_"+(last_id+1)+"_desc\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", obj.description)+">";
 
     }
 }

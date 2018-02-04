@@ -88,11 +88,12 @@ function mp_list_add_existing(obj) {
 
     document.getElementById("mp_listitem_"+(last_id+1)+"_btns_delete").addEventListener("click", mp_list_click_delete);
 
-    if ( obj != null) {
-        console.log(obj)
-        document.getElementById("mp_listitem_"+(last_id+1)+"_name").innerHTML = $.encoder.encodeForHTML(obj.Name);
-        document.getElementById("mp_listitem_"+(last_id+1)+"_edit_name").value = $.encoder.encodeForHTML(obj.Name);
-        document.getElementById("mp_listitem_"+(last_id+1)+"_edit_desc").value = $.encoder.encodeForHTML(obj.Description);
+    if ( obj) {
+        var ehn = $.encoder.encodeForHTML(obj.name);
+        var ehd = $.encoder.encodeForHTML(obj.description);
+        document.getElementById("mp_listitem_"+(last_id+1)+"_name").innerHTML = ehn;
+        document.getElementById("mp_listitem_"+(last_id+1)+"_edit_name").value = ehn;
+        document.getElementById("mp_listitem_"+(last_id+1)+"_edit_desc").value = ehd;
 
         var tabBool = document.getElementById("mp_listitem_"+(last_id+1)+"_type_bool");
         var tabNumber = document.getElementById("mp_listitem_"+(last_id+1)+"_type_number");
@@ -107,14 +108,14 @@ function mp_list_add_existing(obj) {
         tabNumberA.className = "";
         tabStringA.className = "";
 
-        var typeStr = obj.Type;
+        var typeStr = obj.type;
         var typeStrForm;
-        if (obj.Type === "Boolean") {
+        if (obj.type === "Boolean") {
             tabBool.className = "col active";
             tabBoolA.className = "active";
             typeStrForm = "b";
         }
-        if (obj.Type === "Float") {
+        if (obj.type === "Float") {
             var selectId = "mp_listitem_"+(last_id+1)+"_type_number_type";
             document.getElementById(selectId).value = "Float";
             $("#"+selectId).find('option[value="2"]').prop('selected', true);
@@ -122,19 +123,19 @@ function mp_list_add_existing(obj) {
             tabNumber.className = "col active";
             tabNumberA.className = "active";
             typeStrForm = "f";
-            if (obj.Min !== undefined) {
-                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_min").value = $.encoder.encodeForHTML(obj.Min);
-                typeStrForm += ";"+obj.Min;
+            if (obj.min !== undefined) {
+                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_min").value = $.encoder.encodeForHTML(obj.min);
+                typeStrForm += ";"+obj.min;
             }
-            if (obj.Max !== undefined) {
-                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_max").value = $.encoder.encodeForHTML(obj.Max);
-                typeStrForm += ";"+obj.Max;
+            if (obj.max !== undefined) {
+                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_max").value = $.encoder.encodeForHTML(obj.max);
+                typeStrForm += ";"+obj.max;
             }
-            if (obj.Min !== undefined && obj.Max !== undefined) {
-                typeStr = typeStr + "["+$.encoder.encodeForHTML(obj.Min)+".."+$.encoder.encodeForHTML(obj.Max)+"]";
+            if (obj.min !== undefined && obj.max !== undefined) {
+                typeStr = typeStr + "["+$.encoder.encodeForHTML(obj.min)+".."+$.encoder.encodeForHTML(obj.max)+"]";
             }
         }
-        if (obj.Type === "Integer") {
+        if (obj.type === "Integer") {
             var selectId = "mp_listitem_"+(last_id+1)+"_type_number_type";
             document.getElementById(selectId).value = "Integer";
             $("#"+selectId).find('option[value="1"]').prop('selected', true);
@@ -142,34 +143,34 @@ function mp_list_add_existing(obj) {
             tabNumber.className = "col active";
             tabNumberA.className = "active";
             typeStrForm = "i";
-            if (obj.Min !== undefined) {
-                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_min").value = $.encoder.encodeForHTML(obj.Min);
-                typeStrForm += ";"+obj.Min;
+            if (obj.min !== undefined) {
+                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_min").value = $.encoder.encodeForHTML(obj.min);
+                typeStrForm += ";"+obj.min;
             }
-            if (obj.Max !== undefined) {
-                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_max").value = $.encoder.encodeForHTML(obj.Max);
-                typeStrForm += ";"+obj.Max;
+            if (obj.max !== undefined) {
+                document.getElementById("mp_listitem_"+(last_id+1)+"_type_number_max").value = $.encoder.encodeForHTML(obj.max);
+                typeStrForm += ";"+obj.max;
             }
-            if (obj.Min !== undefined && obj.Max !== undefined) {
-                typeStr = typeStr + "["+$.encoder.encodeForHTML(obj.Min)+".."+$.encoder.encodeForHTML(obj.Max)+"]";
+            if (obj.min !== undefined && obj.max !== undefined) {
+                typeStr = typeStr + "["+$.encoder.encodeForHTML(obj.min)+".."+$.encoder.encodeForHTML(obj.max)+"]";
             }
         }
-        if (obj.Type === "String") {
+        if (obj.type === "String") {
             tabString.className = "col active";
             tabStringA.className = "active";
             typeStrForm = "s";
-            if (obj.MaxLength !== undefined) {
-                var i = $.encoder.encodeForHTML(obj.MaxLength);
+            if (obj.maxLength !== undefined) {
+                var i = $.encoder.encodeForHTML(obj.maxLength);
                 document.getElementById("mp_listitem_"+(last_id+1)+"_type_str_maxlength").value = i;
-                typeStrForm += ";"+obj.MaxLength;
+                typeStrForm += ";"+i;
                 typeStr = typeStr + "["+i+"]";
             }
         }
 
         document.getElementById("mp_listitem_"+(last_id+1)+"_details").innerHTML =
-            "<p>"+$.encoder.encodeForHTML(typeStr)+"<br/><i>"+$.encoder.encodeForHTML(obj.Description)+"</i></p>"+
-            "<input type=\"text\" name=\"mp_listitem_"+(last_id+1)+"_val\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value",""+obj.Name+";"+typeStrForm)+">"+
-            "<input type=\"text\" name=\"mp_listitem_"+(last_id+1)+"_desc\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value",""+obj.Description)+">";
+            "<p>"+$.encoder.encodeForHTML(typeStr)+"<br/><i>"+$.encoder.encodeForHTML(obj.description)+"</i></p>"+
+            "<input type=\"text\" name=\"mp_listitem_"+(last_id+1)+"_val\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value",""+obj.name+";"+typeStrForm)+">"+
+            "<input type=\"text\" name=\"mp_listitem_"+(last_id+1)+"_desc\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value",""+obj.description)+">";
 
     }
 }

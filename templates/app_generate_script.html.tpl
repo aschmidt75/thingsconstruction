@@ -26,12 +26,18 @@
                 console.log(obj);
                 var div;
 
+                var tdesc = ""
+                if (obj.wtd.description !== null) {
+                    tdesc = "<p>"+$.encoder.encodeForHTML(obj.wtd.description)+"</p>";
+                }
+
                 div = document.getElementById("gen_review_thing");
                 div.innerHTML = "<div class=\"col s12\"><p>Name: <strong>"+
-                        $.encoder.encodeForHTML(obj.wtd.Name)+
-                        "</strong></p><p>"+
-                        $.encoder.encodeForHTML(obj.wtd.Description)+
-                        "</p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}\"><i class=\"material-icons\">edit</i></a></div>"
+                        $.encoder.encodeForHTML(obj.wtd.name)+
+                        "</strong></p>"+
+                        tdesc+
+                        "<a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}\"><i class=\"material-icons\">edit</i></a></div>"
+                        "<a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}\"><i class=\"material-icons\">edit</i></a></div>"
 
                 var cf = obj.target;
                 if ( cf != null && cf !== undefined ) {
@@ -61,66 +67,84 @@
 
                 var tgt;
 
-                tgt = obj.wtd.Properties;
-                if (tgt != null && tgt.length > 0) {
+                tgt = obj.wtd.properties;
+                if (tgt !== null) {
+                    var f = false;
                     var t = "<table class=\"responsive-table\"><thead><tr><th>Name</th><th>Type</th><th>Description</th></thead><tbody>";
-                    for (var i = 0; i < tgt.length; i++) {
-                        var p = tgt[i];
-                        t += "<tr><td><strong>"+ $.encoder.encodeForHTML(p.Name)+"</strong></td>";
-                        t += "<td>"+ $.encoder.encodeForHTML(p.Type)+"</td>";
-                        t += "<td>"+ $.encoder.encodeForHTML(p.Description)+"</td>";
-                        t += "</tr>";
+                    for (var key in tgt) {
+                        if (tgt.hasOwnProperty(key)) {
+                            p = tgt[key];
+                            p.name = key;
+                            t += "<tr><td><strong>"+ $.encoder.encodeForHTML(p.name)+"</strong></td>";
+                            t += "<td>"+ $.encoder.encodeForHTML(p.type)+"</td>";
+                            t += "<td>"+ $.encoder.encodeForHTML(p.description)+"</td>";
+                            t += "</tr>";
+                            f = true;
+                        }
                     }
                     t += "</tbody></table>";
                     div = document.getElementById("gen_review_properties");
-                    div.innerHTML =
-                            "<div class=\"col s11\">"+
-                            t+ "</div>"+
-                            "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/properties\"><i class=\"material-icons\">edit</i></a></p></div>"+
-                            "";
-                } else {
-                    div = document.getElementById("gen_review_properties");
-                    div.innerHTML = "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/properties\"><i class=\"material-icons\">edit</i></a></p></div>";
+                    if (f) {
+                        div.innerHTML =
+                                "<div class=\"col s11\">"+
+                                t+ "</div>"+
+                                "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/properties\"><i class=\"material-icons\">edit</i></a></p></div>"+
+                                "";
+                    } else {
+                        div.innerHTML = "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/properties\"><i class=\"material-icons\">edit</i></a></p></div>";
+                    }
                 }
-                tgt = obj.wtd.Actions;
-                if (tgt != null && tgt.length > 0) {
+                tgt = obj.wtd.actions;
+                if (tgt !== null) {
+                    var f = false;
                     var t = "<table class=\"responsive-table\"><thead><tr><th>Name</th><th>Description</th></thead><tbody>";
-                    for (var i = 0; i < tgt.length; i++) {
-                        var p = tgt[i];
-                        t += "<tr><td><strong>"+ $.encoder.encodeForHTML(p.Name)+"</strong></td>";
-                        t += "<td>"+ $.encoder.encodeForHTML(p.Description)+"</td>";
-                        t += "</tr>";
+                    for (var key in tgt) {
+                        if (tgt.hasOwnProperty(key)) {
+                            p = tgt[key];
+                            p.name = key;
+                            t += "<tr><td><strong>"+ $.encoder.encodeForHTML(p.name)+"</strong></td>";
+                            t += "<td>"+ $.encoder.encodeForHTML(p.description)+"</td>";
+                            t += "</tr>";
+                            f = true
+                        }
                     }
                     t += "</tbody></table>";
                     div = document.getElementById("gen_review_actions");
-                    div.innerHTML =
-                            "<div class=\"col s11\">"+
-                            t+ "</div>"+
-                            "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/actions\"><i class=\"material-icons\">edit</i></a></p></div>"+
-                            "";
-                } else {
-                    div = document.getElementById("gen_review_actions");
-                    div.innerHTML = "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/actions\"><i class=\"material-icons\">edit</i></a></p></div>";
+                    if (f) {
+                        div.innerHTML =
+                                "<div class=\"col s11\">"+
+                                t+ "</div>"+
+                                "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/actions\"><i class=\"material-icons\">edit</i></a></p></div>"+
+                                "";
+                    } else {
+                        div.innerHTML = "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/actions\"><i class=\"material-icons\">edit</i></a></p></div>";
+                    }
                 }
-                tgt = obj.wtd.Events;
-                if (tgt != null && tgt.length > 0) {
+                tgt = obj.wtd.events;
+                if (tgt != null) {
+                    var f = false;
                     var t = "<table class=\"responsive-table\"><thead><tr><th>Name</th><th>Description</th></thead><tbody>";
-                    for (var i = 0; i < tgt.length; i++) {
-                        var p = tgt[i];
-                        t += "<tr><td><strong>"+ $.encoder.encodeForHTML(p.Name)+"</strong></td>";
-                        t += "<td>"+ $.encoder.encodeForHTML(p.Description)+"</td>";
-                        t += "</tr>";
+                    for (var key in tgt) {
+                        if (tgt.hasOwnProperty(key)) {
+                            p = tgt[key];
+                            p.name = key;
+                            f = true;
+                            t += "<tr><td><strong>" + $.encoder.encodeForHTML(p.name) + "</strong></td>";
+                            t += "<td>" + $.encoder.encodeForHTML(p.description) + "</td>";
+                            t += "</tr>";
+                        }
                     }
                     t += "</tbody></table>";
                     div = document.getElementById("gen_review_events");
-                    div.innerHTML =
-                            "<div class=\"col s11\">"+
-                            t+ "</div>"+
-                            "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/events\"><i class=\"material-icons\">edit</i></a></p></div>"+
-                            "";
-                } else {
-                    div = document.getElementById("gen_review_events");
-                    div.innerHTML = "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/events\"><i class=\"material-icons\">edit</i></a></p></div>";
+                    if (f) {
+                        div.innerHTML =
+                                "<div class=\"col s11\">"+
+                                t+ "</div>"+
+                                "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/events\"><i class=\"material-icons\">edit</i></a></p></div>"+
+                                "";
+                    } else {
+                        div.innerHTML = "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/events\"><i class=\"material-icons\">edit</i></a></p></div>";
+                    }
                 }
             }
 

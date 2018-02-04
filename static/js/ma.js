@@ -80,14 +80,16 @@ function ma_list_add_existing(obj) {
 
     document.getElementById("ma_listitem_"+(last_id+1)+"_btns_delete").addEventListener("click", ma_list_click_delete);
 
-    if ( obj != null) {
-        document.getElementById("ma_listitem_"+(last_id+1)+"_name").textContent = $.encoder.encodeForHTML(obj.Name);
-        document.getElementById("ma_listitem_"+(last_id+1)+"_edit_name").value = $.encoder.encodeForHTML(obj.Name);
-        document.getElementById("ma_listitem_"+(last_id+1)+"_edit_desc").value = $.encoder.encodeForHTML(obj.Description);
+    if ( obj !== null) {
+        var ehn = $.encoder.encodeForHTML(obj.name);
+        var ehd = $.encoder.encodeForHTML(obj.description);
+        document.getElementById("ma_listitem_"+(last_id+1)+"_name").textContent = ehn;
+        document.getElementById("ma_listitem_"+(last_id+1)+"_edit_name").value = ehn;
+        document.getElementById("ma_listitem_"+(last_id+1)+"_edit_desc").value = ehd;
 
-        document.getElementById("ma_listitem_"+(last_id+1)+"_details").innerHTML = "<p><i>"+$.encoder.encodeForHTML(obj.Description)+"</i></p>"+
-            "<input type=\"text\" name=\"ma_listitem_"+(last_id+1)+"_val\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", obj.Name)+">"+
-            "<input type=\"text\" name=\"ma_listitem_"+(last_id+1)+"_desc\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", obj.Description)+">";
+        document.getElementById("ma_listitem_"+(last_id+1)+"_details").innerHTML = "<p><i>"+ehd+"</i></p>"+
+            "<input type=\"text\" name=\"ma_listitem_"+(last_id+1)+"_val\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", obj.name)+">"+
+            "<input type=\"text\" name=\"ma_listitem_"+(last_id+1)+"_desc\" class=\"hide\" "+$.encoder.encodeForHTMLAttribute("value", obj.description)+">";
 
     }
 }

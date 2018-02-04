@@ -124,19 +124,19 @@ func (ap *AppPageData) SetTocInfo() {
 		var l int
 		l = 0
 		if ap.wtd.Properties != nil {
-			l = len(*ap.wtd.Properties)
+			l = len(ap.wtd.Properties)
 		}
 		ap.TocInfo["num_properties"] = fmt.Sprintf("%d", l)
 
 		l = 0
 		if ap.wtd.Actions != nil {
-			l = len(*ap.wtd.Actions)
+			l = len(ap.wtd.Actions)
 		}
 		ap.TocInfo["num_actions"] = fmt.Sprintf("%d", l)
 
 		l = 0
 		if ap.wtd.Events != nil {
-			l = len(*ap.wtd.Events)
+			l = len(ap.wtd.Events)
 		}
 		ap.TocInfo["num_events"] = fmt.Sprintf("%d", l)
 	}

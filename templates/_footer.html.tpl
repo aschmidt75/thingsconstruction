@@ -22,8 +22,12 @@
     </div>
     <div class="footer-copyright">
       <div class="container">
-        {{ .CopyrightLine }}
-        <a class="grey-text text-lighten-4 right" href="/imprint.html">Imprint</a>
+        by @aschmidt75&nbsp;|&nbsp;{{ .CopyrightLine }}
+          <div class="right">
+              <a class="grey-text text-lighten-4" href="/privacy.html">Privacy Policy</a> &nbsp;|&nbsp;
+              <a class="grey-text text-lighten-4" href="/imprint.html">Imprint</a>
+
+          </div>
       </div>
     </div>
   </footer>
