@@ -28,6 +28,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"github.com/shurcooL/github_flavored_markdown"
 )
 
 type appGenerateResultData struct {
@@ -182,10 +183,10 @@ func AppGenerateResultAssetViewHandleGet(w http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	err = serveAssetFrom(data, mr, permalink, w, false)
+	err = serveAssetAsMDFrom(data, mr, permalink, w, false)
 	if err != nil {
 		w.WriteHeader(500)
-		fmt.Fprint(w, "Error serving generation result data")
+		fmt.Fprint(w, "Error serving generation result data (view mode)")
 		return
 	}
 
@@ -277,11 +278,11 @@ func loadResults(data *appGenerateResultData) (*ModuleResponse, error) {
 	return res, nil
 }
 
-func serveAssetFrom(data *appGenerateResultData, mr *ModuleResponse, permaLink string, w http.ResponseWriter, bAsFile bool) error {
+func readAssetFile(data *appGenerateResultData) ([]byte, error) {
 	basePath, err := GetBasePathByThingId(data.ThingId)
 	if err != nil {
 		Error.Println(err)
-		return err
+		return nil, err
 	}
 
 	// look into the files "last-result.*" they must be present
@@ -290,9 +291,24 @@ func serveAssetFrom(data *appGenerateResultData, mr *ModuleResponse, permaLink s
 	_, err = os.Stat(lastResultRunIdFileName)
 	if err != nil {
 		Error.Printf("Unable to find result files (2) for id=%s", data.ThingId)
-		return err
+		return nil, err
 	}
 	b, err := ioutil.ReadFile(lastResultRunIdFileName)
+
+	return b,err
+}
+
+func serveAssetFrom(data *appGenerateResultData, mr *ModuleResponse, permaLink string, w http.ResponseWriter, bAsFile bool) error {
+	basePath, err := GetBasePathByThingId(data.ThingId)
+	if err != nil {
+		Error.Println(err)
+		return err
+	}
+
+	b, err := readAssetFile(data)
+	if err != nil {
+		return err
+	}
 
 	// iterate over result files, locate permalink
 	for _, file := range *mr.Files {
@@ -321,8 +337,56 @@ func serveAssetFrom(data *appGenerateResultData, mr *ModuleResponse, permaLink s
 		}
 	}
 
-	return errors.New("Unable to find file for permalink")
+	return errors.New("unable to find file for permalink")
 }
+
+func serveAssetAsMDFrom(data *appGenerateResultData, mr *ModuleResponse, permaLink string, w http.ResponseWriter, bAsFile bool) error {
+	basePath, err := GetBasePathByThingId(data.ThingId)
+	if err != nil {
+		Error.Println(err)
+		return err
+	}
+
+	b, err := readAssetFile(data)
+	if err != nil {
+		return err
+	}
+
+	// iterate over result files, locate permalink
+	for _, file := range *mr.Files {
+		if *file.Permalink == permaLink {
+
+			// locate file within folder
+			filePath := fmt.Sprintf("%s/%s-out/%s", basePath, string(b), file.FileName)
+			b, err = ioutil.ReadFile(filePath)
+
+			ct := "text/html; charset=utf-8"
+
+			if *file.ContentType == "text/markdown" {
+				markDown := github_flavored_markdown.Markdown(b)
+				w.Header().Set("Content-Type", ct)
+				w.Header().Set("Content-Size", fmt.Sprintf("%d", len(b)))
+				w.WriteHeader(200)
+				w.Write(markDown)
+
+				return nil
+			}
+			if *file.FileType == "Source Code" {
+				bb := fmt.Sprintf("### Code \n```%s```", b)
+				markDown := github_flavored_markdown.Markdown([]byte(bb))
+				w.Header().Set("Content-Type", ct)
+				w.Header().Set("Content-Size", fmt.Sprintf("%d", len(b)))
+				w.WriteHeader(200)
+				w.Write(markDown)
+
+				return nil
+			}
+		}
+	}
+
+	return errors.New("unable to find file for permalink or invalid content type")
+}
+
 
 func serveAssetArchiveAsZIP(data *appGenerateResultData, mr *ModuleResponse, w http.ResponseWriter) error {
 	basePath, err := GetBasePathByThingId(data.ThingId)

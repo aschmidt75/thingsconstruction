@@ -25,7 +25,8 @@
         by @aschmidt75&nbsp;|&nbsp;{{ .CopyrightLine }}
           <div class="right">
               <a class="grey-text text-lighten-4" href="/privacy.html">Privacy Policy</a> &nbsp;|&nbsp;
-              <a class="grey-text text-lighten-4" href="/imprint.html">Imprint</a>
+              <a class="grey-text text-lighten-4" href="/imprint.html">Imprint</a> &nbsp;|
+              <a class="grey-text text-lighten-4" href="/terms.html">Terms</a>
 
           </div>
       </div>

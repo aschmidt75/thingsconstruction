@@ -63,7 +63,7 @@ $ ls /tmp/tc-out
 readme.md  sample.ino
 ```
 
-Result metadata is written to STDOUT, stating that 2 files have been writte, `readme.md` and `sample.ino`.
+Result metadata is written to STDOUT, stating that 2 files have been written, `readme.md` and `sample.ino`.
 
 In case of errors, no files are produces (or parts may be missing), and meta data containing
 error details is written to STDOUT:

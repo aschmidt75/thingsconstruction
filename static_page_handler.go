@@ -27,6 +27,7 @@ import (
 
 var whiteListPages = map[string]string{
 	"about":      "about.html",
+	"terms":      "terms.html",
 	"imprint":    "imprint.html",
 	"imprint_de": "imprint_de.html",
 	"privacy":    "privacy.html",

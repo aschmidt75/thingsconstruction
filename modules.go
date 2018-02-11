@@ -42,19 +42,30 @@ type ModuleResponse struct {
 
 type ModuleRequestFile struct {
 	FileName    string  `json:"filename"`
-	ContentType *string `json:"ct"`
-	FileType    *string `json:"type"`
+	ContentType string `json:"ct"`
+	FileType    string `json:"type"`
 }
 type ModuleRequestFiles []ModuleRequestFile
 
 type ModuleRequest struct {
 	ThingId string `json:"thingid"`
-	//Files *ModuleRequestFiles `json:"files"`
+	Files *ModuleRequestFiles `json:"files"`
 }
 
 func NewModuleRequest(id string) *ModuleRequest {
-	res := &ModuleRequest{ThingId: id}
+	res := &ModuleRequest{
+		ThingId: id,
+		Files: &ModuleRequestFiles{},
+		}
 	return res
+}
+
+func (mr *ModuleRequest) AddInputFile(filePath string) {
+	*mr.Files = append(*mr.Files, ModuleRequestFile{
+		FileName: filePath,
+		ContentType: "application/json",
+		FileType: "thingdescription",
+	})
 }
 
 func (mr *ModuleRequest) ShipRequest() *strings.Reader {

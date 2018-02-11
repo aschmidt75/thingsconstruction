@@ -321,7 +321,26 @@ func runModule(data *appGenerateData) error {
 	// attach stdin, stdout and stderr to container.
 	Debug.Printf("Started, attaching\n")
 
+	// create a module request
 	mr := NewModuleRequest(data.ThingId)
+
+	// copy input files to temp stage.
+	srcPath := fmt.Sprintf("%s/data.json", basePath)
+	destPath := fmt.Sprintf("%s/%s-in/data.json", basePath, runId)
+
+	tempData, err := ioutil.ReadFile(srcPath)
+	if err != nil {
+		Error.Println(err)
+		return errors.New("i12")
+	}
+	// Write data to dst
+	err = ioutil.WriteFile(destPath, tempData, 0600)
+	if err != nil {
+		Error.Println(err)
+		return errors.New("i13")
+	}
+	// add input file to module request
+	mr.AddInputFile("data.json")
 
 	// for simulating stdin, we use a string reader with predefined content.
 	var reader = mr.ShipRequest()

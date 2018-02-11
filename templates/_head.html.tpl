@@ -35,6 +35,17 @@
       background: rgba(0,0,0,0.2);
     }
   </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113732834-1"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-113732834-1', { 'anonymize_ip': true });
+  </script>
+
 </head>
 
 
