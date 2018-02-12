@@ -29,6 +29,7 @@ import (
 	"net/http"
 	"os"
 	"github.com/shurcooL/github_flavored_markdown"
+	"html/template"
 )
 
 type appGenerateResultData struct {
@@ -360,27 +361,28 @@ func serveAssetAsMDFrom(data *appGenerateResultData, mr *ModuleResponse, permaLi
 			filePath := fmt.Sprintf("%s/%s-out/%s", basePath, string(b), file.FileName)
 			b, err = ioutil.ReadFile(filePath)
 
-			ct := "text/html; charset=utf-8"
-
-			if *file.ContentType == "text/markdown" {
-				markDown := github_flavored_markdown.Markdown(b)
-				w.Header().Set("Content-Type", ct)
-				w.Header().Set("Content-Size", fmt.Sprintf("%d", len(b)))
-				w.WriteHeader(200)
-				w.Write(markDown)
-
-				return nil
+			templates, err := NewHtmlTemplateSet("root", "app_result_view.html.tpl")
+			if err != nil {
+				Error.Printf("Unable to create template set for viewing results: %s", err)
+				return err
 			}
 			if *file.FileType == "Source Code" {
-				bb := fmt.Sprintf("### Code \n```%s```", b)
-				markDown := github_flavored_markdown.Markdown([]byte(bb))
-				w.Header().Set("Content-Type", ct)
-				w.Header().Set("Content-Size", fmt.Sprintf("%d", len(b)))
-				w.WriteHeader(200)
-				w.Write(markDown)
-
-				return nil
+				bStr := string(b)
+				wrappedStr := fmt.Sprintf("```%s\n%s\n```", *file.Language, bStr)
+				b = []byte(wrappedStr)
 			}
+
+			context := &struct{
+				MainContent template.HTML
+			}{
+				MainContent: template.HTML(github_flavored_markdown.Markdown(b)),
+
+			}
+			if err := templates.Execute(w, context); err != nil {
+				Error.Printf("Unable to execute template for viewing results: %s", err)
+				return err
+			}
+			return nil
 		}
 	}
 

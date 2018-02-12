@@ -262,7 +262,7 @@ func runModule(data *appGenerateData) error {
 		return errors.New("i3")
 	}
 
-	runId := uuid.NewV4().String()
+	runId := uuid.Must(uuid.NewV4()).String()
 	Debug.Printf("runId=%s", runId)
 
 	inPath := fmt.Sprintf("%s/%s-in", basePath, runId)
@@ -274,7 +274,7 @@ func runModule(data *appGenerateData) error {
 	}
 	err = os.Mkdir(outPath, 0777)
 	if err != nil {
-		Error.Println(err)
+		Error.Println(err)gt
 		return errors.New("i5")
 	}
 

@@ -84,7 +84,7 @@ func AppGenerateToken() string {
 	CurrentAppTokens.mux.Lock()
 	defer CurrentAppTokens.mux.Unlock()
 
-	t := uuid.NewV4().String()
+	t := uuid.Must(uuid.NewV4()).String()
 
 	CurrentAppTokens.tokens[t] = time.Now().Add(time.Hour * 1)
 

@@ -172,7 +172,7 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 // returns unique thing id
 func appEntryCreateThing(data *appEntryData) (string, error) {
 
-	data.AppPageData.ThingId = uuid.NewV4().String()
+	data.AppPageData.ThingId = uuid.Must(uuid.NewV4()).String()
 
 	data.AppPageData.wtd = &WebThingDescription{
 		Name:        data.CtfName,
