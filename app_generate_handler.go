@@ -274,7 +274,7 @@ func runModule(data *appGenerateData) error {
 	}
 	err = os.Mkdir(outPath, 0777)
 	if err != nil {
-		Error.Println(err)gt
+		Error.Println(err)
 		return errors.New("i5")
 	}
 
