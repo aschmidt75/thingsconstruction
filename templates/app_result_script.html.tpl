@@ -1,5 +1,41 @@
 {{define `script`}}
 <script>
+    $(document).ready(function(){
+        // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+        $('.modal').modal();
+    });
+    {{ if .Files }}
+{{ range .Files }}
+    document.getElementById("view_{{ .Permalink }}").addEventListener('click', view_element);
+{{ end }}
+{{ end }}
+
+    function view_element(e) {
+        $('#view_modal').modal('open');
+
+        var permaLink = e.target.getAttribute("linkid");
+        var target = document.getElementById("view_modal_content");
+        var viewUrl = "/app/{{.ThingId}}/result/assetview/"+permaLink;
+
+        var content = ""
+
+        $.ajax({
+            type: "GET",
+            url: viewUrl,
+            async: true,
+            success: function (data) {
+                content = content + data
+            },
+            error: function (data) {
+                console.log(data);
+                target.innerHTML = "<p>An error occured while fetching the document. Please try again later.</p>";
+            },
+            complete: function() {
+                target.innerHTML = content;
+            },
+        });
+
+    }
 
     $(document).ready(function() {
         $('select').material_select();

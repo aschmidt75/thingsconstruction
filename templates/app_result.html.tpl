@@ -47,7 +47,7 @@
                                 <td>
                                     <a href="/app/{{$GThingId}}/result/asset/{{ .Permalink }}"><i class="material-icons">file_download</i>
                                     </a>
-                                    <a target="tc-view-src" href="/app/{{$GThingId}}/result/assetview/{{ .Permalink }}"><i class="material-icons">remove_red_eye</i>
+                                    <a target="#" class="modal-trigger" href="#view_modal"> <i id="view_{{ .Permalink }}" linkid="{{ .Permalink }}" class="material-icons">remove_red_eye</i>
                                     </a>
                                 </td>
                             </tr>
@@ -93,5 +93,12 @@
         </div>
     </div>
 </div>
-
+        <!-- Modal Structure -->
+        <div id="view_modal" class="modal modal-fixed-footer">
+            <div class="modal-content" id="view_modal_content">
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect btn-flat">Dismiss</a>
+            </div>
+        </div>
 {{end}}
