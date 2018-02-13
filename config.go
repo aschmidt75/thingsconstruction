@@ -49,6 +49,9 @@ type Config struct {
 	StaticTexts struct {
 		CopyrightLine string `yaml:"copyrightline"`
 	}
+	Docker struct {
+		UserConfig string `yaml:"userConfig"`
+	}
 }
 
 // Read yaml configuration from file (fromPath),

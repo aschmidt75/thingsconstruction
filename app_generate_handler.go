@@ -283,7 +283,7 @@ func runModule(data *appGenerateData) error {
 		Target:   "/in",
 		Source:   inPath,
 		Type:     "bind",
-		ReadOnly: false,
+		ReadOnly: true,
 	}
 	hostMounts[1] = docker.HostMount{
 		Target:   "/out",
@@ -300,7 +300,13 @@ func runModule(data *appGenerateData) error {
 		},
 		HostConfig: &docker.HostConfig{
 			Mounts: hostMounts,
+			CapDrop: []string{ "all" },
+			CapAdd: []string{ "setuid", "setgid" },
 		},
+	}
+	// run container generator as specific user?
+	if ServerConfig.Docker.UserConfig != "" {
+		opts.Config.User = ServerConfig.Docker.UserConfig
 	}
 
 	// Create the container, start the container
@@ -380,8 +386,10 @@ func runModule(data *appGenerateData) error {
 	}
 
 	Debug.Println(buf.String())
+	Debug.Println(buferr.String())
 	// save to file for later usage
 	ioutil.WriteFile(fmt.Sprintf("%s/last-result.json", basePath), buf.Bytes(), 0640)
+	ioutil.WriteFile(fmt.Sprintf("%s/last-result.stderr", basePath), buferr.Bytes(), 0640)
 	ioutil.WriteFile(fmt.Sprintf("%s/last-result.id", basePath), []byte(runId), 0640)
 	// Parse this reponse, construct data for web page.
 	moduleResponse, err := ParseResponseFromModule(buf.Bytes())

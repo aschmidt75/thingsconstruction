@@ -96,6 +96,8 @@ func FeedbackHandlePost(w http.ResponseWriter, req *http.Request) {
 	// Save feedback somewhere
 	fbPath := filepath.Join(ServerConfig.Paths.FeedbackPath, makeTimestampStr2())
 	if err := ioutil.WriteFile(fbPath, b, os.FileMode(400)); err != nil {
+		Error.Printf("%s", err)
+
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Set("Content-Type", "text/plain")
 

@@ -21,3 +21,5 @@ features:
   github: true
 statictexts:
   copyrightline: "© 2017 @aschmidt75, AGPLv3/dual licensed. Blog content is CC BY-SA 4.0"
+docker:
+  userConfig: "601:999"

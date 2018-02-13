@@ -132,7 +132,7 @@ func logger(inner http.Handler, name string) http.Handler {
 		start := time.Now()
 
 		Debug.Printf(
-			"> %s\t%s\t%s",
+			"> %s %s %s",
 			r.Method,
 			r.RequestURI,
 			name,
@@ -140,7 +140,7 @@ func logger(inner http.Handler, name string) http.Handler {
 		inner.ServeHTTP(w, r)
 
 		Verbose.Printf(
-			"< %s\t%s\t%s\t%s",
+			"< %s %s %s %s",
 			r.Method,
 			r.RequestURI,
 			name,
