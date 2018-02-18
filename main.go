@@ -38,7 +38,8 @@ func InitializeBlogPages() {
 	// read all pages
 	Blog, err = NewBlogPagesFromPath(p)
 	if err != nil {
-		Verbose.Printf("Unable to read blog content: %e\n", err)
+		Error.Printf("Unable to read blog content: %e\n", err)
+		return
 	}
 	//Debug.Printf("Blog=%s\n", spew.Sdump(Blog))
 	Verbose.Printf("Blog: Read %d posts.\n", len(Blog.Pages))

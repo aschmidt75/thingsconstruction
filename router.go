@@ -39,6 +39,7 @@ var routes = Routes{
 	Route{"StaticPage", "GET", "/{page}.html", StaticPageHandler},
 	Route{"Blog", "GET", "/blog", BlogIndexHandler},
 	Route{"BlogPage", "GET", "/blog/{page}", MarkdownBlogHandler},
+	Route{"ModuleInfo", "GET", "/module/{page}", ModulePageHandler},
 	Route{"AppCreateThing", "GET", "/app", AppCreateThingHandleGet},
 	Route{"AppCreateThing", "POST", "/app", AppCreateThingHandlePost},
 	Route{"AppCreateThing", "GET", "/app/{id}", AppCreateThingHandleGet},

@@ -5,7 +5,9 @@
         <div class="col s9">
             {{.HtmlOutput}}
         </div>
-        <div class="col s3">
+        <div class="col s1">
+        </div>
+        <div class="col s2">
             <p>
             <h5>Tags</h5>
             {{ range .TagChipData }}

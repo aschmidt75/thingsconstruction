@@ -8,6 +8,7 @@ logging:
 paths:
   assets: "./static"
   staticpages: "./static-content"
+  modulepages: "./module-content"
   mdpages: "./md-content"
   feedback: "/tmp/"
   generators: "./etc/generators.yaml"

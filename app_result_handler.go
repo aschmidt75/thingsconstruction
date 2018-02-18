@@ -25,11 +25,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/shurcooL/github_flavored_markdown"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"github.com/shurcooL/github_flavored_markdown"
-	"html/template"
 )
 
 type appGenerateResultData struct {
@@ -296,7 +296,7 @@ func readAssetFile(data *appGenerateResultData) ([]byte, error) {
 	}
 	b, err := ioutil.ReadFile(lastResultRunIdFileName)
 
-	return b,err
+	return b, err
 }
 
 func serveAssetFrom(data *appGenerateResultData, mr *ModuleResponse, permaLink string, w http.ResponseWriter, bAsFile bool) error {
@@ -372,11 +372,10 @@ func serveAssetAsMDFrom(data *appGenerateResultData, mr *ModuleResponse, permaLi
 				b = []byte(wrappedStr)
 			}
 
-			context := &struct{
+			context := &struct {
 				MainContent template.HTML
 			}{
 				MainContent: template.HTML(github_flavored_markdown.Markdown(b)),
-
 			}
 			if err := templates.Execute(w, context); err != nil {
 				Error.Printf("Unable to execute template for viewing results: %s", err)
@@ -388,7 +387,6 @@ func serveAssetAsMDFrom(data *appGenerateResultData, mr *ModuleResponse, permaLi
 
 	return errors.New("unable to find file for permalink or invalid content type")
 }
-
 
 func serveAssetArchiveAsZIP(data *appGenerateResultData, mr *ModuleResponse, w http.ResponseWriter) error {
 	basePath, err := GetBasePathByThingId(data.ThingId)

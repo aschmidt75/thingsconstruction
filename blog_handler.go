@@ -63,6 +63,8 @@ func BlogIndexHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	Blog.Reload()
+
 	data := blogOverviewData{
 		PageData: PageData{
 			Title:  "Blog Index",
@@ -85,7 +87,6 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	pageName := vars["page"]
 
-	// refresh? TODO
 	Blog.Reload()
 
 	// look up page by name

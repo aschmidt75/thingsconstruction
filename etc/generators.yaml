@@ -1,6 +1,6 @@
 ---
 targets:
- - id: 1
+ - id: sample
    repotag: v0:latest
    shortdesc: Arduino-compatible JSON/REST-API, for use with EthernetServer
    desc: "This generates a single .ino sketch suitable for working with the Arduino IDE. The sketch

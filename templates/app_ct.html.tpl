@@ -6,7 +6,7 @@
         <p></p>
         <h4>Create a new Thing Description</h4>
         <p style="padding-bottom: 2em">
-            To start a new WoT Thing Description, start with a Name and Description.
+            To start a new WoT Thing Description, choose a name and describe your device.
         </p>
     {{ if .Message }}
         <div class="card red darken-2">

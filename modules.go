@@ -21,6 +21,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
+	"html/template"
+	"io/ioutil"
+	"net/http"
+	"path/filepath"
 	"strings"
 )
 
@@ -41,30 +46,30 @@ type ModuleResponse struct {
 }
 
 type ModuleRequestFile struct {
-	FileName    string  `json:"filename"`
+	FileName    string `json:"filename"`
 	ContentType string `json:"ct"`
 	FileType    string `json:"type"`
 }
 type ModuleRequestFiles []ModuleRequestFile
 
 type ModuleRequest struct {
-	ThingId string `json:"thingid"`
-	Files *ModuleRequestFiles `json:"files"`
+	ThingId string              `json:"thingid"`
+	Files   *ModuleRequestFiles `json:"files"`
 }
 
 func NewModuleRequest(id string) *ModuleRequest {
 	res := &ModuleRequest{
 		ThingId: id,
-		Files: &ModuleRequestFiles{},
-		}
+		Files:   &ModuleRequestFiles{},
+	}
 	return res
 }
 
 func (mr *ModuleRequest) AddInputFile(filePath string) {
 	*mr.Files = append(*mr.Files, ModuleRequestFile{
-		FileName: filePath,
+		FileName:    filePath,
 		ContentType: "application/json",
-		FileType: "thingdescription",
+		FileType:    "thingdescription",
 	})
 }
 
@@ -98,4 +103,65 @@ func ParseResponseFromModule(b []byte) (*ModuleResponse, error) {
 
 	}
 	return res, err
+}
+
+type modulePageData struct {
+	PageData
+	HtmlOutput template.HTML
+}
+
+func ModulePageHandler(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	pageName := vars["page"]
+
+	// look up module by name
+	bp := "sample-module.html"
+	ok := true
+	if ok {
+		bp = filepath.Join(ServerConfig.Paths.ModulePagesPath, bp)
+		Debug.Printf("serving module page %s\n", bp)
+
+		tplBytes, err := ioutil.ReadFile(bp)
+		if err != nil {
+			Error.Printf("Error reading page by name %s\n", pageName)
+			ServeNotFound(w, req)
+			return
+		}
+
+		modulePagesServePage(w, modulePageData{
+			PageData: PageData{
+				Title: pageName, // TODO
+			},
+			HtmlOutput: template.HTML(tplBytes),
+		})
+	} else {
+		ServeNotFound(w, req)
+	}
+
+}
+
+var ModulePagesTemplates *template.Template
+
+func initializeModuleTemplates() {
+	if ModulePagesTemplates == nil {
+		Debug.Printf("Initializing templates for module pages")
+		var err error
+		ModulePagesTemplates, err = NewBasicHtmlTemplateSet("staticpage.html.tpl", "staticpage_script.html.tpl")
+		if err != nil {
+			Error.Fatalf("Fatal error creating template set: %s\n", err)
+		}
+	}
+}
+
+func modulePagesServePage(w http.ResponseWriter, data modulePageData) {
+	initializeModuleTemplates()
+	data.SetFeaturesFromConfig()
+
+	err := ModulePagesTemplates.ExecuteTemplate(w, "root", data)
+	if err != nil {
+		Error.Printf("Error executing template: %s\n", err)
+		w.WriteHeader(500)
+		fmt.Fprint(w, "There was an internal error.")
+	}
+
 }

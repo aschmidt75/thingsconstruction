@@ -7,22 +7,22 @@
           <a href="/index.html" class="brand-logo"><img style="height:40px; margin-top: 10px" src="/img/logosmall.png"></a>
           <a href="#" data-activates="mobile" class="button-collapse"><i class="material-icons">menu</i></a>
           <ul class="right hide-on-med-and-down">
-            <li>
-              <a href="/about.html">About</a>
-            </li>
             {{ if .Feature.Blog }}
+            <li>
+                <a href="/blog/about.md">About</a>
+            </li>
             <li>
               <a {{ if .InBlog }}class="active"{{end}} href="/blog">Blog</a>
             </li>
             {{ end }}
             {{ if .Feature.App }}
             <li>
-                <a {{ if .InApp }}class="active"{{end}} href="/app"></i><i class="material-icons">apps</i></a>
+                <a {{ if .InApp }}class="active"{{end}} href="/app" title="Get Started!"></i><i class="material-icons">settings</i></a>
             </li>
             {{ end }}
             {{ if .Feature.Contact }}
               <li>
-                  <a {{ if .InContact }}class="active"{{end}} href="/feedback"><i class="material-icons">comment</i></a>
+                  <a {{ if .InContact }}class="active"{{end}} href="/feedback" title="Your feedback is welcome!"><i class="material-icons">comment</i></a>
               </li>
             {{ end }}
 

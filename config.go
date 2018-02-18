@@ -33,6 +33,7 @@ type Config struct {
 	Paths struct {
 		AssetPath          string `yaml:"assets"`
 		StaticPagesPath    string `yaml:"staticpages"`
+		ModulePagesPath    string `yaml:"modulepages"`
 		MDPagesPath        string `yaml:"mdpages"`
 		FeedbackPath       string `yaml:"feedback"`
 		GeneratorsDataPath string `yaml:"generators"`

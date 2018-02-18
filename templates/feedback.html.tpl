@@ -11,11 +11,6 @@
                 embedded code! Please let us know what you think and how we could improve
                 this service. Additionally, feel free to use this form to contact us.
             </p>
-            <p>
-                We're fans of data minimization: Please provide personal
-                contact information only if you agree that we will process
-                it for the purpose of contacting you.
-            </p>
             <br/>
             <form id="fbf" name="fbf" method="POST" action="/feedback">
                 <div class="row">
@@ -36,6 +31,10 @@
                         <label for="ctf_desc">Text</label>
                     </div>
                 </div>
+                <p style="font-size: 80%">
+                    Please provide personal contact information only if you agree that we will process
+                    it for the purpose of contacting you. For more information please see <a href="/privacy.html"/>the privacy policy</p>
+                </p>
                 <div class="row" >
                     <a class="waves-effect waves-light deep-orange btn right" id="fbf_send"><i class="material-icons right">send</i>Send</a>
                 </div>
