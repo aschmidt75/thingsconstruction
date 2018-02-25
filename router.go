@@ -39,7 +39,7 @@ var routes = Routes{
 	Route{"StaticPage", "GET", "/{page}.html", StaticPageHandler},
 	Route{"Blog", "GET", "/blog", BlogIndexHandler},
 	Route{"BlogPage", "GET", "/blog/{page}", MarkdownBlogHandler},
-	Route{"ModuleInfo", "GET", "/module/{page}", ModulePageHandler},
+	Route{"ModuleInfo", "GET", "/module/{id}", ModulePageHandler},
 	Route{"AppCreateThing", "GET", "/app", AppCreateThingHandleGet},
 	Route{"AppCreateThing", "POST", "/app", AppCreateThingHandlePost},
 	Route{"AppCreateThing", "GET", "/app/{id}", AppCreateThingHandleGet},
@@ -73,7 +73,7 @@ func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(false)
 
 	// add asset paths
-	staticPaths := []string{"js", "css", "fonts", "img"}
+	staticPaths := []string{"js", "css", "fonts", "img", "webfonts"}
 	for _, staticPath := range staticPaths {
 		p := fmt.Sprintf("/%s/", staticPath)
 		d := fmt.Sprintf("%s/%s", ServerConfig.Paths.AssetPath, staticPath)

@@ -18,7 +18,6 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-	//"gopkg.in/russross/blackfriday.v2"
 	"github.com/shurcooL/github_flavored_markdown"
 	"html/template"
 	"net/http"

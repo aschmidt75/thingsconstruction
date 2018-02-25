@@ -20,6 +20,8 @@ features:
   contact: true
   twitter: true
   github: true
+  analytics: true
+  shariff: true
 statictexts:
   copyrightline: "© 2017 @aschmidt75, AGPLv3/dual licensed. Blog content is CC BY-SA 4.0"
 docker:

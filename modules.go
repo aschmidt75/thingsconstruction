@@ -23,10 +23,15 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"html/template"
-	"io/ioutil"
 	"net/http"
-	"path/filepath"
 	"strings"
+	"errors"
+	"os"
+	"github.com/fsouza/go-dockerclient"
+	"bytes"
+	"path/filepath"
+	"github.com/davecgh/go-spew/spew"
+	"io/ioutil"
 )
 
 type ModuleResponseFile struct {
@@ -56,6 +61,15 @@ type ModuleRequest struct {
 	ThingId string              `json:"thingid"`
 	Files   *ModuleRequestFiles `json:"files"`
 }
+
+type ModuleMetaData struct {
+	Status	string `json:"status"`
+	Message string `json:"msg"`
+	Details *interface{}
+
+	Files ModuleResponseFiles
+}
+
 
 func NewModuleRequest(id string) *ModuleRequest {
 	res := &ModuleRequest{
@@ -112,32 +126,146 @@ type modulePageData struct {
 
 func ModulePageHandler(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
-	pageName := vars["page"]
+	moduleId := vars["id"]
 
-	// look up module by name
-	bp := "sample-module.html"
-	ok := true
-	if ok {
-		bp = filepath.Join(ServerConfig.Paths.ModulePagesPath, bp)
-		Debug.Printf("serving module page %s\n", bp)
-
-		tplBytes, err := ioutil.ReadFile(bp)
-		if err != nil {
-			Error.Printf("Error reading page by name %s\n", pageName)
-			ServeNotFound(w, req)
-			return
-		}
-
-		modulePagesServePage(w, modulePageData{
-			PageData: PageData{
-				Title: pageName, // TODO
-			},
-			HtmlOutput: template.HTML(tplBytes),
-		})
-	} else {
+	// start container to get module spec page
+	content, err := getModuleSpecContent(moduleId)
+	if err != nil {
+		Error.Printf("Error reading module content for id=%s, err=%s\n", moduleId, err)
 		ServeNotFound(w, req)
+		return
 	}
 
+	modulePagesServePage(w, modulePageData{
+		PageData: PageData{
+			Title: "Module specification",
+		},
+		HtmlOutput: template.HTML(content),
+	})
+}
+
+func getModuleSpecContent(moduleId string) ([]byte, error) {
+	targets, err := ReadGeneratorsConfig()
+	if err != nil || targets == nil {
+		return nil, err
+	}
+
+	target := targets.AppGenTargetById(moduleId)
+	if target == nil {
+		return nil, errors.New("no module for id")
+	}
+	Verbose.Printf("Using target=%#v", target)
+
+	client, err := docker.NewClient("unix:///var/run/docker.sock")
+	if err != nil {
+		return nil, err
+	}
+	client.SkipServerVersionCheck = true
+
+	Debug.Printf("cli=%#v\n", client)
+
+	outPath := fmt.Sprintf("%s/%s-out", ServerConfig.Paths.ModulePagesPath, moduleId)
+	if _, err := os.Stat(outPath); err != nil {
+		if os.IsNotExist(err) {
+			if err = os.Mkdir(outPath, 0777); err != nil {
+				return nil, err
+			}
+		} else {
+			return nil, err
+		}
+	}
+
+	outPath, err = filepath.Abs(outPath)
+	if err != nil {
+		return nil, err
+	}
+
+	hostMounts := make([]docker.HostMount, 1)
+	hostMounts[0] = docker.HostMount{
+		Target:   "/out",
+		Source:   outPath,
+		Type:     "bind",
+		ReadOnly: false,
+	}
+
+	opts := docker.CreateContainerOptions{
+		Config: &docker.Config{
+			Image:     target.ImageRepoTag,
+			OpenStdin: false,
+			StdinOnce: false,
+		},
+		HostConfig: &docker.HostConfig{
+			Mounts:  hostMounts,
+			CapDrop: []string{"all"},
+			CapAdd:  []string{"setuid", "setgid"},
+		},
+	}
+
+	if ServerConfig.Docker.UserConfig != "" {
+		opts.Config.User = ServerConfig.Docker.UserConfig
+	}
+
+	// Create the container, start the container
+	container, err := client.CreateContainer(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	Debug.Printf("container=%#v\n", container)
+
+	if err = client.StartContainer(container.ID, &docker.HostConfig{}); err != nil {
+		return nil, err
+	}
+
+	var buf bytes.Buffer
+	var buferr bytes.Buffer
+
+	attachOpts := docker.AttachToContainerOptions{
+		Container:    container.ID,
+		Stdin:        false,
+		Stdout:       true,
+		Stderr:       true,
+		OutputStream: &buf,
+		ErrorStream:  &buferr,
+		Stream:       true,
+		Logs:         true,
+	}
+
+	if err = client.AttachToContainer(attachOpts); err != nil {
+		return nil, err
+	}
+
+	// Wait until container has finished. TODO: WaitContainerWithContext, timeout, ...
+	exitCode, err := client.WaitContainer(container.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	// dump some results.
+	Debug.Printf("Exitcode=%#v\n", exitCode)
+	if exitCode != 0 {
+		Error.Printf("Module returned non-zero exit code: %d. Will not continue", exitCode)
+		return nil, errors.New("Non-zero exit code.")
+	}
+
+	var md ModuleMetaData
+	if err := json.Unmarshal(buf.Bytes(), &md); err != nil {
+		return nil, err
+	}
+
+	Debug.Println(spew.Sdump(md))
+
+	// go through files, seek a module-spec type..
+	for _, file := range md.Files {
+		if *file.FileType == "module-spec" && *file.ContentType == "text/html" {
+			return ioutil.ReadFile(filepath.Join(outPath, file.FileName))
+		}
+	}
+
+//	Debug.Println(buf.String())
+//	Debug.Println(buferr.String())
+
+	return nil, errors.New("no suitable module spec found")
 }
 
 var ModulePagesTemplates *template.Template

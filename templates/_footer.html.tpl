@@ -40,6 +40,9 @@
   <!-- 1.0 alpha Compiled and minified JavaScript
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
           -->
+  {{ if .Feature.Shariff }}
+  <script src="/js/shariff.min.js"></script>
+  {{ end -}}
 
   <script src="/js/main.js"></script>
 {{ template `script` . }}

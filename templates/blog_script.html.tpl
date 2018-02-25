@@ -1,4 +1,5 @@
 {{define `script`}}
+<!-- immediately before </body> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>
     // set document title to blog post title
@@ -13,7 +14,7 @@
 </script>
 
 <script>
-var bp_selected_tags = new Map()
+var bp_selected_tags = new Map();
 
 // if we are on the overview page, do some filtering magic
 all_posts = document.getElementById("bp_overview")

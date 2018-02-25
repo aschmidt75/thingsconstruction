@@ -46,6 +46,8 @@ type Config struct {
 		Contact bool `yaml:"contact"`
 		Twitter bool `yaml:"twitter"`
 		GitHub  bool `yaml:"github"`
+		Analytics  bool `yaml:"analytics"`
+		Shariff  bool `yaml:"shariff"`
 	}
 	StaticTexts struct {
 		CopyrightLine string `yaml:"copyrightline"`

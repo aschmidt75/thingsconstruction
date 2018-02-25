@@ -1,18 +1,30 @@
 {{define `main`}}
 <div class="row">
+</div>
+<div class="row">
     <div class="col s12">
-        <div>
-            <p>
-
+        <h4 class="center">Enhance your embedded devices with APIs!</h4>
+        <div class="row">
+        <div class="col s8 offset-s2 center">
+            <p >This service let's you easily create APIs by modeling
+                properties, actions and events, suitable for different
+                embedded development frameworks.
             </p>
         </div>
+        </div>
+    {{ if .Feature.App  }}
+    <div class="row">
+        <div class="carousel-fixed-item center">
+                <a class="waves-effect waves-light btn teal waves-teal" href="/app"><i class="material-icons left">settings</i>Get Started</a></p>
+        </div>
+    </div>
+    {{end}}
+        <div>
 
+        </div>
+
+        <div class="col s10 offset-s1">
         <div class="carousel carousel-slider center" data-indicators="true">
-        {{ if .Feature.App  }}
-            <div class="carousel-fixed-item center">
-                <a class="waves-effect waves-light btn teal waves-teal" href="/app"><i class="material-icons left">settings</i>Get Started</a>
-            </div>
-        {{end}}
             <div class="carousel-item grey lighten-3 black-text" href="#one!">
                 <h2>Support for embedded device targets</h2>
                 <p>Code generators are available for different embedded development boards</p>
@@ -34,7 +46,7 @@
                 <img src="/img/index_carousel_code.png">
             </div>
         </div>
-
+        </div>
 
     </div>
 </div>

@@ -36,6 +36,8 @@ func (pd *PageData) SetFeaturesFromConfig() {
 		"Contact": ServerConfig.Features.Contact,
 		"Twitter": ServerConfig.Features.Twitter,
 		"GitHub":  ServerConfig.Features.GitHub,
+		"Analytics":  ServerConfig.Features.Analytics,
+		"Shariff":  ServerConfig.Features.Shariff,
 	}
 	pd.CopyrightLine = ServerConfig.StaticTexts.CopyrightLine
 	pd.InApp = false
