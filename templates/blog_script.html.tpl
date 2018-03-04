@@ -66,13 +66,13 @@ function bp_update_list_filter() {
     if ( total == active) {
         document.getElementById("bp_title").innerHTML = "Blog posts"
         document.getElementById("bp_count").innerText = "all"
-        document.getElementById("bp_count").className = "badge deep-orange white-text"
+        document.getElementById("bp_count").className = "badge tc-maincolor white-text"
 
     } else {
         document.getElementById("bp_title").innerText = "Blog posts"
         if ( active > 0) {
             document.getElementById("bp_count").innerText = ""+active+"/"+total
-            document.getElementById("bp_count").className = "badge deep-orange white-text tiny"
+            document.getElementById("bp_count").className = "badge tc-maincolor white-text tiny"
         } else {
             //
             document.getElementById("bp_count").innerText = ""
@@ -90,7 +90,7 @@ function bp_tag_clicked(e) {
         tag.className = "chip"
         bp_selected_tags.delete(tagName)
     } else {
-        tag.className = "chip bp_selected deep-orange lighten-3"
+        tag.className = "chip bp_selected tc-maincolor lighten-3"
         bp_selected_tags.set(tagName, tag)
     }
 

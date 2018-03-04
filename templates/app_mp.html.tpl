@@ -42,7 +42,7 @@
                         </p>
                     </div>
                     <div style="padding-bottom: 4em">
-                        <button id="mp_add_btn" class="btn btn-floating deep-orange tooltipped left" data-delay="100" data-tooltip="New property">
+                        <button id="mp_add_btn" class="btn btn-floating tc-maincolor tooltipped left" data-delay="100" data-tooltip="New property">
                             <i class="material-icons">playlist_add</i>
                         </button>
                     </div>
@@ -52,7 +52,7 @@
                     <ul class="section table-of-contents">
                         <li>Create</li>
                         <li>Framework{{ if .TocInfo.framework }}&nbsp;(<span>{{ index .TocInfo "framework" }}</span>){{end}}</li>
-                        <li><strong class="deep-orange-text">Properties</strong>&nbsp;(<span id="toc_current_info">0</span>){{end}}</li>
+                        <li><strong class="tc-maincolor-text">Properties</strong>&nbsp;(<span id="toc_current_info">0</span>){{end}}</li>
                         <li>Actions{{ if .TocInfo.num_actions }}&nbsp;(<span>{{ index .TocInfo "num_actions" }}</span>){{end}}</li>
                         <li>Events{{ if .TocInfo.num_properties }}&nbsp;(<span>{{ index .TocInfo "num_events" }})</li>
                         <li>Generate!</li>
@@ -62,11 +62,11 @@
 
                 <div class="row">
                     <div class="col s9">
-                        <button id="mp_prev" class="btn-large deep-orange tooltipped left" data-delay="100" data-tooltip="Save changes, go to previous step">
+                        <button id="mp_prev" class="btn-large tc-maincolor tooltipped left" data-delay="100" data-tooltip="Save changes, go to previous step">
                             Framework
                             <i class="material-icons right">navigate_before</i>
                         </button>
-                        <button id="mp_next" class="btn-large deep-orange tooltipped right" data-delay="100" data-tooltip="Save changes, go to next step">
+                        <button id="mp_next" class="btn-large tc-maincolor tooltipped right" data-delay="100" data-tooltip="Save changes, go to next step">
                             Actions
                             <i class="material-icons right">navigate_next</i>
                         </button>
@@ -127,7 +127,7 @@
             <div class="row">
               <div class="col s12">
                <input type="text" id="mp_listitem_##_type_" class="input-field hide" value="mp_listitem_##_type_str">
-               <ul class="tabs deep-orange lighten-5 tabs-fixed-width">
+               <ul class="tabs tc-maincolor lighten-5 tabs-fixed-width">
                   <li id="mp_listitem_##_type_bool_click" class="tab col">
                     <a id="mp_listitem_a_##_type_bool_click" href="#mp_listitem_##_type_bool">Bool</a>
                   </li>
@@ -175,7 +175,7 @@
         </div>
         <div id="mp_listitem_##_btns">
             <div class="right col secondary-content">
-                <button id="mp_listitem_##_btns_edit" class="btn-flat waves-effect waves-deep-orange">
+                <button id="mp_listitem_##_btns_edit" class="btn-flat waves-effect waves-tc-maincolor">
                     <i class="material-icons large">mode_edit</i>
                 </button>
                 <button id="mp_listitem_##_btns_delete" class="waves-effect waves-red btn-flat" style="padding: 0 0rem; width:2em; background-color:white; color: red">

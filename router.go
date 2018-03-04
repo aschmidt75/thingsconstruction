@@ -14,6 +14,10 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+//
+//    This program is dual-licensed. For commercial licensing options, please
+//    contact the author(s).
+//
 package main
 
 import (
@@ -66,6 +70,7 @@ var routes = Routes{
 	Route{"AppResult", "GET", "/app/{id}/result/asset-archive/{format}", AppGenerateResultAssetArchiveHandleGet},
 	Route{"Feedback", "GET", "/feedback", FeedbackHandleGet},
 	Route{"Feedback", "POST", "/feedback", FeedbackHandlePost},
+	Route{"FeedbackVote", "POST", "/feedback/vote", FeedbackVoteHandlePost},
 	Route{"FeedbackQuick", "POST", "/feedback/q", FeedbackQuickHandlePost},
 }
 

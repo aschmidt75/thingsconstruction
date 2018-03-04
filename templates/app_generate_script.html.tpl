@@ -26,7 +26,7 @@
                 console.log(obj);
                 var div;
 
-                var tdesc = ""
+                var tdesc = "";
                 if (obj.wtd.description !== null) {
                     tdesc = "<p>"+$.encoder.encodeForHTML(obj.wtd.description)+"</p>";
                 }
@@ -36,8 +36,8 @@
                         $.encoder.encodeForHTML(obj.wtd.name)+
                         "</strong></p>"+
                         tdesc+
-                        "<a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}\"><i class=\"material-icons\">edit</i></a></div>"
-                        "<a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}\"><i class=\"material-icons\">edit</i></a></div>"
+                        "<a class=\"tc-maincolor-text\" href=\"/app/{{.ThingId}}\"><i class=\"material-icons\">edit</i></a></div>"
+                        "<a class=\"tc-maincolor-text\" href=\"/app/{{.ThingId}}\"><i class=\"material-icons\">edit</i></a></div>"
 
                 var cf = obj.target;
                 if ( cf != null && cf !== undefined ) {
@@ -61,7 +61,9 @@
                             $.encoder.encodeForHTML(cf.CodeGenInfo)+
                             "</p><p>"+
                             depsStr+
-                            "</p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/framework\"><i class=\"material-icons\">edit</i></a></div>"
+                            "</p><a class=\"tc-maincolor-text\" href=\"/app/{{.ThingId}}/framework\"><i class=\"material-icons\">edit</i></a>"+
+                            "<a target=\"_tf_module\" class=\"tc-maincolor-text\" href=\"/module/"+$.encoder.encodeForHTML(cf.Id)+"\"><i class=\"material-icons\">description</i></a>"+
+                            "</div>"
 
                 }
 
@@ -88,10 +90,10 @@
                         div.innerHTML =
                                 "<div class=\"col s11\">"+
                                 t+ "</div>"+
-                                "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/properties\"><i class=\"material-icons\">edit</i></a></p></div>"+
+                                "<div class=\"col s1\"><p><a class=\"tc-maincolor-text\" href=\"/app/{{.ThingId}}/properties\"><i class=\"material-icons\">edit</i></a></p></div>"+
                                 "";
                     } else {
-                        div.innerHTML = "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/properties\"><i class=\"material-icons\">edit</i></a></p></div>";
+                        div.innerHTML = "<div class=\"col s1\"><p><a class=\"tc-maincolor-text\" href=\"/app/{{.ThingId}}/properties\"><i class=\"material-icons\">edit</i></a></p></div>";
                     }
                 }
                 tgt = obj.wtd.actions;
@@ -114,10 +116,10 @@
                         div.innerHTML =
                                 "<div class=\"col s11\">"+
                                 t+ "</div>"+
-                                "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/actions\"><i class=\"material-icons\">edit</i></a></p></div>"+
+                                "<div class=\"col s1\"><p><a class=\"tc-maincolor-text\" href=\"/app/{{.ThingId}}/actions\"><i class=\"material-icons\">edit</i></a></p></div>"+
                                 "";
                     } else {
-                        div.innerHTML = "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/actions\"><i class=\"material-icons\">edit</i></a></p></div>";
+                        div.innerHTML = "<div class=\"col s1\"><p><a class=\"tc-maincolor-text\" href=\"/app/{{.ThingId}}/actions\"><i class=\"material-icons\">edit</i></a></p></div>";
                     }
                 }
                 tgt = obj.wtd.events;
@@ -140,10 +142,10 @@
                         div.innerHTML =
                                 "<div class=\"col s11\">"+
                                 t+ "</div>"+
-                                "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/events\"><i class=\"material-icons\">edit</i></a></p></div>"+
+                                "<div class=\"col s1\"><p><a class=\"tc-maincolor-text\" href=\"/app/{{.ThingId}}/events\"><i class=\"material-icons\">edit</i></a></p></div>"+
                                 "";
                     } else {
-                        div.innerHTML = "<div class=\"col s1\"><p><a class=\"deep-orange-text\" href=\"/app/{{.ThingId}}/events\"><i class=\"material-icons\">edit</i></a></p></div>";
+                        div.innerHTML = "<div class=\"col s1\"><p><a class=\"tc-maincolor-text\" href=\"/app/{{.ThingId}}/events\"><i class=\"material-icons\">edit</i></a></p></div>";
                     }
                 }
             }
@@ -189,4 +191,25 @@
         }
     }
 </script>
+<script>
+    function more_activate(e) {
+        document.getElementById('btn_more').removeEventListener('click', more_activate);
+        document.getElementById('btn_less').addEventListener('click', more_deactivate);
+        document.getElementById('sp_more').className = "";
+        document.getElementById('btn_more').className += " hide";
+    }
+
+    function more_deactivate(e) {
+        document.getElementById('btn_more').addEventListener('click', more_activate);
+        document.getElementById('btn_less').removeEventListener('click', more_deactivate);
+        document.getElementById('sp_more').className += " hide";
+        document.getElementById('btn_more').className += "tc-maincolor-text";
+    }
+
+    var btn_more = document.getElementById('btn_more');
+    if ( btn_more != null) {
+        btn_more.addEventListener('click', more_activate);
+    }
+</script>
+
 {{end}}

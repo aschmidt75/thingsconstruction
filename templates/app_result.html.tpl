@@ -13,8 +13,21 @@
             <div class="row" id="gen">
                 <div class="col s9">
                     <h4>Download your code!</h4>
-                    <p>Finally, code is ready! You can download files individually from the table below,
-                    or download all as an archive.</p>
+                    <p>Finally, code is ready! You can view and download files individually from the table below,
+                    or download all as an archive.
+                    <br>
+                    <span class="tc-maincolor-text" id="btn_more">... more</span>
+                    <span id="sp_more" class="hide">
+                        The table below shows all generated assets, which include the Thing/API description,
+                        source code, readme's / how-to's and licensing information. The rightmost buttons
+                        allow you to download the file(s) to your pc, or view them in the browser. From browser
+                        view, code can be copy&pasted, so it's easily transferable to an IDE for example.
+                        A good start is the README file which contains detailed instructions
+                        of how to get the code running on your device.
+                        <span class="tc-maincolor-text" id="btn_less">... less</span>
+                    </span>
+
+                    </p>
                     <p>You can revise your work later by coming back to this page:<br>
                         <i data-tooltip="Copy to clipboard" id="url_copy_btn" class="material-icons tooltipped">content_copy</i>
                         <input type="text" id="url_copy_input" class="hide">
@@ -31,7 +44,7 @@
                             </thead>
                             <tr>
                                 <td>{{ .ThingId }}.json</td>
-                                <td>WoT Thing Description</td>
+                                <td>Thing/API Description</td>
                                 <td>
                                     <a href="/app/{{.ThingId}}/result/wtd">
                                     <i class="material-icons">file_download</i>
@@ -45,9 +58,9 @@
                                 <td>{{ .Description }}<br>
                                 {{ .FileType }} / {{ .Language }}</td>
                                 <td>
-                                    <a href="/app/{{$GThingId}}/result/asset/{{ .Permalink }}"><i class="material-icons">file_download</i>
+                                    <a href="/app/{{$GThingId}}/result/asset/{{ .Permalink }}"><i class="material-icons tooltipped" data-delay="100" data-tooltip="Download file">file_download</i>
                                     </a>
-                                    <a target="#" class="modal-trigger" href="#view_modal"> <i id="view_{{ .Permalink }}" linkid="{{ .Permalink }}" class="material-icons">remove_red_eye</i>
+                                    <a target="#" class="modal-trigger" href="#view_modal"> <i id="view_{{ .Permalink }}" linkid="{{ .Permalink }}" class="material-icons tooltipped" data-delay="100" data-tooltip="View in browser">remove_red_eye</i>
                                     </a>
                                 </td>
                             </tr>
@@ -98,7 +111,8 @@
             <div class="modal-content" id="view_modal_content">
             </div>
             <div class="modal-footer">
-                <a href="#!" class="modal-action modal-close waves-effect btn-flat">Dismiss</a>
+                <a id="copycode" data-clipboard-target="#view_modal_content" class="modal-action waves-effect tc-maincolor btn-flat">Copy to clipboard</a>
+                <a class="modal-action modal-close waves-effect btn-flat">Dismiss</a>
             </div>
         </div>
 {{end}}

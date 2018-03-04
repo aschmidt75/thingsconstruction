@@ -14,6 +14,9 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+//    This program is dual-licensed. For commercial licensing options, please
+//    contact the author(s).
+//
 package main
 
 import (
@@ -45,16 +48,23 @@ type Config struct {
 		App     bool `yaml:"app"`
 		Contact bool `yaml:"contact"`
 		Twitter bool `yaml:"twitter"`
+		LinkedIn bool `yaml:"linkedin"`
 		GitHub  bool `yaml:"github"`
 		Analytics  bool `yaml:"analytics"`
 		Shariff  bool `yaml:"shariff"`
+		VoteForGenerators  bool `yaml:"vote_generators"`
 	}
 	StaticTexts struct {
+		LinkedInUrl string `yaml:"linkedin_url"`
+		GitHubUrl string `yaml:"github_url"`
+		TwitterUrl string `yaml:"twitter_url"`
 		CopyrightLine string `yaml:"copyrightline"`
+		Notices string `yaml:"notices"`
 	}
 	Docker struct {
 		UserConfig string `yaml:"userConfig"`
 	}
+	VoteGenerators map[string]string  `yaml:"vote_generators"`
 }
 
 // Read yaml configuration from file (fromPath),

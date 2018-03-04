@@ -14,6 +14,9 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+//    This program is dual-licensed. For commercial licensing options, please
+//    contact the author(s).
+//
 package main
 
 // app_ct_handler.go
@@ -37,6 +40,7 @@ type appEntryData struct {
 	CtfName string
 	CtfDesc string
 	CtfType string
+	AllowTypeSelection bool
 }
 
 func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
@@ -59,6 +63,7 @@ func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
 	data.AppPageData.ThingId = vars["id"]
 	if data.AppPageData.ThingId != "" {
 		Debug.Printf("Loading data for id=%s\n", data.AppPageData.ThingId)
+		data.AllowTypeSelection = false
 
 		if err := data.Deserialize(); err != nil {
 			Error.Printf("Unable to load data, err=%s\n", err)
@@ -67,6 +72,8 @@ func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
 			data.CtfDesc = *data.AppPageData.wtd.Description
 			data.CtfType = data.AppPageData.wtd.Type
 		}
+	} else {
+		data.AllowTypeSelection = true
 	}
 
 	appCreateThingServePage(w, *data)
@@ -93,13 +100,11 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 	// check if id is valid
 	vars := mux.Vars(req)
 	id := vars["id"]
-	Debug.Printf("id=%s", id)
 	if id != "" {
 		// this is an edit of an existing ThingId
 		data := &appManageActionsData{
 			AppPageData: AppPageData{
 				PageData: PageData{
-					Title: "Manage Actions",
 					InApp: true,
 				},
 				ThingId: id,
@@ -181,6 +186,30 @@ func appEntryCreateThing(data *appEntryData) (string, error) {
 	}
 	*data.AppPageData.wtd.Description = data.CtfDesc
 
+	// According to Thing Type selected, prefill with properties/actions
+	var wtd = data.AppPageData.wtd
+	for key, tp := range TypePresets {
+		if wtd.Type == key {
+			if len(tp.properties) > 0 {
+				wtd.NewProperties()
+				for _, o := range tp.properties {
+					wtd.AppendProperty(o)
+				}
+			}
+			if len(tp.actions) > 0 {
+				wtd.NewActions()
+				for _, o := range tp.actions {
+					wtd.AppendAction(o)
+				}
+			}
+			if len(tp.events) > 0 {
+				wtd.NewEvents()
+				for _, o := range tp.events {
+					wtd.AppendEvent(o)
+				}
+			}
+		}
+	}
 	err := data.AppPageData.Serialize()
 	if err != nil {
 		return "", err

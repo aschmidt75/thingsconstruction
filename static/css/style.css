@@ -1,3 +1,119 @@
+.tc-maincolor {
+    background-color: #ff5722 !important;
+}
+
+.tc-maincolor-text {
+    color: #ff5722 !important;
+}
+
+.tc-maincolor.lighten-5 {
+    background-color: #fbe9e7 !important;
+}
+
+.tc-maincolor-text.text-lighten-5 {
+    color: #fbe9e7 !important;
+}
+
+.tc-maincolor.lighten-4 {
+    background-color: #ffccbc !important;
+}
+
+.tc-maincolor-text.text-lighten-4 {
+    color: #ffccbc !important;
+}
+
+.tc-maincolor.lighten-3 {
+    background-color: #ffab91 !important;
+}
+
+.tc-maincolor-text.text-lighten-3 {
+    color: #ffab91 !important;
+}
+
+.tc-maincolor.lighten-2 {
+    background-color: #ff8a65 !important;
+}
+
+.tc-maincolor-text.text-lighten-2 {
+    color: #ff8a65 !important;
+}
+
+.tc-maincolor.lighten-1 {
+    background-color: #ff7043 !important;
+}
+
+.tc-maincolor-text.text-lighten-1 {
+    color: #ff7043 !important;
+}
+
+.tc-maincolor.darken-1 {
+    background-color: #f4511e !important;
+}
+
+.tc-maincolor-text.text-darken-1 {
+    color: #f4511e !important;
+}
+
+.tc-maincolor.darken-2 {
+    background-color: #e64a19 !important;
+}
+
+.tc-maincolor-text.text-darken-2 {
+    color: #e64a19 !important;
+}
+
+.tc-maincolor.darken-3 {
+    background-color: #d84315 !important;
+}
+
+.tc-maincolor-text.text-darken-3 {
+    color: #d84315 !important;
+}
+
+.tc-maincolor.darken-4 {
+    background-color: #bf360c !important;
+}
+
+.tc-maincolor-text.text-darken-4 {
+    color: #bf360c !important;
+}
+
+.tc-maincolor.accent-1 {
+    background-color: #ff9e80 !important;
+}
+
+.tc-maincolor-text.text-accent-1 {
+    color: #ff9e80 !important;
+}
+
+.tc-maincolor.accent-2 {
+    background-color: #ff6e40 !important;
+}
+
+.tc-maincolor-text.text-accent-2 {
+    color: #ff6e40 !important;
+}
+
+.tc-maincolor.accent-3 {
+    background-color: #ff3d00 !important;
+}
+
+.tc-maincolor-text.text-accent-3 {
+    color: #ff3d00 !important;
+}
+
+.tc-maincolor.accent-4 {
+    background-color: #dd2c00 !important;
+}
+
+.tc-maincolor-text.text-accent-4 {
+    color: #dd2c00 !important;
+}
+
+
+
+
+
 h1 {
     font-size: 3.5em;
 }
@@ -114,3 +230,5 @@ ul.browser-default li {
     margin: 10px;
     background-color: #ff0000;
 }
+
+.modal { width: 85% !important ; max-height: 95% !important }

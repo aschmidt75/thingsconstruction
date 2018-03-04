@@ -1,7 +1,7 @@
 {{define `header`}}
 <header>
   <div class="navbar-fixed">
-    <nav class="deep-orange darken-1">
+    <nav class="tc-maincolor darken-1">
       <div class="nav-wrapper">
         <div class="container">
           <a href="/index.html" class="brand-logo"><img style="height:40px; margin-top: 10px" src="/img/logosmall.png"></a>

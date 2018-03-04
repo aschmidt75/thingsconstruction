@@ -15,7 +15,7 @@
             <p>
             <h5>Tags</h5>
             {{ range .TagChipData }}
-                <div class="chip {{ if .Active }}deep-orange lighten-3{{end}}">
+                <div class="chip {{ if .Active }}tc-maincolor lighten-3{{end}}">
                     {{ .TagName }}
                 </div>
             {{ end }}
@@ -25,7 +25,7 @@
             <ul>
                 {{ range .AllPostsChrono }}
                 <li>
-                    <div><a class="deep-orange-text text-lighten-1" href="/blog/{{.Name}}">{{ .Title }}</a></div>
+                    <div><a class="tc-maincolor-text text-lighten-1" href="/blog/{{.Name}}">{{ .Title }}</a></div>
                 </li>
                 {{ end }}
             </ul>

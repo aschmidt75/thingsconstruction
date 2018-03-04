@@ -14,6 +14,9 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+//    This program is dual-licensed. For commercial licensing options, please
+//    contact the author(s).
+//
 package main
 
 import (
@@ -26,6 +29,7 @@ type appGenParamsData struct {
 	AppPageData
 	NumGenerators int
 	AppGenTargets *AppGenTargets
+	VoteGenerators map[string]string
 }
 
 func appGenParamsNewPageData(id string) (*appGenParamsData, error) {
@@ -45,6 +49,7 @@ func appGenParamsNewPageData(id string) (*appGenParamsData, error) {
 		},
 		NumGenerators: 1,
 		AppGenTargets: t,
+		VoteGenerators: ServerConfig.VoteGenerators,
 	}
 	data.SetFeaturesFromConfig()
 	data.InApp = true

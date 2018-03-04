@@ -23,11 +23,11 @@
                         <div class="row">
                             <div class="col s12">
                                 <ul class="tabs">
-                                    <li class="tab col s2"><a class="active" href="#gen_review_thing">Thing</a></li>
-                                    <li class="tab col s3"><a href="#gen_review_framework">Framework</a></li>
-                                    <li class="tab col s3"><a href="#gen_review_properties">Properties</a></li>
-                                    <li class="tab col s2"><a href="#gen_review_actions">Actions</a></li>
-                                    <li class="tab col s2"><a href="#gen_review_events">Events</a></li>
+                                    <li class="tab col s2"><a class="active tc-maincolor-text" href="#gen_review_thing">Thing</a></li>
+                                    <li class="tab col s3"><a class="tc-maincolor-text" href="#gen_review_framework">Framework</a></li>
+                                    <li class="tab col s3"><a class="tc-maincolor-text" href="#gen_review_properties">Properties</a></li>
+                                    <li class="tab col s2"><a class="tc-maincolor-text" href="#gen_review_actions">Actions</a></li>
+                                    <li class="tab col s2"><a class="tc-maincolor-text" href="#gen_review_events">Events</a></li>
                                 </ul>
                             </div>
                             <div id="gen_review_thing" class="col s12">
@@ -61,7 +61,7 @@
                             <div class="card-action ">
                                 <p>Please tick the checkbox below if you agree with the conditions above.</p>
 
-                                <input id="gen_accept_cb" type="checkbox" class="filled-in deep-orange" />
+                                <input id="gen_accept_cb" type="checkbox" class="filled-in tc-maincolor" />
                                 <label for="gen_accept_cb" class="teal-text">
                                     <span>I understand, let's roll.</span>
                                 </label>
@@ -81,7 +81,7 @@
                         <li>Properties{{ if .TocInfo.num_properties }}&nbsp;(<span>{{ index .TocInfo "num_properties" }}</span>){{end}}</li>
                         <li>Actions{{ if .TocInfo.num_actions }}&nbsp;(<span>{{ index .TocInfo "num_actions" }}</span>){{end}}</li>
                         <li>Events{{ if .TocInfo.num_events }}&nbsp;(<span>{{ index .TocInfo "num_events" }}</span>){{end}}</li>
-                        <li><strong class="deep-orange-text">Generate!</strong></li>
+                        <li><strong class="tc-maincolor-text">Generate!</strong></li>
                     </ul>
                     </p>
                 </div>
@@ -97,7 +97,7 @@
         <form id="gen_go_f" name="gen_go_f" method="POST" action="/app/{{ .ThingId }}/generate">
             <input type="hidden" value="" id="gen_go_token" name="token">
             <input type="hidden" value="{{.ThingId}}" id="gen_go_id" name="id">
-            <button id="gen_go" class="btn deep-orange waves-effect waves-light col s5 right" type="submit" name="gen_go">
+            <button id="gen_go" class="btn tc-maincolor waves-effect waves-light col s5 right" type="submit" name="gen_go">
                 Generate!
                 <i class="material-icons right">build</i>
             </button>

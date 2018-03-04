@@ -19,7 +19,7 @@
 
                     </div>
                     <div class="col s8 right">
-                        <h5><a class="deep-orange-text text-lighten-1 truncate" href="/blog/{{.Name}}">{{ .Title }}</a></h5>
+                        <h5><a class="tc-maincolor-text text-lighten-1 truncate" href="/blog/{{.Name}}">{{ .Title }}</a></h5>
                         {{.Abstract}}
                     </div>
 

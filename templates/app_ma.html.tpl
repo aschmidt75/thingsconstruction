@@ -46,7 +46,7 @@
                         </p>
                     </div>
                     <div style="padding-bottom: 4em">
-                        <button id="ma_add_btn" class="btn btn-floating deep-orange tooltipped left" data-delay="100" data-tooltip="New action">
+                        <button id="ma_add_btn" class="btn btn-floating tc-maincolor tooltipped left" data-delay="100" data-tooltip="New action">
                             <i class="material-icons">playlist_add</i>
                         </button>
                     </div>
@@ -58,7 +58,7 @@
                         <li>Create</li>
                         <li>Framework{{ if .TocInfo.framework }}&nbsp;(<span>{{ index .TocInfo "framework" }}</span>){{end}}</li>
                         <li>Properties{{ if .TocInfo.num_properties }}&nbsp;(<span>{{ index .TocInfo "num_properties" }}</span>){{end}}</li>
-                        <li><strong class="deep-orange-text">Actions</strong>&nbsp;(<span id="toc_current_info">0</span>)</li>
+                        <li><strong class="tc-maincolor-text">Actions</strong>&nbsp;(<span id="toc_current_info">0</span>)</li>
                         <li>Events{{ if .TocInfo.num_events }}&nbsp;(<span>{{ index .TocInfo "num_events" }}</span>){{end}}</li>
                         <li>Generate!</li>
                     </ul>
@@ -67,11 +67,11 @@
 
                 <div class="row">
                     <div class="col s9">
-                        <button id="ma_prev" class="btn-large deep-orange tooltipped left" data-delay="100" data-tooltip="Discard changes, go to previous step">
+                        <button id="ma_prev" class="btn-large tc-maincolor tooltipped left" data-delay="100" data-tooltip="Discard changes, go to previous step">
                             <i class="material-icons left">navigate_before</i>Properties
 
                         </button>
-                        <button id="ma_next" class="btn-large deep-orange tooltipped right" data-delay="100" data-tooltip="Save changes, go to next step">
+                        <button id="ma_next" class="btn-large tc-maincolor tooltipped right" data-delay="100" data-tooltip="Save changes, go to next step">
                             Events
                             <i class="material-icons right">navigate_next</i>
                         </button>
@@ -132,7 +132,7 @@
         </div>
         <div id="ma_listitem_##_btns">
             <div class="right col secondary-content">
-                <button id="ma_listitem_##_btns_edit" class="btn-flat waves-effect waves-deep-orange">
+                <button id="ma_listitem_##_btns_edit" class="btn-flat waves-effect waves-tc-maincolor">
                     <i class="material-icons large">mode_edit</i>
                 </button>
                 <button id="ma_listitem_##_btns_delete" class="waves-effect waves-red btn-flat" style="padding: 0 0rem; width:2em; background-color:white; color: red">

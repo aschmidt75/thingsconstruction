@@ -6,6 +6,10 @@
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
     <meta name="description" content="Embedded IoT Code Generator for constrained devices, according to W3C's Web Of Things (WoT) Thing Description">
     <meta name="keywords" content="embedded constrained devices microcontrollers IoT Arduino Framework HTTP JSON Generator Internet of Things W3C WOT Web Of Things Thing Description">
+{{ if eq .Robots false -}}
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+{{ end -}}
     <link rel="author" href="twitter.com/aschmidt75">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>THNG:STRUCTION - {{ .Title }}</title>

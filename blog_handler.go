@@ -14,6 +14,9 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+//    This program is dual-licensed. For commercial licensing options, please
+//    contact the author(s).
+//
 package main
 
 import (
@@ -68,6 +71,7 @@ func BlogIndexHandler(w http.ResponseWriter, req *http.Request) {
 		PageData: PageData{
 			Title:  "Blog Index",
 			InBlog: true,
+			Robots: true,
 		},
 		BlogMetaData:   Blog.MetaData,
 		TagChipData:    collectTagChipData(Blog.MetaData, nil),
@@ -100,6 +104,7 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 			PageData: PageData{
 				Title:  bp.MetaData.Title,
 				InBlog: true,
+				Robots: true,
 			},
 			MetaData:       bp.MetaData,
 			BlogMetaData:   Blog.MetaData,

@@ -20,9 +20,20 @@ features:
   contact: true
   twitter: true
   github: true
+  linkedin: true
   analytics: true
   shariff: true
+  vote_generators: true
 statictexts:
+  linkedin_url: https://www.linkedin.com/
+  github_url: https://github.com/
+  twitter_url: https://twitter.com/
   copyrightline: "© 2017 @aschmidt75, AGPLv3/dual licensed. Blog content is CC BY-SA 4.0"
+  notices: |
+  "Web Of Things" or "WoT" is a term defined and specified by the W3C World Wide Web Consortium.
+  "Arduino" is a trademark of and copyright by Arduino AG. "ARM mbed" is a trademark of and copyright by ARM Limited.
+
 docker:
   userConfig: "601:999"
+vote_generators:
+  1: "Your specialized generator module wish goes here"

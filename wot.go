@@ -14,6 +14,10 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+//
+//    This program is dual-licensed. For commercial licensing options, please
+//    contact the author(s).
+//
 package main
 
 import (
@@ -97,3 +101,153 @@ func (wtd *WebThingDescription) Deserialize(id string, fileName string) error {
 	}
 	return err
 }
+
+func newString(s string) *string {
+	var res = new(string)
+	*res = s
+	return res
+}
+
+type TypePreset struct {
+	properties []WebThingProperty
+	actions []WebThingAction
+	events []WebThingEvent
+}
+
+var TypePresets = map[string]TypePreset{
+	"onOffSwitch": TypePreset{
+		properties: []WebThingProperty{
+			WebThingProperty{
+				Name: "on",
+				Type: "Boolean",
+			},
+		},
+		actions: []WebThingAction{
+			WebThingAction{
+				Name:        "toggle",
+			},
+		},
+	},
+	"multilevelSwitch": TypePreset{
+		properties: []WebThingProperty{
+			WebThingProperty{
+				Name: "on",
+				Type: "Boolean",
+			},
+			WebThingProperty{
+				Name: "level",
+				Type: "Integer",
+				Description: newString("unit:percent"),
+			},
+		},
+	},
+	"binarySensor": TypePreset{
+		properties: []WebThingProperty{
+			WebThingProperty{
+				Name: "on",
+				Type: "Boolean",
+			},
+		},
+	},
+	"multilevelSensor": TypePreset{
+		properties: []WebThingProperty{
+			WebThingProperty{
+				Name: "on",
+				Type: "Boolean",
+			},
+			WebThingProperty{
+				Name: "level",
+				Type: "Integer",
+				Description: newString("unit:percent"),
+			},
+		},
+	},
+	"smartPlug": TypePreset{
+		properties: []WebThingProperty{
+			WebThingProperty{
+				Name: "on",
+				Type: "Boolean",
+			},
+			WebThingProperty{
+				Name: "instantaneousPower",
+				Type: "Float",
+				Description: newString("unit:watt"),
+			},
+			WebThingProperty{
+				Name: "voltage",
+				Type: "Float",
+				Description: newString("unit:volt"),
+			},
+			WebThingProperty{
+				Name: "current",
+				Type: "Float",
+				Description: newString("unit:ampere"),
+			},
+			WebThingProperty{
+				Name: "frequency",
+				Type: "Float",
+				Description: newString("unit:hertz"),
+			},
+			WebThingProperty{
+				Name: "level",
+				Type: "Float",
+				Description: newString("unit:percent"),
+			},
+		},
+	},
+	"onOffLight": TypePreset{
+		properties: []WebThingProperty{
+			WebThingProperty{
+				Name: "on",
+				Type: "Boolean",
+			},
+		},
+	},
+	"dimmableLight": TypePreset{
+		properties: []WebThingProperty{
+			WebThingProperty{
+				Name: "on",
+				Type: "Boolean",
+			},
+			WebThingProperty{
+				Name: "level",
+				Type: "Integer",
+				Description: newString("unit:percent"),
+			},
+		},
+	},
+	"onOffColorLight": TypePreset{
+		properties: []WebThingProperty{
+			WebThingProperty{
+				Name: "on",
+				Type: "Boolean",
+			},
+			WebThingProperty{
+				Name: "color",
+				Type: "String",
+				Description: newString("hex rgb"),
+			},
+		},
+	},
+	"dimmableColorLight": TypePreset{
+		properties: []WebThingProperty{
+			WebThingProperty{
+				Name: "on",
+				Type: "Boolean",
+			},
+			WebThingProperty{
+				Name: "level",
+				Type: "Integer",
+				Description: newString("unit:percent"),
+			},
+			WebThingProperty{
+				Name: "color",
+				Type: "String",
+				Description: newString("hex rgb"),
+			},
+		},
+	},
+
+
+}
+

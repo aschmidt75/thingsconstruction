@@ -14,6 +14,9 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+//    This program is dual-licensed. For commercial licensing options, please
+//    contact the author(s).
+//
 package main
 
 // Generic Page Data, valid for all pages
@@ -23,10 +26,15 @@ type PageData struct {
 
 	Feature       map[string]bool
 	CopyrightLine string
+	Notices string
+	LinkedInUrl string
+	TwitterUrl	string
+	GitHubUrl	string
 
 	InBlog    bool
 	InApp     bool
 	InContact bool
+	Robots    bool
 }
 
 func (pd *PageData) SetFeaturesFromConfig() {
@@ -35,10 +43,16 @@ func (pd *PageData) SetFeaturesFromConfig() {
 		"App":     ServerConfig.Features.App,
 		"Contact": ServerConfig.Features.Contact,
 		"Twitter": ServerConfig.Features.Twitter,
+		"LinkedIn": ServerConfig.Features.LinkedIn,
 		"GitHub":  ServerConfig.Features.GitHub,
 		"Analytics":  ServerConfig.Features.Analytics,
 		"Shariff":  ServerConfig.Features.Shariff,
+		"VoteForGenerators":  ServerConfig.Features.VoteForGenerators,
 	}
 	pd.CopyrightLine = ServerConfig.StaticTexts.CopyrightLine
+	pd.Notices = ServerConfig.StaticTexts.Notices
+	pd.LinkedInUrl = ServerConfig.StaticTexts.LinkedInUrl
+	pd.TwitterUrl = ServerConfig.StaticTexts.TwitterUrl
+	pd.GitHubUrl = ServerConfig.StaticTexts.GitHubUrl
 	pd.InApp = false
 }

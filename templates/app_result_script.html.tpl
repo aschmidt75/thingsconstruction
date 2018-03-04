@@ -1,4 +1,5 @@
 {{define `script`}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 <script>
     $(document).ready(function(){
         // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
@@ -17,7 +18,7 @@
         var target = document.getElementById("view_modal_content");
         var viewUrl = "/app/{{.ThingId}}/result/assetview/"+permaLink;
 
-        var content = ""
+        var content = "";
 
         $.ajax({
             type: "GET",
@@ -32,6 +33,9 @@
             },
             complete: function() {
                 target.innerHTML = content;
+                (function(){
+                    new Clipboard('#copycode');
+                })();
             },
         });
 
@@ -63,4 +67,25 @@
         //M.toast({html: 'Copied.'});
     })
 </script>
+<script>
+    function more_activate(e) {
+        document.getElementById('btn_more').removeEventListener('click', more_activate);
+        document.getElementById('btn_less').addEventListener('click', more_deactivate);
+        document.getElementById('sp_more').className = "";
+        document.getElementById('btn_more').className += " hide";
+    }
+
+    function more_deactivate(e) {
+        document.getElementById('btn_more').addEventListener('click', more_activate);
+        document.getElementById('btn_less').removeEventListener('click', more_deactivate);
+        document.getElementById('sp_more').className += " hide";
+        document.getElementById('btn_more').className += "tc-maincolor-text";
+    }
+
+    var btn_more = document.getElementById('btn_more');
+    if ( btn_more != null) {
+        btn_more.addEventListener('click', more_activate);
+    }
+</script>
+
 {{end}}

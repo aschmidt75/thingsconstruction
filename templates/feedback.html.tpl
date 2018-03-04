@@ -7,7 +7,7 @@
         </div>
         <div class="col s12">
             <p>
-                We appreciate your feedback on this app and the code generators for
+                We appreciate your feedback on this app and the generator modules for
                 embedded code! Please let us know what you think and how we could improve
                 this service. Additionally, feel free to use this form to contact us.
             </p>
@@ -36,7 +36,7 @@
                     it for the purpose of contacting you. For more information please see <a href="/privacy.html"/>the privacy policy</p>
                 </p>
                 <div class="row" >
-                    <a class="waves-effect waves-light deep-orange btn right" id="fbf_send"><i class="material-icons right">send</i>Send</a>
+                    <a class="waves-effect waves-light tc-maincolor btn right" id="fbf_send"><i class="material-icons right">send</i>Send</a>
                 </div>
             </form>
         </div>

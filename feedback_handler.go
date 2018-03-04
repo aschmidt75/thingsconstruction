@@ -13,6 +13,10 @@
 //
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+//    This program is dual-licensed. For commercial licensing options, please
+//    contact the author(s).
+//
 package main
 
 import (
@@ -140,6 +144,50 @@ func FeedbackHandleGet(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func FeedbackVoteHandlePost(w http.ResponseWriter, req *http.Request) {
+	req.Body = http.MaxBytesReader(w, req.Body, 1024)
+
+	if ServerConfig.Features.VoteForGenerators == false {
+		http.Redirect(w, req, "/", 302)
+		return
+	}
+
+	err := req.ParseForm()
+	if err != nil {
+		Debug.Printf("Error parsing feedback form: %s\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	voteform := req.PostForm
+
+	fbPath := filepath.Join(ServerConfig.Paths.FeedbackPath, makeTimestampStr3())
+	file, err := os.OpenFile(fbPath, os.O_CREATE | os.O_RDWR,  os.FileMode(400))
+	if err != nil {
+		Error.Printf("%s", err)
+
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "text/plain")
+
+		fmt.Fprint(w, "I'm sorry, an error occured saving your feedback. Please try again later.")
+		return
+	}
+	defer file.Close()
+	for key, name := range ServerConfig.VoteGenerators {
+		value := voteform.Get(key)
+		if value != "" {
+			fmt.Fprintf(file, "%s;%s;%s\r\n", key, name, value);
+		}
+	}
+
+	Verbose.Printf("Vote: written to %s\n", fbPath)
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "text/plain")
+
+	fmt.Fprint(w, "Thank you for your vote.")
+
+}
+
 func makeTimestampStr() string {
 	return fmt.Sprintf("feedback-%d.txt", (time.Now().UnixNano()))
 }
@@ -147,3 +195,8 @@ func makeTimestampStr() string {
 func makeTimestampStr2() string {
 	return fmt.Sprintf("feedback-%d.json", (time.Now().UnixNano()))
 }
+
+func makeTimestampStr3() string {
+	return fmt.Sprintf("vote-%d.csv", (time.Now().UnixNano()))
+}
+

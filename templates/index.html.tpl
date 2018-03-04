@@ -3,49 +3,61 @@
 </div>
 <div class="row">
     <div class="col s12">
-        <h4 class="center">Enhance your embedded devices with APIs!</h4>
+        <h4 class="center">Turn your embedded device into a Web Thing!</h4>
         <div class="row">
-        <div class="col s8 offset-s2 center">
-            <p >This service let's you easily create APIs by modeling
-                properties, actions and events, suitable for different
-                embedded development frameworks.
-            </p>
-        </div>
+            <div class="col s4" style="height:20em">
+                <div class="card horizontal" style="height:100%">
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <p>
+                                This service let's you create communication models
+                                for your embedded device similar to the
+                                Web Things API, and turn them into source code for
+                                embedded devices, ready to run.
+                            </p>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col s4" style="height:20em">
+                <div class="card horizontal" style="height:100%">
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <p>
+                                Models cover device <strong>properties</strong> - such as
+                                temperature or LED state -, <strong>actions</strong> and
+                                <strong>events</strong> - i.e. "Flash LED" or "Temperature low".
+                            </p>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col s4" style="height:20em">
+                <div class="card horizontal" style="height:100%">
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <p>
+                                Code generators produce API code, so you don't have to.
+                                Examples for APIs are HTTP+JSON REST, MQTT or LPWAN interface.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     {{ if .Feature.App  }}
     <div class="row">
+        <p></p>
         <div class="carousel-fixed-item center">
-                <a class="waves-effect waves-light btn teal waves-teal" href="/app"><i class="material-icons left">settings</i>Get Started</a></p>
+                <a class="waves-effect waves-light btn blue-grey darken-3 white-text" href="/app"><i class="material-icons left">settings</i>Get Started</a></p>
         </div>
     </div>
     {{end}}
         <div>
 
-        </div>
-
-        <div class="col s10 offset-s1">
-        <div class="carousel carousel-slider center" data-indicators="true">
-            <div class="carousel-item grey lighten-3 black-text" href="#one!">
-                <h2>Support for embedded device targets</h2>
-                <p>Code generators are available for different embedded development boards</p>
-                <img src="/img/index_carousel_module.png">
-            </div>
-            <div class="carousel-item grey lighten-4 black-text" href="#two!">
-                <h2>Uses W3C's Web of Things Descriptions</h2>
-                <p>Model device behaviour including properties, actions and events.</p>
-                <img src="/img/index_carousel_wot.png">
-            </div>
-            <div class="carousel-item grey lighten-5 black-text" href="#three!">
-                <h2>Generates code for a complete Web Of Things API</h2>
-                <p>Generate and download your code as a skeleton, ready to run.</p>
-                <img src="/img/index_carousel_download.png">
-            </div>
-            <div class="carousel-item grey lighten-4 black-text" href="#four!">
-                <h2>Run code in your favourite development environment</h2>
-                <p>Paste code into your favourite embedded IDE, adapt & flash</p>
-                <img src="/img/index_carousel_code.png">
-            </div>
-        </div>
         </div>
 
     </div>

@@ -182,8 +182,12 @@ function cf_lookup_matching_targets() {
             li.innerHTML = `<div class="collapsible-header">
  <i class="material-icons">keyboard_arrow_right</i>
  ${t.shortDesc}
- <span class="right col s1">
-  <button style="padding-left: 5px" class="deep-orange darken-3 btn-floating tooltipped waves-effect waves-light" data-tooltip="Use this generator" type="" id="go_${t.id}">
+ <br><br><span class="tc-maincolor-text">...more</span>
+ <span class="right col s3">
+  <button style="padding-left: 5px" class="tc-maincolor darken-3 btn-floating tooltipped waves-effect waves-light" data-tooltip="Show details" type="" id="details_${t.id}">
+   <i class="material-icons">description</i>
+  </button>
+  <button style="padding-left: 5px" class="tc-maincolor darken-3 btn-floating tooltipped waves-effect waves-light" data-tooltip="Use this generator" type="" id="go_${t.id}">
    <i class="material-icons">arrow_forward</i>
   </button>
  </span>
@@ -199,8 +203,11 @@ ${depsStr}
 
             cf_targets_matching.appendChild(li);
 
-            var b = document.getElementById("go_"+t.id)
-            b.addEventListener('click', cff_generator_clicked)
+            var b = document.getElementById("go_"+t.id);
+            b.addEventListener('click', cff_generator_clicked);
+
+            b = document.getElementById("details_"+t.id);
+            b.addEventListener('click', cff_generator_details_clicked);
         }
     }
     document.getElementById('cf_targets_num_showing').innerText = ""+num_found;
@@ -209,14 +216,14 @@ ${depsStr}
         div.className = ""
         div.style = "padding: 1em"
         div.innerHTML = `I'm sorry, i don't have a code generator on board for the aspects you selected.
-        Do you like to have a code generator that is still missing? Please let us know on the <a class="deep-orange-text" href="/feedback">feedback</a> page
+        Do you like to have a code generator that is still missing? Please let us know on the <a class="tc-maincolor-text" href="/feedback">feedback</a> page
         or right here: <form id="cff_feedback" action="/feedback/q" method="POST">
         <div class="row">
         <div class="input-field col s8">
         <input id="cff_feedback_what" name="cff_feedback_what" type="text" placeholder="I'm missing ...">
         </div>
         <div class="input-field col s1">
-        <button id="cff_feedback_submit" type="submit" class="waves-effect waves-light deep-orange btn-floating tiny"> <i class="material-icons">send</i></button>
+        <button id="cff_feedback_submit" type="submit" class="waves-effect waves-light tc-maincolor btn-floating tiny"> <i class="material-icons">send</i></button>
         </div>
         </div>
         </form>
@@ -285,5 +292,105 @@ function cff_generator_clicked(e) {
     d.submit();
 }
 
+function cff_generator_details_clicked(e) {
+    e.preventDefault()
+
+    var win = window.open("/module/"+e.target.id.replace(/^details_/,""), '_tf_module');
+    win.focus();
+}
+
 // run initially, produces an empty list if nothing is selected.
 cf_lookup_matching_targets();
+
+
+// connect vote buttons (max.20)
+for( var i = 0; i < 20; i++) {
+    var n = "vote_"+i+"-down";
+    var b = document.getElementById(n);
+    if ( b !== null && b !== undefined)
+        b.addEventListener('click', cf_vote_down);
+    n = "vote_"+i+"-up";
+    b = document.getElementById(n);
+    if ( b !== null && b !== undefined)
+        b.addEventListener('click', cf_vote_up);
+}
+document.getElementById('vote_submit').addEventListener('click', cf_vote_submit);
+
+
+function cf_vote_submit(e) {
+    e.preventDefault();
+
+    var s = document.getElementById('vote_submit');
+    s.removeEventListener('click', cff_feedback_submit);
+    s.className += " disabled";
+
+    // disconnect/gray out buttons
+    for( var i = 0; i < 20; i++) {
+        var n = "vote_"+i+"-down";
+        var b = document.getElementById(n);
+        if ( b !== null && b !== undefined) {
+            b.removeEventListener('click', cf_vote_down);
+        }
+        n = "vote_"+i+"-up";
+        b = document.getElementById(n);
+        if ( b !== null && b !== undefined) {
+            b.removeEventListener('click', cf_vote_up);
+        }
+
+    }
+
+    var frm = $('#cf_vote_form');
+    $.ajax({
+        type: frm.attr('method'),
+        url: frm.attr('action'),
+        data: frm.serialize(),
+        async: true,
+        complete: function() {
+            var f = document.getElementById('cf_vote_form');
+
+            f.innerHTML = "<span class=\"tc-maincolor-text\">Thank you for your feedback!</span>";
+        }
+    });
+}
+
+function cf_vote_up(e) {
+    e.preventDefault();
+
+    var id_ = e.target.id.split("-");
+    if ( id_ != null && id_.length === 2) {
+        var p = id_[0];
+
+        var input_elem = document.getElementById(""+p+"-input");
+        var v = parseInt(input_elem.value);
+        if ( v >= 5) {
+            return;
+        }
+        v++;
+        input_elem.value = ""+v;
+
+        for ( var j = 1; j < 6; j++) {
+            document.getElementById(""+p+"-"+j).className = "col s1"+((j==v)?" tc-maincolor":"")
+        }
+    }
+}
+
+function cf_vote_down(e) {
+    e.preventDefault();
+
+    var id_ = e.target.id.split("-");
+    if ( id_ != null && id_.length === 2) {
+        var p = id_[0];
+
+        var input_elem = document.getElementById(""+p+"-input");
+        var v = parseInt(input_elem.value);
+        if ( v <= 1) {
+            return;
+        }
+        v--;
+        input_elem.value = ""+v;
+
+        for ( var j = 1; j < 6; j++) {
+            document.getElementById(""+p+"-"+j).className = "col s1"+((j==v)?" tc-maincolor":"")
+        }
+    }
+}
