@@ -27,6 +27,7 @@ import (
 	"regexp"
 	"sort"
 	"time"
+	"strings"
 )
 
 type tagChipData struct {
@@ -100,6 +101,9 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 	bp, ok := Blog.Pages[pageName]
 	if ok {
 		markDown := github_flavored_markdown.Markdown(bp.Content)
+		r := strings.NewReplacer("<ul>", "<ul class=\"browser-default\">")
+		htmlStr := template.HTML(r.Replace(string(markDown)))
+
 		blogServePage(w, blogContentData{
 			PageData: PageData{
 				Title:  bp.MetaData.Title,
@@ -110,7 +114,7 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 			BlogMetaData:   Blog.MetaData,
 			TagChipData:    collectTagChipData(Blog.MetaData, bp.MetaData),
 			AllPostsChrono: collectAllPostsChrono(Blog),
-			HtmlOutput:     template.HTML(markDown),
+			HtmlOutput:     htmlStr,
 		})
 
 	} else {

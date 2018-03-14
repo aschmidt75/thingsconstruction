@@ -60,7 +60,7 @@
                                 <td>
                                     <a href="/app/{{$GThingId}}/result/asset/{{ .Permalink }}"><i class="material-icons tooltipped" data-delay="100" data-tooltip="Download file">file_download</i>
                                     </a>
-                                    <a target="#" class="modal-trigger" href="#view_modal"> <i id="view_{{ .Permalink }}" linkid="{{ .Permalink }}" class="material-icons tooltipped" data-delay="100" data-tooltip="View in browser">remove_red_eye</i>
+                                    <a target="#" class="modal-trigger" href="#view_modal"> <i id="view_{{ .Permalink }}" linkid="{{ .Permalink }}" onclick="return view_element(event);" class="material-icons tooltipped" data-delay="100" data-tooltip="View in browser">remove_red_eye</i>
                                     </a>
                                 </td>
                             </tr>
@@ -115,4 +115,7 @@
                 <a class="modal-action modal-close waves-effect btn-flat">Dismiss</a>
             </div>
         </div>
+
+        <span id="span_thing_id" class="hide">{{.ThingId}}</span>
+
 {{end}}

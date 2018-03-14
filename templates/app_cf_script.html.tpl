@@ -1,3 +1,3 @@
 {{define `script`}}
-<script src="/js/cf.js"></script>
+<script type="text/javascript" src="/js/cf.js"></script>
 {{end}}

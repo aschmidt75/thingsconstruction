@@ -53,34 +53,13 @@
 
     {{ if .Feature.Analytics }}
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113732834-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-113732834-1', { 'anonymize_ip': true });
-    </script>
+    <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-113732834-1"></script>
+    <script type="text/javascript" src="/js/tcga.js"></script>
     {{ end }}
     <!-- cookie consent -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
-    <script>
-        window.addEventListener("load", function(){
-            window.cookieconsent.initialise({
-                "palette": {
-                    "popup": {
-                        "background": "#000"
-                    },
-                    "button": {
-                        "background": "#fff"
-                    }
-                },
-                "position": "bottom-left",
-                "content": {
-                    "href": "https://thngstruction.online/privacy.html"
-                }
-            })});
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+    <script type="text/javascript" src="/js/cookieconsent.js">
     </script>
 </head>
 

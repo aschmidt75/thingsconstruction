@@ -1,7 +1,4 @@
 {{define `script`}}
-<script>
-    $(document).ready(function(){
-        $('.scrollspy').scrollSpy();
-    });
+<script type="text/javascript" src="/js/staticpage.js">
 </script>
 {{end}}

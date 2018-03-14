@@ -103,6 +103,7 @@
             </button>
         </form>
     </div>
+    <span id="span_thing_id" class="hide">{{.ThingId}}</span>
 
 </div>
 
