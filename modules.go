@@ -147,6 +147,31 @@ func ModulePageHandler(w http.ResponseWriter, req *http.Request) {
 	})
 }
 
+func ModuleDataHandler(w http.ResponseWriter, req *http.Request) {
+	targets, err := ReadGeneratorsConfig()
+	if err != nil || targets == nil {
+		Error.Println(err)
+		w.WriteHeader(500)
+		fmt.Fprint(w, "Error reading modules data")
+		return
+	}
+
+	b, err := json.Marshal(targets)
+	if err != nil {
+		Error.Println(err)
+		w.WriteHeader(500)
+		fmt.Fprint(w, "Error marshaling modules data")
+		return
+	}
+
+	w.WriteHeader(200)
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	w.Write(b)
+}
+
+
+
 func getModuleSpecContent(moduleId string) ([]byte, error) {
 	targets, err := ReadGeneratorsConfig()
 	if err != nil || targets == nil {

@@ -24,7 +24,7 @@ import (
 	"net/http"
 )
 
-func IndexHandler(w http.ResponseWriter, _ *http.Request) {
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	templates, err := NewBasicHtmlTemplateSet("index.html.tpl", "index_script.html.tpl")
 	if err != nil {
 		Error.Fatalf("Fatal error creating template set: %s\n", err)

@@ -25,6 +25,7 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"time"
+	"context"
 )
 
 type Route struct {
@@ -44,6 +45,7 @@ var routes = Routes{
 	Route{"Blog", "GET", "/blog", BlogIndexHandler},
 	Route{"BlogPage", "GET", "/blog/{page}", MarkdownBlogHandler},
 	Route{"ModuleInfo", "GET", "/module/{id}", ModulePageHandler},
+	Route{"ModuleInfo", "GET", "/modules/data", ModuleDataHandler},
 	Route{"AppCreateThing", "GET", "/app", AppCreateThingHandleGet},
 	Route{"AppCreateThing", "POST", "/app", AppCreateThingHandlePost},
 	Route{"AppCreateThing", "GET", "/app/{id}", AppCreateThingHandleGet},
@@ -92,6 +94,7 @@ func NewRouter() *mux.Router {
 		handler = route.HandlerFunc
 		handler = addNoCacheHeaders(handler)
 		handler = filterTooBigPayloads(handler)
+		handler = featureActivationHandler(handler)
 		handler = logger(handler, route.Name)
 
 		router.
@@ -164,11 +167,37 @@ func addNoCacheHeaders(inner http.Handler) http.Handler {
 		w.Header().Set("Pragma", "no-cache")
 		w.Header().Set("Expires", "0")
 
+		w.Header().Set("Content-Security-Policy", "frame-ancestors 'none';")
+		w.Header().Set("X-Frame-Options", "DENY")
+		w.Header().Set("X-Content-Options", "nosniff")
+		w.Header().Set("X-XSS-Protection", "1; mode=block")
+
 		// forward
 		inner.ServeHTTP(w, r)
 	})
 }
 
+func featureActivationHandler(inner http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check for feature param. if given, make it permanent as a cookie
+		featureActivation := r.URL.Query().Get("with-feature")
+		if featureActivation != "" {
+			// set cookie
+			http.SetCookie(w, &http.Cookie{
+				Name: "tc-feature",
+				Value: featureActivation,
+			})
+		}
+
+		c, _ := r.Cookie("tc-feature")
+		if c != nil {
+			ctx := context.WithValue(r.Context(), "tc-feature", c.Value)
+			inner.ServeHTTP(w, r.WithContext(ctx))
+		} else {
+			inner.ServeHTTP(w, r)
+		}
+	})
+}
 func filterTooBigPayloads(inner http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, 4096)

@@ -17,6 +17,63 @@
 // CF = Choose Framework
 //
 
+function Target(id,shortDesc,desc,tags,codegeninfo) {
+    this.id = id;
+    this.shortDesc = shortDesc;
+    this.desc = desc;
+    this.tags = tags;
+    this.selected = false;
+    this.deps = [];
+    this.codegeninfo = codegeninfo;
+    // TODO: Add version
+}
+
+function TargetDep(name,url,license,copyright,info) {
+    this.name = name;
+    this.url = url;
+    this.license = license;
+    this.copyright = copyright;
+    this.info = info;
+}
+
+var targets = [];
+
+var modulesJson = "";
+$.ajax({
+    type: "GET",
+    url: "/modules/data",
+    timeout: 5000,
+    async: false,
+    success: function (data) {
+        modulesJson += data;
+    },
+    error: function (data) {
+        console.log(data);
+        alert("I'm sorry, an error occurred when reading the modules list!");
+    },
+    complete: function (data) {
+        if (modulesJson != null && modulesJson.length > 0) {
+            var obj = JSON.parse(modulesJson);
+            if (obj != null) {/// construct targets from it
+                for ( var i = 0; i < obj.Targets.length; i++) {
+                    var ot = obj.Targets[i];
+                    console.log(ot);
+                    var t = new Target(ot.Id, ot.ShortDesc, ot.Desc, ot.Tags);
+                    for ( var j = 0; j < ot.Dependencies.length; j++) {
+                        var oj = ot.Dependencies[j];
+                        var d = new TargetDep(oj.Name, oj.URL, oj.License, oj.Copyright, oj.Info);
+                        t.deps.push(d);
+                    }
+                    targets.push(t);
+                }
+            } else {
+                alert("I'm sorry, an error occurred when parsing the modules list!");
+            }
+        }
+    }
+});
+
+
 // given a name of a target tag (i.e. "framework:arduino"), this
 // function creates a new chip and places it under nodeId
 // unless it already exists
@@ -393,4 +450,34 @@ function cf_vote_down(e) {
             document.getElementById(""+p+"-"+j).className = "col s1"+((j==v)?" tc-maincolor":"")
         }
     }
+}
+
+function more_activate(e) {
+    document.getElementById('btn_more').removeEventListener('click', more_activate);
+    document.getElementById('btn_less').addEventListener('click', more_deactivate);
+    document.getElementById('sp_more').className = "";
+    document.getElementById('btn_more').className += " hide";
+}
+
+function more_deactivate(e) {
+    document.getElementById('btn_more').addEventListener('click', more_activate);
+    document.getElementById('btn_less').removeEventListener('click', more_deactivate);
+    document.getElementById('sp_more').className += " hide";
+    document.getElementById('btn_more').className += "tc-maincolor-text";
+}
+
+function interest_activate(e) {
+    document.getElementById('btn_interest').removeEventListener('click', more_activate);
+    document.getElementById('span_btn_interest').innerHTML = "";
+    document.getElementById('span_interest').className = "";
+}
+
+var btn_more = document.getElementById('btn_more');
+if ( btn_more != null) {
+    btn_more.addEventListener('click', more_activate);
+}
+
+var btn_intr = document.getElementById('btn_interest');
+if ( btn_intr != null) {
+    btn_intr.addEventListener('click', interest_activate);
 }

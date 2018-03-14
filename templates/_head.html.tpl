@@ -49,7 +49,6 @@
     nav ul a.active {
         background: rgba(0,0,0,0.2);
     }
-
     </style>
 
     {{ if .Feature.Analytics }}

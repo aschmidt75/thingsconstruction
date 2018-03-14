@@ -48,14 +48,17 @@
                     <p></p>
                 </div>
                 <div class="hide">
-                    <form id="cf_selection_form" name="cf_selection_form" method="POST" action="">
+                    <form id="cf_selection_form" name="cf_selection_form" method="POST" action="/app/{{ .AppPageData.ThingId }}/framework">
                         <input type="text" id="cf_selection" name="cfs">
-                        <input type="text" id="cf_id" name="cfid" value="">
+                        <input type="text" id="cf_id" name="cfid" value="{{ .AppPageData.ThingId }}">
                     </form>
                 </div>
                 {{ if .Feature.VoteForGenerators }}
                 <div class="row">
-                    <h4>Interested in additional generators?</h4>
+                    <span id="span_btn_interest">
+                    <a id="btn_interest" class="waves-effect waves-light btn-large tc-maincolor" href="#">Interested in additional generators?</a>
+                    </span>
+                    <span id="span_interest" class="hide">
                     <form id="cf_vote_form" name="cf_vote_form" method="POST" action="/feedback/vote">
                         <p>Then please vote here for your favorite IoT tech stack:</p>
                     <table>
@@ -81,6 +84,7 @@
                     </table>
                     <button id="vote_submit" class="btn waves-effect waves-light tc-maincolor" href="#!">Vote!</button>
                     </form>
+                    </span>
                 </div>
                 {{ end }}
             </div>

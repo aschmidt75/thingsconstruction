@@ -73,6 +73,5 @@ func ReadGeneratorsConfig() (*AppGenTargets, error) {
 		return t, err
 	}
 
-	//	Debug.Printf("targets=%s\n", spew.Sdump(t))
 	return t, nil
 }

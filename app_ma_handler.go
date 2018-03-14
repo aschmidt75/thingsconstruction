@@ -78,7 +78,6 @@ func AppManageActionsHandleGet(w http.ResponseWriter, req *http.Request) {
 	}
 
 	appManageActionsServePage(w, data)
-
 }
 
 func AppManageActionsDataHandleGet(w http.ResponseWriter, req *http.Request) {

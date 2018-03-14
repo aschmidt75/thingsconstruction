@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="footer-copyright">
-        <div class="container">by A.Schmidt&nbsp;|&nbsp;{{ .CopyrightLine }}
+        <div class="container"><span style="font-size: 0.8em"><!--by A.Schmidt&nbsp;|&nbsp;-->{{ .CopyrightLine }}</span>
           <div class="right">
               <a class="grey-text text-lighten-4" href="/privacy.html">Privacy Policy</a> &nbsp;|&nbsp;
               <a class="grey-text text-lighten-4" href="/imprint.html">Imprint</a> &nbsp;|
