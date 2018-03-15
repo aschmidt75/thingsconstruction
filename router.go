@@ -169,7 +169,7 @@ func addNoCacheHeaders(inner http.Handler) http.Handler {
 
 		w.Header().Set("Content-Security-Policy", ServerConfig.Http.ContentSecurityPolicy)
 		w.Header().Set("X-Frame-Options", "DENY")
-		w.Header().Set("X-Content-Options", "nosniff")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("X-XSS-Protection", "1; mode=block")
 
 		// forward
