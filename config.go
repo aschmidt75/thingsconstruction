@@ -27,6 +27,7 @@ import (
 type Config struct {
 	Http struct {
 		Port int `yaml:"port"`
+		ContentSecurityPolicy string `yaml:"csp"`
 	}
 	Logging struct {
 		Debug   string `yaml:"debug"`
