@@ -72,6 +72,7 @@ $.ajax({
         }
     }
 });
+console.log("loaded targets: "+targets.length);
 
 
 // given a name of a target tag (i.e. "framework:arduino"), this
