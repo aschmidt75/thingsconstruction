@@ -232,21 +232,3 @@ ul.browser-default li {
 }
 
 .modal { width: 85% !important ; max-height: 95% !important }
-
-body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-}
-
-main {
-    flex: 1 0 auto;
-}
-
-li a.active {
-    background: rgba(0,0,0,0.2);
-}
-
-nav ul a.active {
-    background: rgba(0,0,0,0.2);
-}

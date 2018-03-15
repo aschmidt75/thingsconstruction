@@ -31,6 +31,8 @@
     <link rel="stylesheet" href="/css/shariff.min.css">
 {{ end -}}
 
+    <link rel="stylesheet" href="/css/style2.css">
+
     {{ if .Feature.Analytics }}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-113732834-1"></script>
