@@ -31,26 +31,6 @@
     <link rel="stylesheet" href="/css/shariff.min.css">
 {{ end -}}
 
-    <style>
-    body {
-      display: flex;
-      min-height: 100vh;
-      flex-direction: column;
-    }
-
-    main {
-      flex: 1 0 auto;
-    }
-
-    li a.active {
-      background: rgba(0,0,0,0.2);
-    }
-
-    nav ul a.active {
-        background: rgba(0,0,0,0.2);
-    }
-    </style>
-
     {{ if .Feature.Analytics }}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-113732834-1"></script>
@@ -59,8 +39,7 @@
     <!-- cookie consent -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
-    <script type="text/javascript" src="/js/cookieconsent.js">
-    </script>
+    <script type="text/javascript" src="/js/cookieconsent.js"></script>
 </head>
 
 
