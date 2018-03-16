@@ -56,7 +56,7 @@
                 {{ if .Feature.VoteForGenerators }}
                 <div class="row">
                     <span id="span_btn_interest">
-                    <a id="btn_interest" class="waves-effect waves-light btn-large tc-maincolor" href="#">Interested in additional generators?</a>
+                    <a id="btn_interest" class="waves-effect waves-light btn-large tc-maincolor" href="#"><i class="material-icons left">extension</i>Interested in additional generators?</a>
                     </span>
                     <span id="span_interest" class="hide">
                     <form id="cf_vote_form" name="cf_vote_form" method="POST" action="/feedback/vote">

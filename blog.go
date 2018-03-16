@@ -130,10 +130,10 @@ func NewBlogPagesFromPath(path string) (*BlogPages, error) {
 		bp, err := NewBlogPageFromPath(pathName)
 		if err != nil {
 			Verbose.Printf("Cannot load markdown page %s: %s\n", pathName, err)
+			continue
 		}
 
 		b.addBlogPage(bp)
-
 	}
 
 	return b, nil

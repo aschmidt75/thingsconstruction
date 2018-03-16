@@ -12,7 +12,7 @@
                 The name of your device will appear within the Thing Description and Thing API when querying
                 the device. You can also choose a type for it. Default type is "Thing" which is
                 a blank template. Choosing other types will automatically populate properties and actions in
-                the upcoming dialogs with defaults. For an overview of thing types, click on the <i class="material-icons tiny">info</i>
+                the upcoming dialogs with defaults. For an overview of thing types, click on the <i class="material-icons tiny">info_outline</i>
                 button.
                 <span class="tc-maincolor-text" id="btn_less">... less</span>
             </span>
@@ -47,7 +47,7 @@
                     <label>Select a type.</label>
                 </div>
                 <div class="input-field col s1">
-                    <i id="type_info" class="material-icons">info</i>
+                    <i id="type_info" class="material-icons">info_outline</i>
                 </div>
             </div>
             <div class="row">
