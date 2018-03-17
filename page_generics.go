@@ -23,6 +23,7 @@ package main
 // template data embeds this struct
 type PageData struct {
 	Title string
+	MetaDescription string
 
 	Feature       map[string]bool
 	CopyrightLine string

@@ -4,7 +4,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="UTF-8">
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+{{ if eq .MetaDescription "" -}}
     <meta name="description" content="Embedded IoT Code Generator for constrained devices, according to W3C's Web Of Things (WoT) Thing Description">
+{{ else }}
+    <meta name="description" content="{{ .MetaDescription }}">
+{{ end -}}
     <meta name="keywords" content="embedded constrained devices microcontrollers IoT Arduino Framework HTTP JSON Generator Internet of Things W3C WOT Web Of Things Thing Description">
 {{ if eq .Robots false -}}
     <meta name="robots" content="noindex">

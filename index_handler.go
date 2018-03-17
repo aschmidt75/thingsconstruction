@@ -32,6 +32,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	data := PageData{
 		Title: "Index",
+		Robots: true,
 	}
 	data.SetFeaturesFromConfig()
 

@@ -107,6 +107,7 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 		blogServePage(w, blogContentData{
 			PageData: PageData{
 				Title:  bp.MetaData.Title,
+				MetaDescription: bp.MetaData.Abstract,
 				InBlog: true,
 				Robots: true,
 			},
