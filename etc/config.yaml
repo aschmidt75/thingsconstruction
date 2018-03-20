@@ -25,6 +25,8 @@ features:
   analytics: true
   shariff: true
   vote_generators: true
+  flattr: false
+  flattrid: someflattrid
 statictexts:
   linkedin_url: https://www.linkedin.com/
   github_url: https://github.com/

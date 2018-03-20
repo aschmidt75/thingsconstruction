@@ -54,6 +54,8 @@ type Config struct {
 		Analytics  bool `yaml:"analytics"`
 		Shariff  bool `yaml:"shariff"`
 		VoteForGenerators  bool `yaml:"vote_generators"`
+		Flattr  bool `yaml:"flattr"`
+		FlattrId  string `yaml:"flattrid"`
 	}
 	StaticTexts struct {
 		LinkedInUrl string `yaml:"linkedin_url"`

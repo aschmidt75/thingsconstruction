@@ -14,6 +14,10 @@
     <meta name="robots" content="noindex">
     <meta name="googlebot" content="noindex">
 {{ end -}}
+{{ if .Feature.Flattr -}}
+    <meta name="flattr:id" content="{{ .FlattrId }}">
+{{ end -}}
+
     <link rel="author" href="twitter.com/aschmidt75">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>THNG:STRUCTION - {{ .Title }}</title>
