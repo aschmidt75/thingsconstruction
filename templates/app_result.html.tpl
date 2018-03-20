@@ -98,6 +98,13 @@
                         <li><a href="/app/{{.ThingId}}/generate">Generate</a></li>
                     </ul>
                     </p>
+                    {{ if .Feature.Flattr }}
+                    <p>
+                        <a target="tcext" href="https://flattr.com/submit/auto?user_id={{ .FlattrUser }}&url=https://thngstruction.online/&title=&language=en&tags=app&category=software">
+                            <img src="https://button.flattr.com/flattr-badge-large.png">
+                        </a>
+                    </p>
+                    {{ end }}
                 </div>
 
             </div>

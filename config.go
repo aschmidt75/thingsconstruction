@@ -55,7 +55,6 @@ type Config struct {
 		Shariff  bool `yaml:"shariff"`
 		VoteForGenerators  bool `yaml:"vote_generators"`
 		Flattr  bool `yaml:"flattr"`
-		FlattrId  string `yaml:"flattrid"`
 	}
 	StaticTexts struct {
 		LinkedInUrl string `yaml:"linkedin_url"`
@@ -63,6 +62,8 @@ type Config struct {
 		TwitterUrl string `yaml:"twitter_url"`
 		CopyrightLine string `yaml:"copyrightline"`
 		Notices string `yaml:"notices"`
+		FlattrId  string `yaml:"flattrid"`
+		FlattrUser  string `yaml:"flattruser"`
 	}
 	Docker struct {
 		UserConfig string `yaml:"userConfig"`

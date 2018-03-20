@@ -32,6 +32,7 @@ type PageData struct {
 	TwitterUrl	string
 	GitHubUrl	string
 	FlattrId	string
+	FlattrUser	string
 
 	InBlog    bool
 	InApp     bool
@@ -57,6 +58,7 @@ func (pd *PageData) SetFeaturesFromConfig() {
 	pd.LinkedInUrl = ServerConfig.StaticTexts.LinkedInUrl
 	pd.TwitterUrl = ServerConfig.StaticTexts.TwitterUrl
 	pd.GitHubUrl = ServerConfig.StaticTexts.GitHubUrl
-	pd.FlattrId = ServerConfig.Features.FlattrId
+	pd.FlattrId = ServerConfig.StaticTexts.FlattrId
+	pd.FlattrUser = ServerConfig.StaticTexts.FlattrUser
 	pd.InApp = false
 }

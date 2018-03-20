@@ -26,7 +26,6 @@ features:
   shariff: true
   vote_generators: true
   flattr: false
-  flattrid: someflattrid
 statictexts:
   linkedin_url: https://www.linkedin.com/
   github_url: https://github.com/
@@ -35,7 +34,8 @@ statictexts:
   notices: |
   "Web Of Things" or "WoT" is a term defined and specified by the W3C World Wide Web Consortium.
   "Arduino" is a trademark of and copyright by Arduino AG. "ARM mbed" is a trademark of and copyright by ARM Limited.
-
+  flattrid: someflattrid
+  flattruser: flattrusername
 docker:
   userConfig: "601:999"
 vote_generators:
