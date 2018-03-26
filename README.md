@@ -1,4 +1,5 @@
 # thingsconstruction
+[![Go Report Card](https://goreportcard.com/badge/github.com/aschmidt75/thingsconstruction)](https://goreportcard.com/report/github.com/aschmidt75/thingsconstruction)
 ![TravisBuild](https://travis-ci.org/aschmidt75/thingsconstruction.svg?branch=master)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Faschmidt75%2Fthingsconstruction.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Faschmidt75%2Fthingsconstruction?ref=badge_shield)
 
