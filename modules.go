@@ -20,21 +20,21 @@
 package main
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/fsouza/go-dockerclient"
 	"github.com/gorilla/mux"
 	"html/template"
-	"net/http"
-	"strings"
-	"errors"
-	"os"
-	"github.com/fsouza/go-dockerclient"
-	"bytes"
-	"path/filepath"
-	"github.com/davecgh/go-spew/spew"
 	"io/ioutil"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 type ModuleResponseFile struct {
@@ -66,13 +66,12 @@ type ModuleRequest struct {
 }
 
 type ModuleMetaData struct {
-	Status	string `json:"status"`
+	Status  string `json:"status"`
 	Message string `json:"msg"`
 	Details *interface{}
 
 	Files ModuleResponseFiles
 }
-
 
 func NewModuleRequest(id string) *ModuleRequest {
 	res := &ModuleRequest{
@@ -169,8 +168,6 @@ func ModuleDataHandler(w http.ResponseWriter, req *http.Request) {
 
 	w.Write(b)
 }
-
-
 
 func getModuleSpecContent(moduleId string) ([]byte, error) {
 	targets, err := ReadGeneratorsConfig()
@@ -290,8 +287,8 @@ func getModuleSpecContent(moduleId string) ([]byte, error) {
 		}
 	}
 
-//	Debug.Println(buf.String())
-//	Debug.Println(buferr.String())
+	//	Debug.Println(buf.String())
+	//	Debug.Println(buferr.String())
 
 	return nil, errors.New("no suitable module spec found")
 }

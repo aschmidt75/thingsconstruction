@@ -109,8 +109,8 @@ func newString(s string) *string {
 
 type TypePreset struct {
 	properties []WebThingProperty
-	actions []WebThingAction
-	events []WebThingEvent
+	actions    []WebThingAction
+	events     []WebThingEvent
 }
 
 var TypePresets = map[string]TypePreset{
@@ -123,7 +123,7 @@ var TypePresets = map[string]TypePreset{
 		},
 		actions: []WebThingAction{
 			WebThingAction{
-				Name:        "toggle",
+				Name: "toggle",
 			},
 		},
 	},
@@ -134,8 +134,8 @@ var TypePresets = map[string]TypePreset{
 				Type: "Boolean",
 			},
 			WebThingProperty{
-				Name: "level",
-				Type: "Integer",
+				Name:        "level",
+				Type:        "Integer",
 				Description: newString("unit:percent"),
 			},
 		},
@@ -155,8 +155,8 @@ var TypePresets = map[string]TypePreset{
 				Type: "Boolean",
 			},
 			WebThingProperty{
-				Name: "level",
-				Type: "Integer",
+				Name:        "level",
+				Type:        "Integer",
 				Description: newString("unit:percent"),
 			},
 		},
@@ -168,28 +168,28 @@ var TypePresets = map[string]TypePreset{
 				Type: "Boolean",
 			},
 			WebThingProperty{
-				Name: "instantaneousPower",
-				Type: "Float",
+				Name:        "instantaneousPower",
+				Type:        "Float",
 				Description: newString("unit:watt"),
 			},
 			WebThingProperty{
-				Name: "voltage",
-				Type: "Float",
+				Name:        "voltage",
+				Type:        "Float",
 				Description: newString("unit:volt"),
 			},
 			WebThingProperty{
-				Name: "current",
-				Type: "Float",
+				Name:        "current",
+				Type:        "Float",
 				Description: newString("unit:ampere"),
 			},
 			WebThingProperty{
-				Name: "frequency",
-				Type: "Float",
+				Name:        "frequency",
+				Type:        "Float",
 				Description: newString("unit:hertz"),
 			},
 			WebThingProperty{
-				Name: "level",
-				Type: "Float",
+				Name:        "level",
+				Type:        "Float",
 				Description: newString("unit:percent"),
 			},
 		},
@@ -209,8 +209,8 @@ var TypePresets = map[string]TypePreset{
 				Type: "Boolean",
 			},
 			WebThingProperty{
-				Name: "level",
-				Type: "Integer",
+				Name:        "level",
+				Type:        "Integer",
 				Description: newString("unit:percent"),
 			},
 		},
@@ -222,8 +222,8 @@ var TypePresets = map[string]TypePreset{
 				Type: "Boolean",
 			},
 			WebThingProperty{
-				Name: "color",
-				Type: "String",
+				Name:        "color",
+				Type:        "String",
 				Description: newString("hex rgb"),
 			},
 		},
@@ -235,18 +235,15 @@ var TypePresets = map[string]TypePreset{
 				Type: "Boolean",
 			},
 			WebThingProperty{
-				Name: "level",
-				Type: "Integer",
+				Name:        "level",
+				Type:        "Integer",
 				Description: newString("unit:percent"),
 			},
 			WebThingProperty{
-				Name: "color",
-				Type: "String",
+				Name:        "color",
+				Type:        "String",
 				Description: newString("hex rgb"),
 			},
 		},
 	},
-
-
 }
-

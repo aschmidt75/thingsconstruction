@@ -37,9 +37,9 @@ import (
 
 type appEntryData struct {
 	AppPageData
-	CtfName string
-	CtfDesc string
-	CtfType string
+	CtfName            string
+	CtfDesc            string
+	CtfType            string
 	AllowTypeSelection bool
 }
 

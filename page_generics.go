@@ -22,17 +22,17 @@ package main
 // Generic Page Data, valid for all pages
 // template data embeds this struct
 type PageData struct {
-	Title string
+	Title           string
 	MetaDescription string
 
 	Feature       map[string]bool
 	CopyrightLine string
-	Notices string
-	LinkedInUrl string
-	TwitterUrl	string
-	GitHubUrl	string
-	FlattrId	string
-	FlattrUser	string
+	Notices       string
+	LinkedInUrl   string
+	TwitterUrl    string
+	GitHubUrl     string
+	FlattrId      string
+	FlattrUser    string
 
 	InBlog    bool
 	InApp     bool
@@ -42,16 +42,16 @@ type PageData struct {
 
 func (pd *PageData) SetFeaturesFromConfig() {
 	pd.Feature = map[string]bool{
-		"Blog":    ServerConfig.Features.Blog,
-		"App":     ServerConfig.Features.App,
-		"Contact": ServerConfig.Features.Contact,
-		"Twitter": ServerConfig.Features.Twitter,
-		"LinkedIn": ServerConfig.Features.LinkedIn,
-		"GitHub":  ServerConfig.Features.GitHub,
-		"Analytics":  ServerConfig.Features.Analytics,
-		"Shariff":  ServerConfig.Features.Shariff,
-		"VoteForGenerators":  ServerConfig.Features.VoteForGenerators,
-		"Flattr":  ServerConfig.Features.Flattr,
+		"Blog":              ServerConfig.Features.Blog,
+		"App":               ServerConfig.Features.App,
+		"Contact":           ServerConfig.Features.Contact,
+		"Twitter":           ServerConfig.Features.Twitter,
+		"LinkedIn":          ServerConfig.Features.LinkedIn,
+		"GitHub":            ServerConfig.Features.GitHub,
+		"Analytics":         ServerConfig.Features.Analytics,
+		"Shariff":           ServerConfig.Features.Shariff,
+		"VoteForGenerators": ServerConfig.Features.VoteForGenerators,
+		"Flattr":            ServerConfig.Features.Flattr,
 	}
 	pd.CopyrightLine = ServerConfig.StaticTexts.CopyrightLine
 	pd.Notices = ServerConfig.StaticTexts.Notices

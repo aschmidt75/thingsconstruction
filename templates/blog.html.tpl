@@ -25,7 +25,7 @@
             <ul>
                 {{ range .AllPostsChrono }}
                 <li>
-                    <div><a class="tc-maincolor-text text-lighten-1" href="/blog/{{.Name}}">{{ .Title }}</a></div>
+                    <div style="margin-top: 0.75em"><a class="tc-maincolor-text text-lighten-1" href="/blog/{{.Name}}">{{ .Title }}</a></div>
                 </li>
                 {{ end }}
             </ul>
@@ -34,6 +34,8 @@
                 <a href="/blog"><span><i class="material-icons tiny">arrow_back</i></span>See all</a>
             </p>
             <p style="padding-top: 1em">
+                This blog post is<br/>
+                CC-BY-SA 4.0<br/>
                 <a rel="license" target="tc-ext" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
             </p>
 

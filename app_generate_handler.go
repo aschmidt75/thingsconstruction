@@ -217,6 +217,8 @@ func AppGenerateHandlePost(w http.ResponseWriter, req *http.Request) {
 
 	if AppCheckToken(token) {
 		if err := runModule(data); err != nil {
+			UseCaseCounter.Increment("module-run-error", data.md.SelectedGeneratorId)
+
 			Error.Println(err)
 			var msg = fmt.Sprintf("An internal error occurred while generating your code. (%s)", err)
 			data.AppPageData.Message = msg
@@ -228,6 +230,8 @@ func AppGenerateHandlePost(w http.ResponseWriter, req *http.Request) {
 
 			return
 		}
+
+		UseCaseCounter.Increment("module-run-successful", data.md.SelectedGeneratorId)
 
 		http.Redirect(w, req, fmt.Sprintf("/app/%s/result", id), 302)
 	} else {

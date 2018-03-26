@@ -27,11 +27,12 @@ import (
 )
 
 var (
-	Debug        *log.Logger
-	Verbose      *log.Logger
-	Error        *log.Logger
-	ServerConfig *Config
-	Blog         *BlogPages
+	Debug          *log.Logger
+	Verbose        *log.Logger
+	Error          *log.Logger
+	ServerConfig   *Config
+	Blog           *BlogPages
+	UseCaseCounter Counter
 )
 
 func InitializeBlogPages() {
@@ -44,9 +45,7 @@ func InitializeBlogPages() {
 		Error.Printf("Unable to read blog content: %e\n", err)
 		return
 	}
-	//Debug.Printf("Blog=%s\n", spew.Sdump(Blog))
 	Verbose.Printf("Blog: Read %d posts.\n", len(Blog.Pages))
-	// dump overview
 }
 
 func configFileName() string {
@@ -74,6 +73,12 @@ func main() {
 	InitializeBlogPages()
 
 	AppTokensNew()
+
+	if ServerConfig.Redis.Host != "" && ServerConfig.Redis.Port != 0 {
+		UseCaseCounter = NewRedisCounter(ServerConfig.Redis.Host, ServerConfig.Redis.Port)
+	} else {
+		UseCaseCounter = NewInMemoryCounter()
+	}
 
 	router := NewRouter()
 	Debug.Printf("router=%#v\n", router)

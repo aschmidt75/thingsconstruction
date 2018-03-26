@@ -21,11 +21,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
 	"time"
-	"context"
 )
 
 type Route struct {
@@ -86,6 +86,9 @@ func NewRouter() *mux.Router {
 		d := fmt.Sprintf("%s/%s", ServerConfig.Paths.AssetPath, staticPath)
 		router.PathPrefix(p).Handler(http.StripPrefix(p, http.FileServer(http.Dir(d))))
 	}
+
+	router.PathPrefix("/dimg/").Handler(http.StripPrefix("/dimg/", http.FileServer(http.Dir(
+		fmt.Sprintf("%s/dimg", ServerConfig.Paths.MDPagesPath)))))
 
 	// add application routes
 	for _, route := range routes {
@@ -184,7 +187,7 @@ func featureActivationHandler(inner http.Handler) http.Handler {
 		if featureActivation != "" {
 			// set cookie
 			http.SetCookie(w, &http.Cookie{
-				Name: "tc-feature",
+				Name:  "tc-feature",
 				Value: featureActivation,
 			})
 		}

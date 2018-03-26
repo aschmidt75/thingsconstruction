@@ -26,7 +26,7 @@ import (
 
 type Config struct {
 	Http struct {
-		Port int `yaml:"port"`
+		Port                  int    `yaml:"port"`
 		ContentSecurityPolicy string `yaml:"csp"`
 	}
 	Logging struct {
@@ -45,30 +45,34 @@ type Config struct {
 		URLPrefix          string `yaml:"urlprefix"`
 	}
 	Features struct {
-		Blog    bool `yaml:"blog"`
-		App     bool `yaml:"app"`
-		Contact bool `yaml:"contact"`
-		Twitter bool `yaml:"twitter"`
-		LinkedIn bool `yaml:"linkedin"`
-		GitHub  bool `yaml:"github"`
-		Analytics  bool `yaml:"analytics"`
-		Shariff  bool `yaml:"shariff"`
-		VoteForGenerators  bool `yaml:"vote_generators"`
-		Flattr  bool `yaml:"flattr"`
+		Blog              bool `yaml:"blog"`
+		App               bool `yaml:"app"`
+		Contact           bool `yaml:"contact"`
+		Twitter           bool `yaml:"twitter"`
+		LinkedIn          bool `yaml:"linkedin"`
+		GitHub            bool `yaml:"github"`
+		Analytics         bool `yaml:"analytics"`
+		Shariff           bool `yaml:"shariff"`
+		VoteForGenerators bool `yaml:"vote_generators"`
+		Flattr            bool `yaml:"flattr"`
 	}
 	StaticTexts struct {
-		LinkedInUrl string `yaml:"linkedin_url"`
-		GitHubUrl string `yaml:"github_url"`
-		TwitterUrl string `yaml:"twitter_url"`
+		LinkedInUrl   string `yaml:"linkedin_url"`
+		GitHubUrl     string `yaml:"github_url"`
+		TwitterUrl    string `yaml:"twitter_url"`
 		CopyrightLine string `yaml:"copyrightline"`
-		Notices string `yaml:"notices"`
-		FlattrId  string `yaml:"flattrid"`
-		FlattrUser  string `yaml:"flattruser"`
+		Notices       string `yaml:"notices"`
+		FlattrId      string `yaml:"flattrid"`
+		FlattrUser    string `yaml:"flattruser"`
 	}
 	Docker struct {
 		UserConfig string `yaml:"userConfig"`
 	}
-	VoteGenerators map[string]string  `yaml:"vote_generators"`
+	Redis struct {
+		Host string `yaml:"host"`
+		Port int    `yaml:"port"`
+	}
+	VoteGenerators map[string]string `yaml:"vote_generators"`
 }
 
 // Read yaml configuration from file (fromPath),

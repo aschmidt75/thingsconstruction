@@ -161,7 +161,7 @@ func FeedbackVoteHandlePost(w http.ResponseWriter, req *http.Request) {
 	voteform := req.PostForm
 
 	fbPath := filepath.Join(ServerConfig.Paths.FeedbackPath, makeTimestampStr3())
-	file, err := os.OpenFile(fbPath, os.O_CREATE | os.O_RDWR,  os.FileMode(400))
+	file, err := os.OpenFile(fbPath, os.O_CREATE|os.O_RDWR, os.FileMode(400))
 	if err != nil {
 		Error.Printf("%s", err)
 
@@ -175,7 +175,7 @@ func FeedbackVoteHandlePost(w http.ResponseWriter, req *http.Request) {
 	for key, name := range ServerConfig.VoteGenerators {
 		value := voteform.Get(key)
 		if value != "" {
-			fmt.Fprintf(file, "%s;%s;%s\r\n", key, name, value);
+			fmt.Fprintf(file, "%s;%s;%s\r\n", key, name, value)
 		}
 	}
 
@@ -199,4 +199,3 @@ func makeTimestampStr2() string {
 func makeTimestampStr3() string {
 	return fmt.Sprintf("vote-%d.csv", (time.Now().UnixNano()))
 }
-

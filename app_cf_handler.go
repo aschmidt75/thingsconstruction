@@ -27,8 +27,8 @@ import (
 
 type appGenParamsData struct {
 	AppPageData
-	NumGenerators int
-	AppGenTargets *AppGenTargets
+	NumGenerators  int
+	AppGenTargets  *AppGenTargets
 	VoteGenerators map[string]string
 }
 
@@ -47,8 +47,8 @@ func appGenParamsNewPageData(id string) (*appGenParamsData, error) {
 			},
 			ThingId: id,
 		},
-		NumGenerators: 1,
-		AppGenTargets: t,
+		NumGenerators:  1,
+		AppGenTargets:  t,
 		VoteGenerators: ServerConfig.VoteGenerators,
 	}
 	data.SetFeaturesFromConfig()
@@ -140,6 +140,8 @@ func AppChooseFrameworkHandlePost(w http.ResponseWriter, req *http.Request) {
 		AppErrorServePage(w, "An error occurred while storing session data. Please try again.", id)
 		return
 	}
+
+	UseCaseCounter.Increment("module-selected", cfs)
 
 	// redirect to manage properties
 	http.Redirect(w, req, "/app/"+id+"/properties", 302)

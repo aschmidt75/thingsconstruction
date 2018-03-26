@@ -26,8 +26,8 @@ import (
 	"net/http"
 	"regexp"
 	"sort"
-	"time"
 	"strings"
+	"time"
 )
 
 type tagChipData struct {
@@ -106,10 +106,10 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 
 		blogServePage(w, blogContentData{
 			PageData: PageData{
-				Title:  bp.MetaData.Title,
+				Title:           bp.MetaData.Title,
 				MetaDescription: bp.MetaData.Abstract,
-				InBlog: true,
-				Robots: true,
+				InBlog:          true,
+				Robots:          true,
 			},
 			MetaData:       bp.MetaData,
 			BlogMetaData:   Blog.MetaData,
@@ -117,6 +117,8 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 			AllPostsChrono: collectAllPostsChrono(Blog),
 			HtmlOutput:     htmlStr,
 		})
+
+		UseCaseCounter.Increment("blogpost-viewed", pageName)
 
 	} else {
 		Verbose.Printf("Unable to find page by name %s\n", pageName)
