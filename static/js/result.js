@@ -35,6 +35,25 @@ function view_element(e) {
 
 }
 
+// connect all view links
+function getAllElementsWithAttribute(attribute)
+{
+    var matchingElements = [];
+    var allElements = document.getElementsByTagName('*');
+    for (var i = 0, n = allElements.length; i < n; i++)
+    {
+        if (allElements[i].getAttribute(attribute) !== null)
+        {
+            matchingElements.push(allElements[i]);
+        }
+    }
+    return matchingElements;
+}
+var allViewLinks = getAllElementsWithAttribute('linkid');
+for ( var i = 0; i < allViewLinks.length; i++) {
+    allViewLinks[i].addEventListener('click', view_element);
+}
+
 $(document).ready(function() {
     $('select').material_select();
 });

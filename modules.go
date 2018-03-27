@@ -220,9 +220,10 @@ func getModuleSpecContent(moduleId string) ([]byte, error) {
 			StdinOnce: false,
 		},
 		HostConfig: &docker.HostConfig{
-			Mounts:  hostMounts,
-			CapDrop: []string{"all"},
-			CapAdd:  []string{"setuid", "setgid"},
+			Mounts:     hostMounts,
+			CapDrop:    []string{"all"},
+			CapAdd:     []string{"setuid", "setgid"},
+			AutoRemove: true,
 		},
 	}
 

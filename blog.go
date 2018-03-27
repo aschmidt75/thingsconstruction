@@ -125,6 +125,12 @@ func NewBlogPagesFromPath(path string) (*BlogPages, error) {
 	b := NewBlogPages()
 
 	for _, fileInfo := range fileInfos {
+		if fileInfo.IsDir() {
+			continue
+		}
+		if !strings.HasSuffix(fileInfo.Name(), ".md") {
+			continue
+		}
 		Debug.Printf("Found %s\n", fileInfo.Name())
 		pathName := filepath.Join(path, fileInfo.Name())
 		bp, err := NewBlogPageFromPath(pathName)

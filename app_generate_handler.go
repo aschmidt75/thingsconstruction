@@ -306,9 +306,10 @@ func runModule(data *appGenerateData) error {
 			StdinOnce: true,
 		},
 		HostConfig: &docker.HostConfig{
-			Mounts:  hostMounts,
-			CapDrop: []string{"all"},
-			CapAdd:  []string{"setuid", "setgid"},
+			Mounts:     hostMounts,
+			CapDrop:    []string{"all"},
+			CapAdd:     []string{"setuid", "setgid"},
+			AutoRemove: true,
 		},
 	}
 	// run container generator as specific user?
