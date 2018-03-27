@@ -2,6 +2,7 @@
 http:
   port: 8088
   csp: "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'; frame-ancestors 'none'; style-src https: 'unsafe-inline'"
+  rp: "strict-origin-when-cross-origin"
 logging:
   debug: stdout
   verbose: stdout

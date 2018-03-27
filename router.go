@@ -169,8 +169,13 @@ func addNoCacheHeaders(inner http.Handler) http.Handler {
 		w.Header().Set("Cache-control", "no-store")
 		w.Header().Set("Pragma", "no-cache")
 		w.Header().Set("Expires", "0")
+		if ServerConfig.Http.ReferrerPolicy != "" {
+			w.Header().Set("Referrer-Policy", ServerConfig.Http.ReferrerPolicy)
+		}
 
-		w.Header().Set("Content-Security-Policy", ServerConfig.Http.ContentSecurityPolicy)
+		if ServerConfig.Http.ContentSecurityPolicy != "" {
+			w.Header().Set("Content-Security-Policy", ServerConfig.Http.ContentSecurityPolicy)
+		}
 		w.Header().Set("X-Frame-Options", "DENY")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("X-XSS-Protection", "1; mode=block")

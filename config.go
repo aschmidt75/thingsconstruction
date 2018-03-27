@@ -28,6 +28,7 @@ type Config struct {
 	Http struct {
 		Port                  int    `yaml:"port"`
 		ContentSecurityPolicy string `yaml:"csp"`
+		ReferrerPolicy 		  string `yaml:"rp"`
 	}
 	Logging struct {
 		Debug   string `yaml:"debug"`
