@@ -57,7 +57,7 @@ $.ajax({
             if (obj != null) {/// construct targets from it
                 for ( var i = 0; i < obj.Targets.length; i++) {
                     var ot = obj.Targets[i];
-                    console.log(ot);
+                    //console.log(ot);
                     var t = new Target(ot.Id, ot.ShortDesc, ot.Desc, ot.Tags);
                     for ( var j = 0; j < ot.Dependencies.length; j++) {
                         var oj = ot.Dependencies[j];
@@ -72,7 +72,7 @@ $.ajax({
         }
     }
 });
-console.log("loaded targets: "+targets.length);
+//console.log("loaded targets: "+targets.length);
 
 
 // given a name of a target tag (i.e. "framework:arduino"), this

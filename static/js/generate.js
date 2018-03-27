@@ -173,7 +173,7 @@ $.ajax({
                     div.innerHTML =
                         "<div class=\"col s11\">"+
                         t+ "</div>"+
-                        "<div class=\"col s1\"><p><a class=\"tc-maincolor-text\" href=\"/app/"+ThingId+"}/actions\"><i class=\"material-icons\">edit</i></a></p></div>"+
+                        "<div class=\"col s1\"><p><a class=\"tc-maincolor-text\" href=\"/app/"+ThingId+"/actions\"><i class=\"material-icons\">edit</i></a></p></div>"+
                         "";
                 } else {
                     div.innerHTML = "<div class=\"col s1\"><p><a class=\"tc-maincolor-text\" href=\"/app/"+ThingId+"/actions\"><i class=\"material-icons\">edit</i></a></p></div>";
