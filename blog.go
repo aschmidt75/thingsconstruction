@@ -128,7 +128,7 @@ func NewBlogPagesFromPath(path string) (*BlogPages, error) {
 		if fileInfo.IsDir() {
 			continue
 		}
-		if ! strings.HasSuffix(fileInfo.Name(), ".md") {
+		if !strings.HasSuffix(fileInfo.Name(), ".md") {
 			continue
 		}
 		Debug.Printf("Found %s\n", fileInfo.Name())
