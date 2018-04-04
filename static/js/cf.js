@@ -169,7 +169,7 @@ function cf_select_chip(e) {
     }
     // move to selected
     tag.parentElement.removeChild(tag);
-    var chip2 = cf_add_chip_to(tag.name, 'cf_targets_selected')
+    var chip2 = cf_add_chip_to(tag.name, 'cf_targets_selected');
     chip2.removeEventListener('click', cf_select_chip);
     tag.removeEventListener('click', cf_select_chip);
     chip2.addEventListener('click', cf_unselect_chip);
@@ -186,7 +186,7 @@ function cf_unselect_chip(e) {
     }
     // move to available
     tag.parentElement.removeChild(tag);
-    var chip2 = cf_add_chip_to(tag.name, 'cf_targets_available')
+    var chip2 = cf_add_chip_to(tag.name, 'cf_targets_available');
     tag.removeEventListener('click', cf_unselect_chip);
 
     cf_lookup_matching_targets();

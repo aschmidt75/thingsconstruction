@@ -30,7 +30,7 @@
         <div id="bp_all_tags" class="col s2">
             <h5>Filter by tags</h5>
             {{ range .TagChipData }}
-                <div class="chip">
+                <div class="chip hoverable tc-filter">
                     {{ .TagName }}
                 </div>
             {{ end }}
