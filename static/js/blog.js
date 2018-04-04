@@ -46,7 +46,7 @@ function bp_update_list_filter() {
         total += 1;
         if (( all_on === true) || (num_matching > 0)) {
             // all tags of this post are selected on right -> activate
-            all_bps[i].className = "blogpost row"
+            all_bps[i].className = "blogpost row";
             active += 1
         } else {
             // not all tags are selected on the right -> deactivate
@@ -57,7 +57,7 @@ function bp_update_list_filter() {
     // update title
     if ( total === active) {
         document.getElementById("bp_title").innerHTML = "Blog posts";
-        document.getElementById("bp_count").innerText = "all";
+        document.getElementById("bp_count").innerText = ""+active+"/"+total;
         document.getElementById("bp_count").className = "badge tc-maincolor white-text";
 
     } else {
@@ -79,10 +79,10 @@ function bp_tag_clicked(e) {
     tag = e.target;
     tagName = tag.innerText;
     if (tag.className.startsWith("chip bp_selected")) {
-        tag.className = "chip";
+        tag.className = "chip hoverable";
         bp_selected_tags.delete(tagName)
     } else {
-        tag.className = "chip bp_selected tc-maincolor lighten-3";
+        tag.className = "chip bp_selected tc-maincolor lighten-3 hoverable";
         bp_selected_tags.set(tagName, tag)
     }
 

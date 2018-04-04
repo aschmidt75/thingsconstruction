@@ -57,7 +57,7 @@ $.ajax({
             if (obj != null) {/// construct targets from it
                 for ( var i = 0; i < obj.Targets.length; i++) {
                     var ot = obj.Targets[i];
-                    console.log(ot);
+                    //console.log(ot);
                     var t = new Target(ot.Id, ot.ShortDesc, ot.Desc, ot.Tags);
                     for ( var j = 0; j < ot.Dependencies.length; j++) {
                         var oj = ot.Dependencies[j];
@@ -72,8 +72,7 @@ $.ajax({
         }
     }
 });
-console.log("loaded targets: "+targets.length);
-
+//console.log("loaded targets: "+targets.length);
 
 // given a name of a target tag (i.e. "framework:arduino"), this
 // function creates a new chip and places it under nodeId
@@ -169,7 +168,7 @@ function cf_select_chip(e) {
     }
     // move to selected
     tag.parentElement.removeChild(tag);
-    var chip2 = cf_add_chip_to(tag.name, 'cf_targets_selected')
+    var chip2 = cf_add_chip_to(tag.name, 'cf_targets_selected');
     chip2.removeEventListener('click', cf_select_chip);
     tag.removeEventListener('click', cf_select_chip);
     chip2.addEventListener('click', cf_unselect_chip);
@@ -186,7 +185,7 @@ function cf_unselect_chip(e) {
     }
     // move to available
     tag.parentElement.removeChild(tag);
-    var chip2 = cf_add_chip_to(tag.name, 'cf_targets_available')
+    var chip2 = cf_add_chip_to(tag.name, 'cf_targets_available');
     tag.removeEventListener('click', cf_unselect_chip);
 
     cf_lookup_matching_targets();

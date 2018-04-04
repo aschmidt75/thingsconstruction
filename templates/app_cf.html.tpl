@@ -60,7 +60,7 @@
                     </span>
                     <span id="span_interest" class="hide">
                     <form id="cf_vote_form" name="cf_vote_form" method="POST" action="/feedback/vote">
-                        <p>Then please vote here for your favorite IoT tech stack:</p>
+                        <p id="cf_vote_scrollTo">Then please vote here for your favorite IoT tech stack:</p>
                     <table>
                 {{ range $k, $v := .VoteGenerators }}
                         <tr>
