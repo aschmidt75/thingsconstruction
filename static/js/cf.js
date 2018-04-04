@@ -74,7 +74,6 @@ $.ajax({
 });
 //console.log("loaded targets: "+targets.length);
 
-
 // given a name of a target tag (i.e. "framework:arduino"), this
 // function creates a new chip and places it under nodeId
 // unless it already exists

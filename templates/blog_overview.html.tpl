@@ -7,8 +7,8 @@
             <p>
             <br>
             {{ range .AllPostsChrono }}
-                <div id="bp: {{.Name}}" class="blogpost row">
-                    <div class="col s3 left" >
+                <div id="bp: {{.Name}}" class="blogpost row ">
+                    <div class="col s3 left hide-on-small-only show-on-medium-and-up" >
                     {{ range .Tags }}
                         <div class="chip">
                         {{ . }}
@@ -18,12 +18,13 @@
 
 
                     </div>
-                    <div class="col s9 right">
+                    <div class="col s12 m9 right">
                         <h5><a class="tc-maincolor-text text-lighten-1" href="/blog/{{.Name}}">{{ .Title }}</a></h5>
                         {{.Abstract}}
                     </div>
 
                 </div>
+
             {{ end }}
             </p>
         </div>
