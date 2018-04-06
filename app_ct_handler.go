@@ -31,7 +31,9 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"github.com/satori/go.uuid"
+	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"strings"
 )
 
@@ -41,6 +43,8 @@ type appEntryData struct {
 	CtfDesc            string
 	CtfType            string
 	AllowTypeSelection bool
+	AllowFromTemplate  bool
+	Templates          map[string]string
 }
 
 func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
@@ -64,6 +68,7 @@ func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
 	if data.AppPageData.ThingId != "" {
 		Debug.Printf("Loading data for id=%s\n", data.AppPageData.ThingId)
 		data.AllowTypeSelection = false
+		data.AllowFromTemplate = false
 
 		if err := data.Deserialize(); err != nil {
 			Error.Printf("Unable to load data, err=%s\n", err)
@@ -74,9 +79,70 @@ func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
 		}
 	} else {
 		data.AllowTypeSelection = true
+		data.AllowFromTemplate = true
+
+		// read templates
+		var err error
+		data.Templates, err = appReadModelTemplatesDir()
+		if err != nil {
+			Error.Printf("error reding model templates: %s", err)
+			// disable function in UI
+			data.AllowFromTemplate = false
+			data.AllowTypeSelection = false
+		}
 	}
 
 	appCreateThingServePage(w, *data)
+}
+
+func AppCreateThingFromTemplateHandlePost(w http.ResponseWriter, req *http.Request) {
+	if ServerConfig.Features.App == false {
+		http.Redirect(w, req, "/", 302)
+		return
+	}
+
+	// create new one
+	data := &appEntryData{
+		AppPageData: AppPageData{
+			PageData: PageData{
+				Title: "Create new Thing Description",
+				InApp: true,
+			},
+		},
+	}
+	data.SetFeaturesFromConfig()
+
+	err := req.ParseForm()
+	if err != nil {
+		Debug.Printf("Error parsing create thing form: %s\n", err)
+		appCreateThingServePage(w, appEntryData{
+			AppPageData: AppPageData{
+				Message: "There was an error processing your data.",
+			},
+		})
+		return
+	}
+	ctft := req.PostForm
+
+	var id = ctft.Get("ctftid")
+	Debug.Printf("%#v", ctft)
+	if id != "" {
+		id, err := appEntryCreateThingFromTemplate(data, id)
+		Debug.Printf("new id=%s", id)
+		if err != nil {
+			Error.Printf("error creating from template: %s", err)
+			data.AppPageData.Message = "There was an error creating your Thing Description. Please try again."
+			appCreateThingServePage(w, *data)
+		} else {
+			// redirect to next steps
+			http.Redirect(w, req, "/app/"+id+"/framework", http.StatusFound)
+		}
+		return
+	} else {
+		data.AppPageData.Message = "There was an error creating your Thing Description from a template. Please try again."
+		appCreateThingServePage(w, *data)
+	}
+
 }
 
 func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
@@ -170,6 +236,56 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 			http.Redirect(w, req, "/app/"+id+"/framework", http.StatusFound)
 		}
 	}
+
+}
+
+// reads all templates from model template dir
+func appReadModelTemplatesDir() (map[string]string, error) {
+	res := make(map[string]string)
+	fileInfos, err := ioutil.ReadDir(ServerConfig.Paths.ModelTemplatesPath)
+	if err != nil {
+		return res, err
+	}
+	for _, fileInfo := range fileInfos {
+		if !fileInfo.IsDir() {
+			continue
+		}
+
+		wtd := &WebThingDescription{}
+		path := filepath.Join(ServerConfig.Paths.ModelTemplatesPath, fileInfo.Name(), "data.json")
+		err := wtd.Deserialize("0", path)
+		if err != nil {
+			continue
+		}
+
+		var s string
+		if wtd.Description != nil {
+			s = *wtd.Description
+		} else {
+			s = wtd.Name
+		}
+		res[fileInfo.Name()] = s
+	}
+
+	return res, nil
+}
+
+func appEntryCreateThingFromTemplate(data *appEntryData, templateId string) (string, error) {
+	data.AppPageData.ThingId = uuid.Must(uuid.NewV4()).String()
+	data.AppPageData.wtd = &WebThingDescription{}
+
+	path := filepath.Join(ServerConfig.Paths.ModelTemplatesPath, templateId, "data.json")
+	err := data.AppPageData.wtd.Deserialize(data.AppPageData.ThingId, path)
+	if err != nil {
+		return "", err
+	}
+
+	err = data.AppPageData.Serialize()
+	if err != nil {
+		return "", err
+	}
+
+	return data.AppPageData.ThingId, nil
 
 }
 

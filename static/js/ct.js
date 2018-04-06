@@ -24,6 +24,11 @@ $("document").ready(function(){
     var t = document.getElementById('type_info');
     t.addEventListener('click', ct_type_info_modal);
 
+    document.getElementById('ct_template_sel').onchange = function() {
+        ct_template_selected();
+    }
+    document.getElementById('ct_template_next').addEventListener('click', ct_template_next);
+
 });
 
 // validate form, post to backend
@@ -31,8 +36,8 @@ function ct_next(e) {
     e.preventDefault();
 
     var n = document.getElementById('ctf_name').value;
-    if ( n == "") {
-        document.getElementById('ctf_name').style.borderBottom = 'solid 2px #ee2222'
+    if ( n === "") {
+        document.getElementById('ctf_name').style.borderBottom = 'solid 2px #ee2222';
         $('#ct_form_validation_modal').modal('open');
         return;
     } else {
@@ -51,4 +56,18 @@ function ct_type_info_modal(e) {
 
     $('#ct_type_info').modal('open');
 
+}
+
+function ct_template_selected() {
+    var t = document.getElementById('ct_template_sel');
+    if (t.selectedIndex != 0) {
+        document.getElementById('ct_template_next').className += "_off"
+    }
+}
+
+function ct_template_next(e) {
+    e.preventDefault();
+
+    var form = document.getElementById('ctft');
+    form.submit();
 }

@@ -48,6 +48,7 @@ var routes = Routes{
 	Route{"ModuleInfo", "GET", "/modules/data", ModuleDataHandler},
 	Route{"AppCreateThing", "GET", "/app", AppCreateThingHandleGet},
 	Route{"AppCreateThing", "POST", "/app", AppCreateThingHandlePost},
+	Route{"AppCreateThing", "POST", "/app/fromtemplate", AppCreateThingFromTemplateHandlePost},
 	Route{"AppCreateThing", "GET", "/app/{id}", AppCreateThingHandleGet},
 	Route{"AppCreateThing", "POST", "/app/{id}", AppCreateThingHandlePost},
 	Route{"AppChooseFramework", "GET", "/app/{id}/framework", AppChooseFrameworkHandleGet},

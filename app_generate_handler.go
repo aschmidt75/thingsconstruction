@@ -389,12 +389,13 @@ func runModule(data *appGenerateData) error {
 	// dump some results.
 	Debug.Printf("Exitcode=%#v\n", exitCode)
 	if exitCode != 0 {
+		Debug.Println(buf.String())
+		Debug.Println(buferr.String())
+
 		Error.Printf("Module returned non-zero exit code: %d. Will not continue", exitCode)
 		return errors.New("i14")
 	}
 
-	Debug.Println(buf.String())
-	Debug.Println(buferr.String())
 	// save to file for later usage
 	ioutil.WriteFile(fmt.Sprintf("%s/last-result.json", basePath), buf.Bytes(), 0640)
 	ioutil.WriteFile(fmt.Sprintf("%s/last-result.stderr", basePath), buferr.Bytes(), 0640)

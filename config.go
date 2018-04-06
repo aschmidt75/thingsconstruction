@@ -44,6 +44,7 @@ type Config struct {
 		GeneratorsDataPath string `yaml:"generators"`
 		DataPath           string `yaml:"data"`
 		URLPrefix          string `yaml:"urlprefix"`
+		ModelTemplatesPath string `yaml:"modelTemplatesPath"`
 	}
 	Features struct {
 		Blog              bool `yaml:"blog"`
