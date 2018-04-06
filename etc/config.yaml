@@ -13,6 +13,7 @@ paths:
   modulepages: "./module-content"
   mdpages: "./md-content"
   feedback: "/tmp/"
+  modelTemplatesPath: "/tmp"
   generators: "./etc/generators.yaml"
   data: "/tmp/"
   urlprefix: "http://127.0.0.1:8088/"

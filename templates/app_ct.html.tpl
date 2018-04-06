@@ -16,6 +16,27 @@
                 button.
                 <span class="tc-maincolor-text" id="btn_less">... less</span>
             </span>
+{{ if .AllowFromTemplate }}
+            <div class="row">
+                <form id="ctft" name="ctft" method="POST" action="/app/fromtemplate">
+
+                    <div class="input-field col s8">
+                    <select id="ct_template_sel" name="ctftid">
+                      <option value="" disabled selected>a sample template!</option>
+{{ range $value, $txt := .Templates }}
+                      <option value="{{ $value }}">{{ $txt }}</option>
+{{ end }}
+                    </select>
+                    <label style="color: #ff5722">Or start from a pre-defined template!</label>
+                    </div>
+                    <div class="input-field col s4">
+                    <a class="waves-effect waves-light tc-maincolor btn right disabled" id="ct_template_next"><i class="material-icons right">send</i>Create from Template</a>
+                    </div>
+                </form>
+            </div>
+{{ end }}
+
+        </span>
         </p>
     {{ if .Message }}
         <div class="card red darken-2">

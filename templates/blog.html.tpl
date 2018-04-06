@@ -4,10 +4,12 @@
     <div class="row">
         <div class="col s9">
             {{.HtmlOutput}}
-    {{ if .Feature.Shariff }}
-            <div class="shariff" data-services="[twitter,linkedin]" data-lang="en">
-            </div>
-    {{ end -}}
+            {{ if .Feature.Shariff }}
+                    <p>
+                <div class="shariff" data-services="[twitter,linkedin]" data-lang="en">
+                </div>
+                </p>
+            {{ end -}}
         </div>
         <div class="col s1">
         </div>

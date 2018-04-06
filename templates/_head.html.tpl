@@ -40,6 +40,9 @@
 {{ end -}}
 
     <link rel="stylesheet" href="/css/style2.css">
+{{ if .InBlog }}
+    <link rel="stylesheet" href="/css/blog.css">
+{{ end -}}
 
     {{ if .Feature.Analytics }}
     <!-- Global site tag (gtag.js) - Google Analytics -->
