@@ -19,7 +19,7 @@
 
                     </div>
                     <div class="col s12 m9 right">
-                        <h5><a class="tc-maincolor-text text-lighten-1" href="/blog/{{.Name}}">{{ .Title }}</a></h5>
+                        <h5 style="margin-top: 0px;"><a class="tc-maincolor-text text-lighten-1" href="/blog/{{.Name}}">{{ .Title }}</a></h5>
                         {{.Abstract}}
                     </div>
 
