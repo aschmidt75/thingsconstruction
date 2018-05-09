@@ -43,7 +43,7 @@
     {{ end }}
     {{ if .Feature.App }}
         <li>
-            <a class="active" href="#"></i>App</a>
+            <a class="active" href="#">App</a>
         </li>
     {{ end }}
     </ul>
