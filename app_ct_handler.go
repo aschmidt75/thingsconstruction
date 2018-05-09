@@ -62,6 +62,7 @@ func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
 	}
 	data.SetFeaturesFromConfig()
 	data.InApp = true
+	data.UpdateFeaturesFromContext(req.Context())
 
 	vars := mux.Vars(req)
 	data.AppPageData.ThingId = vars["id"]
@@ -111,6 +112,7 @@ func AppCreateThingFromTemplateHandlePost(w http.ResponseWriter, req *http.Reque
 		},
 	}
 	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(req.Context())
 
 	err := req.ParseForm()
 	if err != nil {
@@ -176,6 +178,8 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 				ThingId: id,
 			},
 		}
+		data.UpdateFeaturesFromContext(req.Context())
+
 		if !data.IsIdValid() {
 			appCreateThingServePage(w, appEntryData{
 				AppPageData: AppPageData{
@@ -226,6 +230,7 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 			CtfType: ctf.Get("ctf_type"),
 		}
 		data.SetFeaturesFromConfig()
+		data.UpdateFeaturesFromContext(req.Context())
 
 		id, err := appEntryCreateThing(data)
 		if err != nil {

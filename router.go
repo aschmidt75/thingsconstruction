@@ -98,7 +98,7 @@ func NewRouter() *mux.Router {
 		handler = route.HandlerFunc
 		handler = addNoCacheHeaders(handler)
 		handler = filterTooBigPayloads(handler)
-		handler = featureActivationHandler(handler)
+		handler = cookieProcessingHandler(handler)
 		handler = logger(handler, route.Name)
 
 		router.
@@ -113,7 +113,7 @@ func NewRouter() *mux.Router {
 	return router
 }
 
-func notFoundHandler(w http.ResponseWriter, _ *http.Request) {
+func notFoundHandler(w http.ResponseWriter, req *http.Request) {
 	templates, err := NewBasicHtmlTemplateSet("_404.html.tpl")
 	if err != nil {
 		Error.Println(err)
@@ -131,6 +131,7 @@ func notFoundHandler(w http.ResponseWriter, _ *http.Request) {
 		},
 	}
 	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(req.Context())
 
 	err = templates.ExecuteTemplate(w, "root", data)
 	if err != nil {
@@ -186,24 +187,36 @@ func addNoCacheHeaders(inner http.Handler) http.Handler {
 	})
 }
 
-func featureActivationHandler(inner http.Handler) http.Handler {
+func cookieProcessingHandler(inner http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// check for feature param. if given, make it permanent as a cookie
-		featureActivation := r.URL.Query().Get("with-feature")
-		if featureActivation != "" {
-			// set cookie
-			http.SetCookie(w, &http.Cookie{
-				Name:  "tc-feature",
-				Value: featureActivation,
-			})
-		}
-
-		c, _ := r.Cookie("tc-feature")
-		if c != nil {
-			ctx := context.WithValue(r.Context(), "tc-feature", c.Value)
+		// check cookie consent
+		cookieConsentStatus, _ := r.Cookie("cookieconsent_status")
+		if cookieConsentStatus != nil && cookieConsentStatus.Value == "deny" {
+			// we may not set cookies. make following code in chain turn off features that would set cookies
+			Debug.Printf("Turning off cookies")
+			ctx := context.WithValue(r.Context(), "tc-nocookies", true)
 			inner.ServeHTTP(w, r.WithContext(ctx))
 		} else {
-			inner.ServeHTTP(w, r)
+			// we may set cookies.
+
+			// check for feature param. if given, make it permanent as a cookie
+			featureActivation := r.URL.Query().Get("with-feature")
+			if featureActivation != "" {
+				// set cookie
+				http.SetCookie(w, &http.Cookie{
+					Name:  "tc-feature",
+					Value: featureActivation,
+				})
+			}
+
+			c, _ := r.Cookie("tc-feature")
+			if c != nil {
+				ctx := context.WithValue(r.Context(), "tc-feature", c.Value)
+				inner.ServeHTTP(w, r.WithContext(ctx))
+			} else {
+				inner.ServeHTTP(w, r)
+			}
+
 		}
 	})
 }

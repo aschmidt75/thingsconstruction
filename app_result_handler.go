@@ -58,6 +58,7 @@ func AppGenerateResultWtdHandleGet(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "Error deserializing session data")
 		return
 	}
+	data.UpdateFeaturesFromContext(req.Context())
 
 	b, err := json.MarshalIndent(data.wtd, "", "\t")
 	if err != nil {
@@ -86,6 +87,8 @@ func AppGenerateResultAssetHandleGet(w http.ResponseWriter, req *http.Request) {
 
 	Debug.Printf("Looking for id=%s, l=%s", id, permalink)
 	data := appGenerateNewResultPageData(id)
+	data.UpdateFeaturesFromContext(req.Context())
+
 	if data == nil {
 		w.WriteHeader(500)
 		fmt.Fprint(w, "Error deserializing session data")
@@ -130,6 +133,7 @@ func AppGenerateResultHandleGet(w http.ResponseWriter, req *http.Request) {
 		URLPrefix: ServerConfig.Paths.URLPrefix,
 	}
 	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(req.Context())
 
 	if !data.IsIdValid() {
 		Error.Printf("Generate: id not valid")
@@ -178,6 +182,7 @@ func AppGenerateResultAssetViewHandleGet(w http.ResponseWriter, req *http.Reques
 		fmt.Fprint(w, "Error deserializing session data")
 		return
 	}
+	data.UpdateFeaturesFromContext(req.Context())
 
 	// load all results
 	mr, err := loadResults(data)
@@ -214,6 +219,7 @@ func AppGenerateResultAssetArchiveHandleGet(w http.ResponseWriter, req *http.Req
 		fmt.Fprint(w, "Error deserializing session data")
 		return
 	}
+	data.UpdateFeaturesFromContext(req.Context())
 
 	// load all results
 	mr, err := loadResults(data)

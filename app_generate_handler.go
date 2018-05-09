@@ -97,6 +97,8 @@ func AppGenerateHandleGet(w http.ResponseWriter, req *http.Request) {
 	// check if id is valid
 	vars := mux.Vars(req)
 	data := appGenerateNewPageData(vars["id"])
+	data.UpdateFeaturesFromContext(req.Context())
+
 	if data == nil {
 		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", vars["id"])
 	}
@@ -121,6 +123,8 @@ func AppGenerateDataHandleGet(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "Error deserializing session data")
 		return
 	}
+	data.UpdateFeaturesFromContext(req.Context())
+
 	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
 	t, err := ReadGeneratorsConfig()
@@ -214,6 +218,7 @@ func AppGenerateHandlePost(w http.ResponseWriter, req *http.Request) {
 	token := formData.Get("token")
 
 	data := appGenerateNewPageData(id)
+	data.UpdateFeaturesFromContext(req.Context())
 
 	if AppCheckToken(token) {
 		if err := runModule(data); err != nil {

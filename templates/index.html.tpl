@@ -8,7 +8,7 @@
         <div class="row">
             <p></p>
             <div class="carousel-fixed-item center">
-                <a class="waves-effect waves-light btn blue-grey darken-3 white-text" href="/app"><i class="material-icons left">settings</i>Get Started</a></p>
+                <a class="waves-effect waves-light btn blue-grey darken-3 white-text" href="/app"><i class="material-icons left">settings</i>Get started!<a></p>
             </div>
         </div>
     {{end}}
@@ -104,7 +104,6 @@
                         <p>
                             Code generators produce API code, so you don't have to.
                             Examples for APIs are HTTP+JSON REST, MQTT or LPWAN interface.
-
                         </p>
                     </div>
                 </div>

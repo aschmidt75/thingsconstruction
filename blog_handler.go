@@ -79,6 +79,8 @@ func BlogIndexHandler(w http.ResponseWriter, req *http.Request) {
 		AllPostsChrono: collectAllPostsChrono(Blog),
 	}
 	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(req.Context())
+
 	blogServeOverviewPage(w, data)
 }
 
@@ -104,7 +106,7 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 		r := strings.NewReplacer("<ul>", "<ul class=\"browser-default\">")
 		htmlStr := template.HTML(r.Replace(string(markDown)))
 
-		blogServePage(w, blogContentData{
+		data := blogContentData{
 			PageData: PageData{
 				Title:           bp.MetaData.Title,
 				MetaDescription: bp.MetaData.Abstract,
@@ -116,7 +118,11 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 			TagChipData:    collectTagChipData(Blog.MetaData, bp.MetaData),
 			AllPostsChrono: collectAllPostsChrono(Blog),
 			HtmlOutput:     htmlStr,
-		})
+		}
+		data.SetFeaturesFromConfig()
+		data.UpdateFeaturesFromContext(req.Context())
+
+		blogServePage(w, data)
 
 		UseCaseCounter.Increment("blogpost-viewed", pageName)
 
@@ -173,7 +179,6 @@ func collectAllPostsChrono(blog *BlogPages) []blogPostChronoData {
 }
 
 func blogServePage(w http.ResponseWriter, data blogContentData) {
-	data.SetFeaturesFromConfig()
 
 	templates, err := NewHtmlTemplateSet("root", "blog.html.tpl", "blog_script.html.tpl")
 	if err != nil {
@@ -188,7 +193,6 @@ func blogServePage(w http.ResponseWriter, data blogContentData) {
 }
 
 func blogServeOverviewPage(w http.ResponseWriter, data blogOverviewData) {
-	data.SetFeaturesFromConfig()
 
 	templates, err := NewHtmlTemplateSet("root", "blog_overview.html.tpl", "blog_script.html.tpl")
 	if err != nil {

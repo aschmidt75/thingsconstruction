@@ -35,6 +35,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		Robots: true,
 	}
 	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(r.Context())
 
 	err = templates.ExecuteTemplate(w, "root", data)
 	if err != nil {

@@ -32,11 +32,17 @@
                     </div>
                 </div>
                 <p style="font-size: 80%">
-                    Please provide personal contact information only if you agree that we will process
-                    it for the purpose of contacting you. For more information please see <a href="/privacy.html"/>the privacy policy</p>
+                    <input id="feedback_accept_cb" type="checkbox" class="filled-in tc-maincolor" />
+                    <label for="feedback_accept_cb">
+                        <span>  I agree that my data from the contact form will be collected and processed to answer my request. The data will be deleted afterwards. 
+                                For more information please see <a href="/privacy.html"/>the privacy policy</p>
+                        </span>
+                    </label>
+
+
                 </p>
                 <div class="row" >
-                    <a class="waves-effect waves-light tc-maincolor btn right" id="fbf_send"><i class="material-icons right">send</i>Send</a>
+                    <a class="waves-effect waves-light tc-maincolor btn right disabled" id="fbf_send"><i class="material-icons right">send</i>Send</a>
                 </div>
             </form>
         </div>

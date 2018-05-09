@@ -19,6 +19,8 @@
 //
 package main
 
+import "context"
+
 // Generic Page Data, valid for all pages
 // template data embeds this struct
 type PageData struct {
@@ -61,4 +63,12 @@ func (pd *PageData) SetFeaturesFromConfig() {
 	pd.FlattrId = ServerConfig.StaticTexts.FlattrId
 	pd.FlattrUser = ServerConfig.StaticTexts.FlattrUser
 	pd.InApp = false
+}
+
+func (pd *PageData) UpdateFeaturesFromContext(ctx context.Context) {
+	if nocookies := ctx.Value("tc-nocookies"); nocookies != nil {
+		if nocookies == true {
+			pd.Feature["Analytics"] = false
+		}
+	}
 }

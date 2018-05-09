@@ -2,7 +2,21 @@ $("document").ready(function(){
     $('select').material_select();
 });
 
-document.getElementById('fbf_send').addEventListener('click', fbf_do_send);
+document.getElementById('feedback_accept_cb').addEventListener('click', feedback_accept_cb);
+
+function feedback_accept_cb(e) {
+    var cb = e.target;
+
+    var d = document.getElementById('fbf_send');
+    var x = d.className;
+    if (cb.checked === true) {
+        d.className = x.replace(new RegExp(" disabled", "g"), "");
+        d.addEventListener('click', fbf_do_send);
+    } else {
+        d.className += " disabled";
+        d.removeEventListener('click', fbf_do_send);
+    }
+}
 
 function fbf_do_send(e) {
     e.preventDefault();

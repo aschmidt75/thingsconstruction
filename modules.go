@@ -138,7 +138,7 @@ func ModulePageHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	modulePagesServePage(w, modulePageData{
+	modulePagesServePage(w, req, modulePageData{
 		PageData: PageData{
 			Title: "Module specification",
 		},
@@ -307,9 +307,10 @@ func initializeModuleTemplates() {
 	}
 }
 
-func modulePagesServePage(w http.ResponseWriter, data modulePageData) {
+func modulePagesServePage(w http.ResponseWriter, req *http.Request, data modulePageData) {
 	initializeModuleTemplates()
 	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(req.Context())
 
 	err := ModulePagesTemplates.ExecuteTemplate(w, "root", data)
 	if err != nil {

@@ -241,7 +241,7 @@ function cf_lookup_matching_targets() {
  ${t.shortDesc}
  <br><br><span class="tc-maincolor-text">...more</span>
  <span class="right col s3">
-  <button style="padding-left: 5px" class="tc-maincolor darken-3 btn-floating tooltipped waves-effect waves-light" data-tooltip="Show details" type="" id="details_${t.id}">
+  <button style="padding-left: 5px" target="tc-module" class="tc-maincolor darken-3 btn-floating tooltipped waves-effect waves-light" data-tooltip="Show details" type="" id="details_${t.id}">
    <i class="material-icons" id="details_${t.id}">description</i>
   </button>
   <button style="padding-left: 5px" class="tc-maincolor darken-3 btn-floating tooltipped waves-effect waves-light" data-tooltip="Use this generator" type="" id="go_${t.id}">
@@ -350,9 +350,9 @@ function cff_generator_clicked(e) {
 }
 
 function cff_generator_details_clicked(e) {
-    e.preventDefault();
+    //e.preventDefault();
 
-    var win = window.open("/module/"+e.target.id.replace(/^details_/,""), '_tf_module');
+    var win = window.open("/module/"+e.target.id.replace(/^details_/,""), '_blank');
     win.focus();
 }
 

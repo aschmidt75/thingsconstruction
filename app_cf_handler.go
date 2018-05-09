@@ -52,6 +52,7 @@ func appGenParamsNewPageData(id string) (*appGenParamsData, error) {
 		VoteGenerators: ServerConfig.VoteGenerators,
 	}
 	data.SetFeaturesFromConfig()
+
 	data.InApp = true
 	if !data.IsIdValid() {
 		Error.Printf("Invalid ID=%s\n", id)
@@ -77,6 +78,7 @@ func AppChooseFrameworkHandleGet(w http.ResponseWriter, req *http.Request) {
 	id := vars["id"]
 
 	data, err := appGenParamsNewPageData(id)
+	data.UpdateFeaturesFromContext(req.Context())
 	if err != nil {
 		// send back to create page
 		http.Redirect(w, req, "/app", 302)
@@ -118,6 +120,9 @@ func AppChooseFrameworkHandlePost(w http.ResponseWriter, req *http.Request) {
 	data := &AppPageData{
 		ThingId: id,
 	}
+	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(req.Context())
+
 	if !data.IsIdValid() {
 		AppErrorServePage(w, "An error occurred while location session data. Please try again.", id)
 		return

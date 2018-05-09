@@ -72,6 +72,8 @@ func AppManageActionsHandleGet(w http.ResponseWriter, req *http.Request) {
 	id := vars["id"]
 
 	data := appManageActionsNewPageData(id)
+	data.UpdateFeaturesFromContext(req.Context())
+
 	if data == nil {
 		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", id)
 		return
@@ -96,6 +98,7 @@ func AppManageActionsDataHandleGet(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "Thing Id is not valid or Error deserializing session data.")
 		return
 	}
+	data.UpdateFeaturesFromContext(req.Context())
 	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
 	b, err := json.Marshal(data.wtd.Actions)
@@ -149,6 +152,8 @@ func AppManageActionsHandlePost(w http.ResponseWriter, req *http.Request) {
 		},
 	}
 	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(req.Context())
+
 	if !data.IsIdValid() {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(w, "An error occurred while location session data. Please try again.")

@@ -132,6 +132,7 @@ func FeedbackHandleGet(w http.ResponseWriter, req *http.Request) {
 		},
 	}
 	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(req.Context())
 
 	templates, err := NewBasicHtmlTemplateSet("feedback.html.tpl", "feedback_script.html.tpl")
 	if err != nil {

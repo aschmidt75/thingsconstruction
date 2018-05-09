@@ -43,7 +43,7 @@ type staticPageData struct {
 	HtmlOutput template.HTML
 }
 
-func ServeNotFound(w http.ResponseWriter, _ *http.Request) {
+func ServeNotFound(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(404)
 
 	bp := filepath.Join(ServerConfig.Paths.StaticPagesPath, "notfound.html.tpl")
@@ -55,7 +55,7 @@ func ServeNotFound(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
-	staticPagesServePage(w, staticPageData{
+	staticPagesServePage(w, req, staticPageData{
 		PageData: PageData{
 			Title: "Page not found", // TODO
 		},
@@ -80,7 +80,7 @@ func StaticPageHandler(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		staticPagesServePage(w, staticPageData{
+		staticPagesServePage(w, req, staticPageData{
 			PageData: PageData{
 				Title: pageName, // TODO
 			},
@@ -108,9 +108,10 @@ func initializeTemplates() {
 	}
 }
 
-func staticPagesServePage(w http.ResponseWriter, data staticPageData) {
+func staticPagesServePage(w http.ResponseWriter, req *http.Request, data staticPageData) {
 	initializeTemplates()
 	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(req.Context())
 
 	err := StaticPagesTemplates.ExecuteTemplate(w, "root", data)
 	if err != nil {

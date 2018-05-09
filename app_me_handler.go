@@ -49,6 +49,7 @@ func appManageEventsNewPageData(id string) *appManageEventsData {
 		},
 	}
 	data.SetFeaturesFromConfig()
+
 	if !data.IsIdValid() {
 		return nil
 	}
@@ -70,6 +71,7 @@ func AppManageEventsHandleGet(w http.ResponseWriter, req *http.Request) {
 	// check if id is valid
 	vars := mux.Vars(req)
 	data := appManageEventsNewPageData(vars["id"])
+	data.UpdateFeaturesFromContext(req.Context())
 	if data == nil {
 		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", vars["id"])
 	}
@@ -89,6 +91,8 @@ func AppManageEventsDataHandleGet(w http.ResponseWriter, req *http.Request) {
 	id := vars["id"]
 
 	data := appManageEventsNewPageData(id)
+	data.UpdateFeaturesFromContext(req.Context())
+
 	if data == nil {
 		w.WriteHeader(500)
 		fmt.Fprint(w, "Error deserializing session data")
@@ -126,7 +130,6 @@ func AppManageEventsHandlePost(w http.ResponseWriter, req *http.Request) {
 			}})
 	}
 	formData := req.PostForm
-	Debug.Printf(spew.Sdump(formData))
 
 	// check if id is valid
 	vars := mux.Vars(req)
@@ -149,6 +152,8 @@ func AppManageEventsHandlePost(w http.ResponseWriter, req *http.Request) {
 		},
 	}
 	data.SetFeaturesFromConfig()
+	data.UpdateFeaturesFromContext(req.Context())
+
 	if !data.IsIdValid() {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(w, "An error occurred while location session data. Please try again.")
