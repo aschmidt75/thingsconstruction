@@ -190,9 +190,10 @@ func addNoCacheHeaders(inner http.Handler) http.Handler {
 func cookieProcessingHandler(inner http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// check cookie consent
-		cookieConsentStatus, _ := r.Cookie("cookieconsent_status")
-		if cookieConsentStatus != nil && cookieConsentStatus.Value == "deny" {
-			// we may not set cookies. make following code in chain turn off features that would set cookies
+		cookieConsentStatus, err := r.Cookie("cookieconsent_status")
+		if err != nil || (err == nil && cookieConsentStatus != nil && cookieConsentStatus.Value != "dismiss") {
+			// we may not set cookies, b/c user did not answer cookie consent yet or answered with "deny".
+			// make following code in chain turn off features that would set cookies
 			Debug.Printf("Turning off cookies")
 			ctx := context.WithValue(r.Context(), "tc-nocookies", true)
 			inner.ServeHTTP(w, r.WithContext(ctx))
