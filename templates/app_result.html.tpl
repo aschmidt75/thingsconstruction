@@ -32,6 +32,8 @@
                         <i data-tooltip="Copy to clipboard" id="url_copy_btn" class="material-icons tooltipped">content_copy</i>
                         <input type="text" id="url_copy_input" class="hide">
                         <a id="url_copy_a" href="{{.URLPrefix}}app/{{.ThingId}}/generate">{{.URLPrefix}}app/{{.ThingId}}/generate</a>
+                        <br/>
+                        This link will be active up to 90 days after your last update.
                     </p>
                     <div>
                         <table>
@@ -83,7 +85,7 @@
                             <a href="/app/{{$GThingId}}/result/asset-archive/" class="hide" id="select-archive-link"><i class="material-icons">file_download</i></a>
                             </div>
                     </div>
-                    <div  class="col s9">
+                    <div  class="col s12">
                         <p>You can also choose to delete your data. You will not be able to edit your model any more,
                             or download any of the generated assets from above.
                         </p>
