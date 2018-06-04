@@ -68,7 +68,7 @@
                             {{ end }}
                         </table>
                     </div>
-                    <div style="padding-top:2em">
+                    <div style="padding-top:2em" class="col s9">
 
                         <div class="input-field col s6" >
                             <select id="select-archive">
@@ -83,6 +83,13 @@
                             <a href="/app/{{$GThingId}}/result/asset-archive/" class="hide" id="select-archive-link"><i class="material-icons">file_download</i></a>
                             </div>
                     </div>
+                    <div  class="col s9">
+                        <p>You can also choose to delete your data. You will not be able to edit your model any more,
+                            or download any of the generated assets from above.
+                        </p>
+                        <a class="waves-effect waves-light btn blue-grey darken-3 white-text" id="btn-delete-data" href="#!"><i class="material-icons left">delete</i>Yes, delete now.</a></p>
+                    </div>
+
                 </div>
                 <div class="col s2 offset-s1 hide-on-med-and-down">
                     <br/>

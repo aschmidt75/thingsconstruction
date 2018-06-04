@@ -244,6 +244,40 @@ func (ap *AppPageData) Deserialize() error {
 	return nil
 }
 
+func (ap *AppPageData) Delete() error {
+	if !ap.IsIdValid() {
+		Error.Printf("Delete() for wtd id=%s: not a valid id\n", ap.ThingId)
+		return errors.New("not a valid id")
+	}
+
+	dir := filepath.Join(ServerConfig.Paths.DataPath, ""+ap.ThingId)
+	Verbose.Printf("Deleteing dir upon request: %s", dir)
+
+	d, err := os.Open(dir)
+	if err != nil {
+		return err
+	}
+	defer d.Close()
+	names, err := d.Readdirnames(-1)
+	if err != nil {
+		return err
+	}
+	for _, name := range names {
+		Verbose.Printf("Deleteing: %s", name)
+		err = os.RemoveAll(filepath.Join(dir, name))
+		if err != nil {
+			return err
+		}
+	}
+
+	err = os.RemoveAll(dir)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 type AppErrorPageData struct {
 	AppPageData
 	Message string

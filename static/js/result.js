@@ -98,3 +98,33 @@ var btn_more = document.getElementById('btn_more');
 if ( btn_more != null) {
     btn_more.addEventListener('click', more_activate);
 }
+
+function delete_data(e) {
+    var url = "/app/"+ThingId;
+
+    $.ajax({
+        type: "DELETE",
+        url: url,
+        async: true,
+        success: function (data) {
+            content = content + data
+        },
+        error: function (data) {
+            console.log(data);
+            target.innerHTML = "<p>An error occured while fetching the document. Please try again later.</p>";
+        },
+        complete: function() {
+            var url = document.URL;
+            console.log(url);
+            url = url.replace(/^(.*\/app).*/, "$1");
+
+            console.log(url);
+            window.location.replace(url);
+        }
+    });
+}
+
+var btn_delete = document.getElementById('btn-delete-data');
+if ( btn_delete != null) {
+    btn_delete.addEventListener('click', delete_data);
+}

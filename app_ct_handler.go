@@ -89,7 +89,6 @@ func AppCreateThingHandleGet(w http.ResponseWriter, req *http.Request) {
 			Error.Printf("error reding model templates: %s", err)
 			// disable function in UI
 			data.AllowFromTemplate = false
-			data.AllowTypeSelection = false
 		}
 	}
 
@@ -242,6 +241,39 @@ func AppCreateThingHandlePost(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
+}
+
+func AppCreateThingHandleDelete(w http.ResponseWriter, req *http.Request) {
+	if ServerConfig.Features.App == false {
+		w.WriteHeader(501)
+		return
+	}
+
+	// check if id is valid
+	vars := mux.Vars(req)
+	id := vars["id"]
+	if id != "" {
+		// this is an edit of an existing ThingId
+		data := &appManageActionsData{
+			AppPageData: AppPageData{
+				PageData: PageData{
+					InApp: true,
+				},
+				ThingId: id,
+			},
+		}
+
+		// delete
+		if err := data.Delete(); err != nil {
+			w.WriteHeader(500)
+			return
+		}
+
+		w.WriteHeader(205)
+		return
+	}
+
+	w.WriteHeader(500)
 }
 
 // reads all templates from model template dir
