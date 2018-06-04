@@ -238,9 +238,11 @@ function cf_lookup_matching_targets() {
             depsStr += "</ul>"
             li.innerHTML = `<div class="collapsible-header">
  <i class="material-icons">keyboard_arrow_right</i>
+ <div class="col s9 left-align">
  ${t.shortDesc}
- <br><br><span class="tc-maincolor-text">...more</span>
- <span class="right col s3">
+ </div>
+ <div class="col s1 right-align tc-maincolor-text">...more</div>
+ <span class="right-align col s2">
   <button style="padding-left: 5px" target="tc-module" class="tc-maincolor darken-3 btn-floating tooltipped waves-effect waves-light" data-tooltip="Show details" type="" id="details_${t.id}">
    <i class="material-icons" id="details_${t.id}">description</i>
   </button>
