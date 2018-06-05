@@ -24,6 +24,9 @@
             </p>
             <p>
             <h5>Recent posts</h5>
+            <p>
+                <a href="/blog"><span><i class="material-icons tiny">arrow_back</i></span>See all</a>
+            </p>
             <ul>
                 {{ range .AllPostsChrono }}
                 <li>
@@ -31,9 +34,6 @@
                 </li>
                 {{ end }}
             </ul>
-            </p>
-            <p>
-                <a href="/blog"><span><i class="material-icons tiny">arrow_back</i></span>See all</a>
             </p>
             <p style="padding-top: 1em">
                 This blog post is<br/>
