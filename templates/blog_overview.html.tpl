@@ -14,7 +14,7 @@
                         {{ . }}
                         </div>
                     {{end}}
-                    <p>{{ .Date.Format "Mon, Jan 2 2006" }}</p>
+                    <p>{{ .DateFormatted }}</p>
 
 
                     </div>

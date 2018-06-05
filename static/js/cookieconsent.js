@@ -18,7 +18,7 @@ window.addEventListener("load", function(){
             }
         },
         "position": "bottom-left",
-        "type": "opt-out",
+        "type": "opt-in",
         "content": {
             "href": "https://thngstruction.online/privacy.html"
         },

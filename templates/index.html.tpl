@@ -115,4 +115,14 @@
 
     </div>
 </div>
+{{ if .Feature.Blog  }}
+<div class="row">
+    <div class="col s12">
+        <h4 class="center">Recent posts</h4>
+        <p id="index_blog_posts">
+
+        </p>
+    </div>
+</div>
+{{end}}
 {{end}}

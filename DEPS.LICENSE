@@ -160,3 +160,9 @@ For details, please see https://fontawesome.com/license
 
 https://github.com/gomodule/redigo
 Redigo is available under the Apache License, Version 2.0.
+
+== dustin/go-humanize
+
+https://github.com/dustin/go-humanize
+Copyright (c) 2005-2008  Dustin Sallings <dustin@spy.net>
+MIT License

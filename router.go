@@ -39,10 +39,13 @@ type Routes []Route
 
 var routes = Routes{
 	Route{"FavIcon", "GET", "/favicon", faviconHandler},
+	Route{"DisableCookiesTracking", "GET", "/donottrack", doNotTrackHandler},
+	Route{"ResetCookies", "GET", "/cookieconsentreset", cookieConsentResetHandler},
 	Route{"Index", "GET", "/index.html", IndexHandler},
 	Route{"Index", "GET", "/", IndexHandler},
 	Route{"StaticPage", "GET", "/{page}.html", StaticPageHandler},
 	Route{"Blog", "GET", "/blog", BlogIndexHandler},
+	Route{"Blog", "GET", "/blog/data", BlogIndexJSONHandler},
 	Route{"BlogPage", "GET", "/blog/{page}", MarkdownBlogHandler},
 	Route{"ModuleInfo", "GET", "/module/{id}", ModulePageHandler},
 	Route{"ModuleInfo", "GET", "/modules/data", ModuleDataHandler},
@@ -142,6 +145,30 @@ func notFoundHandler(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func doNotTrackHandler(w http.ResponseWriter, req *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:  "cookieconsent_status",
+		Value: "deny",
+	})
+	http.SetCookie(w, &http.Cookie{
+		Name:  "_ga",
+		Value: "",
+	})
+	http.SetCookie(w, &http.Cookie{
+		Name:  "_gid",
+		Value: "",
+	})
+	http.Redirect(w,req,"/",http.StatusMovedPermanently)
+}
+
+func cookieConsentResetHandler(w http.ResponseWriter, req *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:  "cookieconsent_status",
+		Value: "",
+	})
+	http.Redirect(w,req,"/",http.StatusMovedPermanently)
+}
+
 func logger(inner http.Handler, name string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
@@ -191,8 +218,23 @@ func addNoCacheHeaders(inner http.Handler) http.Handler {
 func cookieProcessingHandler(inner http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// check cookie consent
+		var bConsentOk = false
 		cookieConsentStatus, err := r.Cookie("cookieconsent_status")
-		if err != nil || (err == nil && cookieConsentStatus != nil && cookieConsentStatus.Value != "dismiss") {
+
+		// with OptIn, we either get "allow" or "dismiss"
+
+		if err != nil {
+			// unable to find cookie
+			bConsentOk = false
+		} else {
+			if (cookieConsentStatus != nil && cookieConsentStatus.Value == "allow") {
+				bConsentOk = true
+			}
+		}
+
+		Debug.Printf("consent ok=%b", bConsentOk)
+
+		if !bConsentOk {
 			// we may not set cookies, b/c user did not answer cookie consent yet or answered with "deny".
 			// make following code in chain turn off features that would set cookies
 			Debug.Printf("Turning off cookies")

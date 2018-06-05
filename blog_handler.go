@@ -28,6 +28,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"encoding/json"
+	"github.com/dustin/go-humanize"
 )
 
 type tagChipData struct {
@@ -38,6 +40,8 @@ type tagChipData struct {
 type blogPostChronoData struct {
 	Title    string
 	Date     time.Time
+	DateFormatted     string
+	DateElapsed     string
 	Name     string
 	Tags     []string
 	Abstract string
@@ -83,6 +87,25 @@ func BlogIndexHandler(w http.ResponseWriter, req *http.Request) {
 
 	blogServeOverviewPage(w, data)
 }
+
+func BlogIndexJSONHandler(w http.ResponseWriter, req *http.Request) {
+	if ServerConfig.Features.Blog == false {
+		w.WriteHeader(501)
+		return
+	}
+
+	Blog.Reload()
+
+	b, err := json.Marshal(collectAllPostsChrono(Blog))
+	if err != nil {
+		w.WriteHeader(500)
+		return
+
+	}
+	w.WriteHeader(200)
+	w.Write(b)
+}
+
 
 func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.Blog == false {
@@ -159,6 +182,9 @@ func collectTagChipData(blogMetaData *BlogMetaData, blogPageMetaData *BlogPageMe
 	return t
 }
 
+
+
+
 func collectAllPostsChrono(blog *BlogPages) []blogPostChronoData {
 	// collect and sort all (recent) posts
 	cr := make([]blogPostChronoData, 0)
@@ -167,6 +193,8 @@ func collectAllPostsChrono(blog *BlogPages) []blogPostChronoData {
 			Title:    post.MetaData.Title,
 			Name:     name,
 			Date:     post.MetaData.DateTime,
+			DateFormatted: post.MetaData.DateTime.Format("Mon, Jan 2 2006"),
+			DateElapsed: humanize.Time(post.MetaData.DateTime),
 			Tags:     post.MetaData.Tags,
 			Abstract: post.MetaData.Abstract,
 		})
