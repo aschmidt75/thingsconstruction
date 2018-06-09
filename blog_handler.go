@@ -20,6 +20,8 @@
 package main
 
 import (
+	"encoding/json"
+	"github.com/dustin/go-humanize"
 	"github.com/gorilla/mux"
 	"github.com/shurcooL/github_flavored_markdown"
 	"html/template"
@@ -28,8 +30,6 @@ import (
 	"sort"
 	"strings"
 	"time"
-	"encoding/json"
-	"github.com/dustin/go-humanize"
 )
 
 type tagChipData struct {
@@ -38,13 +38,14 @@ type tagChipData struct {
 }
 
 type blogPostChronoData struct {
-	Title    string
-	Date     time.Time
-	DateFormatted     string
-	DateElapsed     string
-	Name     string
-	Tags     []string
-	Abstract string
+	Title         string
+	Date          time.Time
+	DateFormatted string
+	DateElapsed   string
+	Name          string
+	Tags          []string
+	Abstract      string
+	HasVideo      bool
 }
 
 type blogContentData struct {
@@ -55,6 +56,8 @@ type blogContentData struct {
 	TagChipData    []tagChipData
 	AllPostsChrono []blogPostChronoData
 	HtmlOutput     template.HTML
+	VimeoID        string
+	YoutubeID      string
 }
 
 type blogOverviewData struct {
@@ -106,7 +109,6 @@ func BlogIndexJSONHandler(w http.ResponseWriter, req *http.Request) {
 	w.Write(b)
 }
 
-
 func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.Blog == false {
 		http.Redirect(w, req, "/", 302)
@@ -141,10 +143,13 @@ func MarkdownBlogHandler(w http.ResponseWriter, req *http.Request) {
 			TagChipData:    collectTagChipData(Blog.MetaData, bp.MetaData),
 			AllPostsChrono: collectAllPostsChrono(Blog),
 			HtmlOutput:     htmlStr,
+			VimeoID:        bp.MetaData.VimeoID,
+			YoutubeID:      bp.MetaData.YoutubeID,
 		}
 		data.SetFeaturesFromConfig()
 		data.UpdateFeaturesFromContext(req.Context())
 
+		Debug.Printf("%#v", data)
 		blogServePage(w, data)
 
 		UseCaseCounter.Increment("blogpost-viewed", pageName)
@@ -182,21 +187,19 @@ func collectTagChipData(blogMetaData *BlogMetaData, blogPageMetaData *BlogPageMe
 	return t
 }
 
-
-
-
 func collectAllPostsChrono(blog *BlogPages) []blogPostChronoData {
 	// collect and sort all (recent) posts
 	cr := make([]blogPostChronoData, 0)
 	for name, post := range blog.Pages {
 		cr = append(cr, blogPostChronoData{
-			Title:    post.MetaData.Title,
-			Name:     name,
-			Date:     post.MetaData.DateTime,
+			Title:         post.MetaData.Title,
+			Name:          name,
+			Date:          post.MetaData.DateTime,
 			DateFormatted: post.MetaData.DateTime.Format("Mon, Jan 2 2006"),
-			DateElapsed: humanize.Time(post.MetaData.DateTime),
-			Tags:     post.MetaData.Tags,
-			Abstract: post.MetaData.Abstract,
+			DateElapsed:   humanize.Time(post.MetaData.DateTime),
+			Tags:          post.MetaData.Tags,
+			Abstract:      post.MetaData.Abstract,
+			HasVideo:      (post.MetaData.YoutubeID != "") || (post.MetaData.VimeoID != ""),
 		})
 	}
 	sort.Slice(cr, func(i, j int) bool {

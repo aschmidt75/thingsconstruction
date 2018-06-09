@@ -1,25 +1,34 @@
-hljs.configure({useBR: false});
+$( document ).ready(function() {
 
-$('div > pre').each(function(i, block) {
-    hljs.highlightBlock(block);
-});
+    hljs.configure({useBR: false});
 
-var bp_selected_tags = new Map();
+    $('div > pre').each(function (i, block) {
+        hljs.highlightBlock(block);
+    });
 
-// if we are on the overview page, do some filtering magic
-all_posts = document.getElementById("bp_overview");
-if (all_posts != null) {
-    // enable handlers for all chips on the right
-    all_tags = document.getElementById("bp_all_tags");
-    c = all_tags.children
-    for (i = 0; i < c.length; i++) {
-        if (c[i].className.startsWith("chip")) {
-            // add listener
-            c[i].addEventListener('click', bp_tag_clicked)
+    // vimeo
+    var e = document.getElementById('embed');
+    if (e.attributes["video"] !== null) {
+        bp_embed_vimeo(e.attributes["video"].nodeValue);
+    }
 
+    var bp_selected_tags = new Map();
+
+    // if we are on the overview page, do some filtering magic
+    all_posts = document.getElementById("bp_overview");
+    if (all_posts != null) {
+        // enable handlers for all chips on the right
+        all_tags = document.getElementById("bp_all_tags");
+        c = all_tags.children
+        for (i = 0; i < c.length; i++) {
+            if (c[i].className.startsWith("chip")) {
+                // add listener
+                c[i].addEventListener('click', bp_tag_clicked)
+
+            }
         }
     }
-}
+});
 
 // TODO: only on blog index
 bp_update_list_filter();
@@ -88,4 +97,17 @@ function bp_tag_clicked(e) {
 
     // filter list according to new selection
     bp_update_list_filter()
+}
+
+function bp_embed_vimeo(id) {
+    var vimeo_url = "https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/"+id+"&callback=bp_callback_embed_vimeo";
+
+    var js = document.createElement('script');
+    js.setAttribute('type', 'text/javascript');
+    js.setAttribute('src', vimeo_url);
+    document.getElementsByTagName('head').item(0).appendChild(js);
+}
+
+function bp_callback_embed_vimeo(video) {
+    document.getElementById('embed').innerHTML = unescape(video.html);
 }

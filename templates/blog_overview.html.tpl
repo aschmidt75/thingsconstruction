@@ -14,13 +14,19 @@
                         {{ . }}
                         </div>
                     {{end}}
-                    <p>{{ .DateFormatted }}</p>
+                    <p>{{ .DateFormatted }}
+                    </p>
 
 
                     </div>
                     <div class="col s12 m9 right">
-                        <h5 style="margin-top: 0px;"><a class="tc-maincolor-text text-lighten-1" href="/blog/{{.Name}}">{{ .Title }}</a></h5>
-                        {{.Abstract}}
+                        <h5 style="margin-top: 0px;"><a class="tc-maincolor-text text-lighten-1" href="/blog/{{.Name}}">{{ .Title }}</a>
+                    {{ if .HasVideo }}
+                        <i class="material-icons">ondemand_video</i>
+                    {{ end }}
+                        </h5>
+
+                    {{.Abstract}}
                     </div>
 
                 </div>

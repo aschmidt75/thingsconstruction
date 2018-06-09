@@ -35,6 +35,8 @@ type BlogPageMetaData struct {
 	Tags             []string
 	Abstract         string
 	originalFileName string
+	VimeoID          string `yaml:"vimeoid"`
+	YoutubeID        string `yaml:"youtubeid"`
 }
 
 type BlogPage struct {

@@ -158,7 +158,7 @@ func doNotTrackHandler(w http.ResponseWriter, req *http.Request) {
 		Name:  "_gid",
 		Value: "",
 	})
-	http.Redirect(w,req,"/",http.StatusMovedPermanently)
+	http.Redirect(w, req, "/", http.StatusMovedPermanently)
 }
 
 func cookieConsentResetHandler(w http.ResponseWriter, req *http.Request) {
@@ -166,7 +166,7 @@ func cookieConsentResetHandler(w http.ResponseWriter, req *http.Request) {
 		Name:  "cookieconsent_status",
 		Value: "",
 	})
-	http.Redirect(w,req,"/",http.StatusMovedPermanently)
+	http.Redirect(w, req, "/", http.StatusMovedPermanently)
 }
 
 func logger(inner http.Handler, name string) http.Handler {
@@ -227,7 +227,7 @@ func cookieProcessingHandler(inner http.Handler) http.Handler {
 			// unable to find cookie
 			bConsentOk = false
 		} else {
-			if (cookieConsentStatus != nil && cookieConsentStatus.Value == "allow") {
+			if cookieConsentStatus != nil && cookieConsentStatus.Value == "allow" {
 				bConsentOk = true
 			}
 		}

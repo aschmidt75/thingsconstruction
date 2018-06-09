@@ -3,6 +3,16 @@
     </div>
     <div class="row">
         <div class="col s9">
+        {{ if .VimeoID }}
+            <p id="embed" video="{{.VimeoID}}">
+            </p>
+        {{ end }}
+        {{ if .YoutubeID }}
+            <p>
+                <iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/{{.YoutubeID}}?rel=0"
+                        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </p>
+        {{ end }}
             {{.HtmlOutput}}
             {{ if .Feature.Shariff }}
                     <p>

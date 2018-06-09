@@ -40,6 +40,9 @@ function load_blog_posts() {
                     content += "<br/><span>"+p.DateElapsed+"</span></div>";
                     content += "<div class=\"col s7 m9 \">";
                     content += "<a class=\"tc-maincolor-text text-lighten-1\" href=\"/blog/"+p.Name+"\">"+p.Title+"</a>";
+                    if (p.HasVideo) {
+                        content += " <i class=\"material-icons tiny\">ondemand_video</i>";
+                    }
                     content += "</div>";
                     content += "</div>";
                 }
