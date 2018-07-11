@@ -32,7 +32,6 @@ import (
 	"net/http"
 	"os"
 	"github.com/fsouza/go-dockerclient"
-	"github.com/davecgh/go-spew/spew"
 )
 
 type appGenerateData struct {
@@ -170,7 +169,6 @@ func AppGenerateAcceptHandlePost(w http.ResponseWriter, req *http.Request) {
 				Message: "There was an error processing your data.",
 			}})
 	}
-	formData := req.PostForm
 
 	// check if id is valid
 	vars := mux.Vars(req)
