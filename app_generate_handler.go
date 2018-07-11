@@ -31,8 +31,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/fsouza/go-dockerclient"
+	"github.com/davecgh/go-spew/spew"
 )
 
 type appGenerateData struct {
@@ -171,7 +171,6 @@ func AppGenerateAcceptHandlePost(w http.ResponseWriter, req *http.Request) {
 			}})
 	}
 	formData := req.PostForm
-	Debug.Printf(spew.Sdump(formData))
 
 	// check if id is valid
 	vars := mux.Vars(req)
