@@ -1,21 +1,23 @@
-//    ThingsConstruction, a code generator for WoT-based models
-//    Copyright (C) 2017  @aschmidt75
+//  ThingsConstruction, a code generator for WoT-based models
+//  Copyright (C) 2017,2018  @aschmidt75
 //
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU Affero General Public License as published
-//    by the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Affero General Public License as published
+//  by the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
 //
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU Affero General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Affero General Public License for more details.
 //
-//    You should have received a copy of the GNU Affero General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-//    This program is dual-licensed. For commercial licensing options, please
-//    contact the author(s).
+//  This program is dual-licensed. For commercial licensing options, please
+//  contact the author(s).
+//
+
 //
 package main
 
@@ -34,7 +36,8 @@ import (
 
 type appManageEventsData struct {
 	AppPageData
-	Msg string
+	Msg              string
+	CustomizationUrl string
 }
 
 func appManageEventsNewPageData(id string) *appManageEventsData {
@@ -76,6 +79,28 @@ func AppManageEventsHandleGet(w http.ResponseWriter, req *http.Request) {
 		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", vars["id"])
 	}
 
+	// do we have a customization for the current module?
+	genId := data.md.SelectedGeneratorId
+	appGenTargets, err := ReadGeneratorsConfig()
+	if err == nil {
+		appGenTarget := appGenTargets.AppGenTargetById(genId)
+		if appGenTarget.CustomizationApp != "" {
+			// find url
+			customAppData, err := ServerConfig.GetCustomizationAppsDetailByName(appGenTarget.CustomizationApp)
+			if err == nil {
+				Debug.Printf("Has customization app: %s", appGenTarget.CustomizationApp)
+				Debug.Printf("customization app URL: %s", customAppData.Entrypoint1)
+
+				data.CustomizationUrl = fmt.Sprintf(customAppData.Entrypoint1, vars["id"])
+			} else {
+				Error.Printf("Could not get custom app url %s", err)
+			}
+		}
+
+	} else {
+		Error.Printf("Error reading generator config: %s", err)
+	}
+
 	appManageEventsServePage(w, data)
 
 }
@@ -98,7 +123,6 @@ func AppManageEventsDataHandleGet(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "Error deserializing session data")
 		return
 	}
-	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
 	b, err := json.Marshal(data.wtd.Events)
 	if err != nil {
@@ -156,7 +180,7 @@ func AppManageEventsHandlePost(w http.ResponseWriter, req *http.Request) {
 
 	if !data.IsIdValid() {
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprint(w, "An error occurred while location session data. Please try again.")
+		fmt.Fprint(w, "An error occurred while locating session data. Please try again.")
 		return
 	}
 	if err := data.Deserialize(); err != nil {

@@ -9,7 +9,6 @@ A code generator UI for WoT (Web Of Things) based models.
 
 See DEPS.LICENSE for more information.
 
-* github.com/davecgh/go-spew/spew, ISC License
 * github.com/satori/go.uuid, MIT License
 * github.com/gorilla/mux, BSD License
 * github.com/fsouza/go-dockerclient, MIT

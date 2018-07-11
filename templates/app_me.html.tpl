@@ -66,7 +66,7 @@
                             <i class="material-icons left">navigate_before</i>Actions
 
                         </button>
-                        <button id="me_next" class="btn-large tc-maincolor tooltipped right" data-delay="100" data-tooltip="Save changes, go to next step">
+                        <button id="me_next" class="btn-large tc-maincolor tooltipped right" customizationUrl="{{ .CustomizationUrl }}" data-delay="100" data-tooltip="Save changes, go to next step">
                             Generate
                             <i class="material-icons right">navigate_next</i>
                         </button>

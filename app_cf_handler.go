@@ -1,26 +1,27 @@
-//    ThingsConstruction, a code generator for WoT-based models
-//    Copyright (C) 2017  @aschmidt75
+//  ThingsConstruction, a code generator for WoT-based models
+//  Copyright (C) 2017,2018  @aschmidt75
 //
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU Affero General Public License as published
-//    by the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Affero General Public License as published
+//  by the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
 //
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU Affero General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Affero General Public License for more details.
 //
-//    You should have received a copy of the GNU Affero General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-//    This program is dual-licensed. For commercial licensing options, please
-//    contact the author(s).
+//  This program is dual-licensed. For commercial licensing options, please
+//  contact the author(s).
+//
+
 //
 package main
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -68,6 +69,7 @@ func appGenParamsNewPageData(id string) (*appGenParamsData, error) {
 	return data, nil
 }
 
+// AppChooseFrameworkHandleGet lets user choose a generator module for a given Web Thing ID
 func AppChooseFrameworkHandleGet(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
 		http.Redirect(w, req, "/", 302)
@@ -80,13 +82,14 @@ func AppChooseFrameworkHandleGet(w http.ResponseWriter, req *http.Request) {
 	data, err := appGenParamsNewPageData(id)
 	data.UpdateFeaturesFromContext(req.Context())
 	if err != nil {
-		// send back to create page
+		// send back to s page
 		http.Redirect(w, req, "/app", 302)
 		return
 	}
 	appGenParamsServePage(w, *data)
 }
 
+// AppChooseFrameworkHandlePost saves generator module choice
 func AppChooseFrameworkHandlePost(w http.ResponseWriter, req *http.Request) {
 	if ServerConfig.Features.App == false {
 		http.Redirect(w, req, "/", 302)
@@ -102,7 +105,6 @@ func AppChooseFrameworkHandlePost(w http.ResponseWriter, req *http.Request) {
 			}})
 	}
 	ctf := req.PostForm
-	Debug.Printf(spew.Sdump(ctf))
 
 	// user selected a generator.
 	// check if id is valid
@@ -133,7 +135,6 @@ func AppChooseFrameworkHandlePost(w http.ResponseWriter, req *http.Request) {
 		AppErrorServePage(w, "An error occurred while reading session data. Please try again.", id)
 		return
 	}
-	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
 	// write generator to meta data file
 	data.md = &GeneratorMetaData{

@@ -406,7 +406,17 @@ function me_submit(e) {
             success: function (data) {
                 // redirect to next page
                 var url = document.URL;
-                window.location.replace(url.replace(/^(.*)\/events.*/,"$1/generate"));
+
+                var btn = document.getElementById("me_next");
+                console.log(btn.attributes["customizationurl"]);
+                if (btn.attributes["customizationurl"] !== undefined) {
+                    var s = btn.attributes["customizationurl"].nodeValue;
+                    console.log("redirecting to "+s);
+                    window.location.replace(url.replace(/^(.*)(\/app.*)/,"$1"+s.toString()));
+                } else {
+                    // forward to generate page
+                    window.location.replace(url.replace(/^(.*)\/events.*/,"$1/generate"));
+                }
             },
             error: function (data) {
                 // stay on page
@@ -449,8 +459,7 @@ $.ajax({
         console.log(data);
     },
     complete: function() {
-        var obj = JSON.parse(eventsJson)
-        console.log(obj)
+        var obj = JSON.parse(eventsJson);
         if (obj !== null) {
             for (var key in obj) {
                 if (obj.hasOwnProperty(key)) {

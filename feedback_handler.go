@@ -1,28 +1,29 @@
-//    ThingsConstruction, a code generator for WoT-based models
-//    Copyright (C) 2017  @aschmidt75
+//  ThingsConstruction, a code generator for WoT-based models
+//  Copyright (C) 2017,2018  @aschmidt75
 //
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU Affero General Public License as published
-//    by the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Affero General Public License as published
+//  by the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
 //
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU Affero General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Affero General Public License for more details.
 //
-//    You should have received a copy of the GNU Affero General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-//    This program is dual-licensed. For commercial licensing options, please
-//    contact the author(s).
+//  This program is dual-licensed. For commercial licensing options, please
+//  contact the author(s).
+//
+
 //
 package main
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -92,7 +93,6 @@ func FeedbackHandlePost(w http.ResponseWriter, req *http.Request) {
 		Content:   cff.Get("fbf_text"),
 		Timestamp: fmt.Sprintf("%s", time.Now()),
 	}
-	Debug.Printf("feedback: %s", spew.Sdump(data))
 
 	b, err := json.Marshal(data)
 	Debug.Printf("%s\n", b)

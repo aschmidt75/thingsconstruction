@@ -45,3 +45,6 @@ redis:
   port: 6379
 vote_generators:
   1: "Your specialized generator module wish goes here"
+customizationapps:
+- name: testcustom
+  entrypoint1: /customapp/%s/

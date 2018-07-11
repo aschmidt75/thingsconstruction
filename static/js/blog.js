@@ -1,3 +1,5 @@
+var bp_selected_tags = new Map();
+
 $( document ).ready(function() {
 
     hljs.configure({useBR: false});
@@ -8,11 +10,9 @@ $( document ).ready(function() {
 
     // vimeo
     var e = document.getElementById('embed');
-    if (e.attributes["video"] !== null) {
+    if (e !== null && e.attributes["video"] !== null) {
         bp_embed_vimeo(e.attributes["video"].nodeValue);
     }
-
-    var bp_selected_tags = new Map();
 
     // if we are on the overview page, do some filtering magic
     all_posts = document.getElementById("bp_overview");

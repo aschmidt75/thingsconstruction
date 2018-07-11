@@ -20,3 +20,4 @@ targets:
      info: ""
    codegeninfo: "Generated code is under CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
    See also https://github.com/aschmidt75/thingsconstruction"
+   customizationapp: testcustom
