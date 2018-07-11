@@ -82,7 +82,6 @@ func FeedbackHandlePost(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	cff := req.PostForm
-	//Debug.Printf("feedback: %s", spew.Sdump(cff))
 
 	data := struct {
 		Category  string `json:"cat"`

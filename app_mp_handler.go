@@ -28,7 +28,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"net/http"
 	"net/url"
@@ -132,7 +131,6 @@ func AppManagePropertiesHandlePost(w http.ResponseWriter, req *http.Request) {
 		Debug.Printf("Error parsing create thing form: %s\n", err)
 	}
 	mpf := req.PostForm
-	Debug.Printf(spew.Sdump(mpf))
 
 	// check if id is valid
 	vars := mux.Vars(req)

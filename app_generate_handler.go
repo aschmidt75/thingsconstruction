@@ -26,13 +26,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
-	"github.com/fsouza/go-dockerclient"
 	"github.com/gorilla/mux"
 	"github.com/satori/go.uuid"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/fsouza/go-dockerclient"
 )
 
 type appGenerateData struct {

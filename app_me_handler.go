@@ -28,7 +28,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"net/http"
 	"net/url"
@@ -191,7 +190,6 @@ func AppManageEventsHandlePost(w http.ResponseWriter, req *http.Request) {
 	}
 
 	parseEventsFormData(data.wtd, formData)
-	Debug.Printf("id=%s, wtd=%s\n", id, spew.Sdump(data.wtd))
 
 	// save..
 	if data.Serialize() != nil {
