@@ -28,8 +28,14 @@ function load_blog_posts() {
                 if ( n > 3) {
                     n = 3;
                 }
+                var maxabstrlen = 120;
                 for (var i = 0; i < n; i++) {
                     var p = obj[i];
+
+                    var a = p.Abstract;
+                    if (a.length > maxabstrlen) {
+                        a = ""+p.Abstract.substr(0,maxabstrlen) + "..."
+                    }
 
                     content += "<div class=\"blogpost row\">";
                     content += "<div class=\"col s3 left hide-on-small-only show-on-medium-and-up\" >";
@@ -43,6 +49,7 @@ function load_blog_posts() {
                     if (p.HasVideo) {
                         content += " <i class=\"material-icons tiny\">ondemand_video</i>";
                     }
+                    content += "<br/><span>"+a+"<a class=\"tc-maincolor-text text-lighten-1\" href=\"/blog/"+p.Name+"\">&nbsp;more</a></span>";
                     content += "</div>";
                     content += "</div>";
                 }

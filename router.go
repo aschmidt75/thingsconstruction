@@ -118,6 +118,10 @@ func NewRouter() *mux.Router {
 	return router
 }
 
+type appGenericPage struct {
+	AppPageData
+}
+
 func notFoundHandler(w http.ResponseWriter, req *http.Request) {
 	templates, err := NewBasicHtmlTemplateSet("_404.html.tpl")
 	if err != nil {
@@ -127,7 +131,7 @@ func notFoundHandler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	//
-	data := &appGenerateResultData{
+	data := &appGenericPage{
 		AppPageData: AppPageData{
 			PageData: PageData{
 				Title: "Not found",

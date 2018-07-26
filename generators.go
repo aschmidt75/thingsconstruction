@@ -47,6 +47,7 @@ type AppGenTarget struct {
 	Dependencies     AppGenDependencyArray `yaml:"dependencies"`
 	CodeGenInfo      string                `yaml:"codegeninfo"`
 	CustomizationApp string                `yaml:"customizationapp"`
+	EnvInjection     []string              `yaml:"env"`
 }
 
 type AppGenTargetArray []AppGenTarget

@@ -79,6 +79,7 @@ func AppManageEventsHandleGet(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// do we have a customization for the current module?
+	data.CustomizationUrl = ""
 	genId := data.md.SelectedGeneratorId
 	appGenTargets, err := ReadGeneratorsConfig()
 	if err == nil {
@@ -87,15 +88,11 @@ func AppManageEventsHandleGet(w http.ResponseWriter, req *http.Request) {
 			// find url
 			customAppData, err := ServerConfig.GetCustomizationAppsDetailByName(appGenTarget.CustomizationApp)
 			if err == nil {
-				Debug.Printf("Has customization app: %s", appGenTarget.CustomizationApp)
-				Debug.Printf("customization app URL: %s", customAppData.Entrypoint1)
-
 				data.CustomizationUrl = fmt.Sprintf(customAppData.Entrypoint1, vars["id"])
 			} else {
 				Error.Printf("Could not get custom app url %s", err)
 			}
 		}
-
 	} else {
 		Error.Printf("Error reading generator config: %s", err)
 	}

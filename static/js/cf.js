@@ -123,6 +123,9 @@ function cf_add_chip_to(target_tag, nodeId) {
         if (target_tag.startsWith("mcu:")) {
             img = '<i class="tiny material-icons">memory</i>&nbsp;';
         }
+        if (target_tag.startsWith("product:")) {
+            img = '<i class="tiny material-icons">devices_other</i>&nbsp;';
+        }
         target_tag = target_tag.replace(component_re, "$2")
         chip.innerHTML = ""+img+target_tag;
     } else {

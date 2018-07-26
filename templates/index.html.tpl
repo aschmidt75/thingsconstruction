@@ -3,7 +3,7 @@
 </div>
 <div class="row">
     <div class="col s12">
-        <h4 class="center">Turn your embedded device into a Web Thing!</h4>
+        <h4 class="center">Enhance your embedded device with APIs</h4>
     {{ if .Feature.App  }}
         <div class="row">
             <p></p>
@@ -21,8 +21,8 @@
                     <div class="card-content">
                         <p>
                             This service let's you create communication models
-                            for your embedded device similar to the
-                            <strong>Web Things API</strong>, and turn them into source code for
+                            for your embedded device based on the
+                            <strong>Web of Things</strong>, and turn them into source code for
                             embedded devices, ready to run.
                         </p>
                         <p></p>
@@ -87,7 +87,7 @@
                         <p>
                             Models cover device <strong>properties</strong> - such as
                             temperature or LED state -, <strong>actions</strong> and
-                            <strong>events</strong> - i.e. "Flash LED" or "Temperature low".
+                            <strong>events</strong> - such as "Flash LED" or "Temperature low".
                         </p>
                         <p></p>
                     </div>
@@ -103,7 +103,7 @@
                     <div class="card-content">
                         <p>
                             Code generators produce API code, so you don't have to.
-                            Examples for APIs are HTTP+JSON REST, MQTT or LPWAN interface.
+                            Examples for APIs are HTTP+JSON REST, MQTT or LPWAN interfaces.
                         </p>
                     </div>
                 </div>

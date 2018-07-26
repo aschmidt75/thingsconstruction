@@ -32,6 +32,13 @@ String.prototype.replaceAll = function(search, replacement) {
 // connect add(+) button of properties list to me_list_add
 document.getElementById("me_add_btn").addEventListener("click", me_list_add);
 
+var btn = document.getElementById("me_next");
+var u = btn.attributes["customizationUrl"];
+if ( u !== undefined && u.nodeValue !== "") {
+    btn.innerHTML = btn.innerHTML.replaceAll(/Generate/,"Customize");
+    btn.innerHTML = btn.innerHTML.replaceAll(/navigate_next/,"developer_board");
+}
+
 // adds an existing action object to the list.
 function me_list_add_existing(obj) {
     // add a new row to the ul #me_list
@@ -408,9 +415,9 @@ function me_submit(e) {
                 var url = document.URL;
 
                 var btn = document.getElementById("me_next");
-                console.log(btn.attributes["customizationurl"]);
-                if (btn.attributes["customizationurl"] !== undefined) {
-                    var s = btn.attributes["customizationurl"].nodeValue;
+                var u = btn.attributes["customizationUrl"];
+                if ( u !== undefined && u.nodeValue !== "") {
+                    var s = u.nodeValue;
                     console.log("redirecting to "+s);
                     window.location.replace(url.replace(/^(.*)(\/app.*)/,"$1"+s.toString()));
                 } else {
@@ -445,7 +452,7 @@ function me_submit(e) {
 
 
 var progress = document.getElementById("progress");
-var eventsJson = ""
+var eventsJson = "";
 var url = document.URL;
 url = url.replace(/^(.*\/events).*/, "$1/data")
 $.ajax({

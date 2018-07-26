@@ -7,6 +7,8 @@ targets:
    will run an HTTP server, which serves the Web Of Things API. Understands JSON.
    Setup-Code includes code to connect via an Ethernet Adapter. Will run on probably
    most hardware that supports the Arduino Framework and an Ethernet Shield."
+   env:
+   - "KEY1=VALUE1"
    tags:
    - framework:arduino
    - proto:http

@@ -38,6 +38,11 @@ var (
 )
 
 func InitializeBlogPages() {
+	if ServerConfig.Features.Blog == false {
+		Verbose.Printf("Blog disabled, not scanning posts")
+		return
+	}
+
 	var err error
 	p := ServerConfig.Paths.MDPagesPath
 	Debug.Printf("Initializing Blog Pages from %s", p)

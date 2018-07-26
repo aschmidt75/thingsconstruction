@@ -26,12 +26,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/fsouza/go-dockerclient"
 	"github.com/gorilla/mux"
 	"github.com/satori/go.uuid"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"github.com/fsouza/go-dockerclient"
 )
 
 type appGenerateData struct {
@@ -307,6 +307,7 @@ func runModule(data *appGenerateData) error {
 			Image:     target.ImageRepoTag,
 			OpenStdin: true,
 			StdinOnce: true,
+			Env:       target.EnvInjection,
 		},
 		HostConfig: &docker.HostConfig{
 			Mounts:     hostMounts,

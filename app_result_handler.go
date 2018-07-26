@@ -39,9 +39,10 @@ import (
 
 type appGenerateResultData struct {
 	AppPageData
-	Msg       string
-	Files     *ModuleResponseFiles
-	URLPrefix string
+	Msg              string
+	Files            *ModuleResponseFiles
+	URLPrefix        string
+	CustomizationUrl string
 }
 
 func AppGenerateResultWtdHandleGet(w http.ResponseWriter, req *http.Request) {
@@ -87,7 +88,6 @@ func AppGenerateResultAssetHandleGet(w http.ResponseWriter, req *http.Request) {
 	id := vars["id"]
 	permalink := vars["permalink"]
 
-	Debug.Printf("Looking for id=%s, l=%s", id, permalink)
 	data := appGenerateNewResultPageData(id)
 	data.UpdateFeaturesFromContext(req.Context())
 
@@ -160,6 +160,24 @@ func AppGenerateResultHandleGet(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(500)
 		fmt.Fprint(w, "Error deserializing generation result data")
 		return
+	}
+
+	// do we have a customization for the current module?
+	genId := data.md.SelectedGeneratorId
+	appGenTargets, err := ReadGeneratorsConfig()
+	if err == nil {
+		appGenTarget := appGenTargets.AppGenTargetById(genId)
+		if appGenTarget.CustomizationApp != "" {
+			// find url
+			customAppData, err := ServerConfig.GetCustomizationAppsDetailByName(appGenTarget.CustomizationApp)
+			if err == nil {
+				data.CustomizationUrl = fmt.Sprintf(customAppData.Entrypoint1, id)
+			} else {
+				Error.Printf("Could not get custom app url %s", err)
+			}
+		}
+	} else {
+		Error.Printf("Error reading generator config: %s", err)
 	}
 
 	data.Files = mr.Files

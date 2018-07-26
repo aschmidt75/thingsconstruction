@@ -104,6 +104,9 @@
                         <li><a href="/app/{{.ThingId}}/properties">Properties</a></li>
                         <li><a href="/app/{{.ThingId}}/actions">Actions</a></li>
                         <li><a href="/app/{{.ThingId}}/events">Events</a></li>
+                    {{ if .CustomizationUrl }}
+                        <li><a href="{{ .CustomizationUrl }}">Customization</a></li>
+                    {{ end }}
                         <li><a href="/app/{{.ThingId}}/generate">Generate</a></li>
                     </ul>
                     </p>

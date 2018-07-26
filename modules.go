@@ -219,6 +219,7 @@ func getModuleSpecContent(moduleId string) ([]byte, error) {
 			Image:     target.ImageRepoTag,
 			OpenStdin: false,
 			StdinOnce: false,
+			Env:       target.EnvInjection,
 		},
 		HostConfig: &docker.HostConfig{
 			Mounts:     hostMounts,

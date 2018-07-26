@@ -33,16 +33,19 @@ type WebThingProperty struct {
 	Min         *float64 `json:"min,omitempty"`
 	Max         *float64 `json:"max,omitempty"`
 	Description *string  `json:"description,omitempty"`
+	TCCustom    *string  `json:"tc-custom,omitempty"`
 }
 
 type WebThingAction struct {
 	Name        string  `json:"-"`
 	Description *string `json:"description,omitempty"`
+	TCCustom    *string `json:"tc-custom,omitempty"`
 }
 
 type WebThingEvent struct {
 	Name        string  `json:"-"`
 	Description *string `json:"description,omitempty"`
+	TCCustom    *string `json:"tc-custom,omitempty"`
 }
 
 type WebThingDescription struct {
@@ -52,6 +55,7 @@ type WebThingDescription struct {
 	Properties  map[string]WebThingProperty `json:"properties,omitempty"`
 	Actions     map[string]WebThingAction   `json:"actions,omitempty"`
 	Events      map[string]WebThingEvent    `json:"events,omitempty"`
+	TCCustom    *string                     `json:"tc-custom,omitempty"`
 }
 
 func (wtd *WebThingDescription) NewProperties() {
